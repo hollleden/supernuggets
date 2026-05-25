@@ -13,11 +13,7 @@ async function loadNuggets(): Promise<Nugget[]> {
     .select('*')
     .order('created_at', { ascending: false })
     .limit(2000)
-  if (error || !data) {
-    console.error('[loadNuggets] Supabase error:', JSON.stringify(error))
-    console.error('[loadNuggets] URL set?', !!process.env.NEXT_PUBLIC_SUPABASE_URL, '| KEY set?', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-    return []
-  }
+  if (error || !data) return []
   return (data as EntryRow[]).map(mapRowToNugget)
 }
 

@@ -31,7 +31,7 @@ Old broken bot at `~/Desktop/listo/` (reference only — do NOT extend). Other s
 | AI brain — vision mode | Claude Sonnet 4.6 (`claude-sonnet-4-6`) via tool use | ✅ |
 | Prompt caching | ephemeral, on system + tools | ✅ ~90% input discount after first call |
 | Bot hosting | Railway | ⏳ not deployed |
-| Frontend hosting | Vercel | ⏳ not deployed |
+| Frontend hosting | Vercel | ✅ live — https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app |
 
 ---
 
