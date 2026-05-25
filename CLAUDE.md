@@ -137,15 +137,17 @@ message_id (bigint, nullable)
 
 ---
 
-## Current state — Web frontend (✅ Phase A complete)
+## Current state — Web frontend (✅ Phase B UI complete — deployed)
 
-- Project at `~/supernuggets`, no git initialized yet
-- `lib/supabaseClient.ts` reads from env vars
-- `lib/listo-data.ts` defines the 12-folder system + `mapEntryToPin()` (handles inconsistent tag shapes from old data)
-- `app/page.tsx` fetches `select('*')` from `entries`, renders the grid, no login screen
-- `app/globals.css` has 12 folder color variables (light + dark)
-- `components/listo/search-header.tsx` and `pin-detail-view.tsx` updated to the new taxonomy
-- Run: `cd ~/supernuggets && npm run dev` → http://localhost:3000
+- **Live URL**: https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app
+- **GitHub**: https://github.com/hollleden/supernuggets (public repo, `main` branch)
+- **Auto-deploy**: every `git push` → Vercel rebuilds automatically
+- UI rebuilt to BRAND.md "tactical neo-retro blueprint" spec: cream bg, black borders, monospaced type, 12-folder accent strips, dithered empty state
+- `lib/supabaseClient.ts` reads from `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `lib/supabaseAdmin.ts` reads from `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SECRET_KEY` (server-only, write ops)
+- `app/page.tsx` — server component, fetches all entries, `force-dynamic`
+- `lib/nuggets.ts` — `mapRowToNugget()` handles inconsistent tag shapes from old data
+- Run locally: `cd ~/supernuggets && npm run dev` → http://localhost:3000
 
 **Known frontend bugs (deferred):**
 - Edit/delete in the web UI only mutates local React state — never writes back to Supabase. UI lies; refresh restores. Fix when next touching the web app.
@@ -222,9 +224,9 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 3. ✅ Brand & design spec locked — see [BRAND.md](BRAND.md)
 
 **Next, in order:**
-1. **Web UI redesign** — rebuild `~/supernuggets` frontend to the BRAND.md "tactical neo-retro blueprint" spec: cream bg, black borders, sticker shadows, inverted-flash hover, folder accent strips, NuggetCard template, dithered empty states, monospaced type. Current v0.dev aesthetic gets fully replaced.
-2. **Apply BRAND.md bot copy to `bot.py`** — replace current bot strings with the mainframe-style copy from BRAND.md §3. Small follow-up, can pair with the UI work or do solo.
-3. **Video handler** — download video bytes → Whisper transcription → pipeline → save with `media_type="video"`
+1. ✅ **Web UI redesign** — BRAND.md "tactical neo-retro blueprint" spec fully applied. Deployed to Vercel.
+2. **Apply BRAND.md bot copy to `bot.py`** — replace current bot strings with the mainframe-style copy from BRAND.md §3. Small follow-up, can pair with the video handler or do solo.
+3. **Video handler** ← **NEXT** — download video bytes → Whisper transcription → pipeline → save with `media_type="video"`
 4. **URL handler** — `yt-dlp` to download from TikTok/Instagram/YouTube/etc. → branch into image or video handler based on content type
 5. **Menus** — `/recent`, `/today`, `/folder <name>`, `/search <q>` inline keyboards (TeleForge patterns: https://github.com/zerox9dev/TeleForge)
 6. **Scheduler** — APScheduler for weekly/quarterly digests (port from old `digest.py`)
@@ -235,9 +237,9 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 1. **Magic URL** for the web frontend: `supernuggets.app/u/<token>` — bot DMs each user their personal link. Replaces the deleted login screen. Token = `secrets.token_urlsafe(32)` stored in `users.token`. Frontend route looks up `user_id` from token, fetches that user's entries. "Share-link security" (like Notion share links).
 2. **Fix frontend persistence bug** (edit/delete writes back to Supabase)
 3. **Enable RLS** on `entries` + `users` once magic URL exists
-4. `git init` in `~/supernuggets`, push to https://github.com/hollleden/supernuggets (currently empty)
+4. ✅ `git init` in `~/supernuggets`, pushed to https://github.com/hollleden/supernuggets
 5. **Delete old bot folders** (ASK user first): `~/listo-bot/`, `~/Desktop/listo/`, `~/Downloads/listo-app-ui/`, `~/listo-bot-docs/`
-6. **Deploy frontend to Vercel**
+6. ✅ **Deploy frontend to Vercel** — live at https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app
 
 ---
 
