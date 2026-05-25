@@ -1,0 +1,140 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------
+   SUPERNUGGETS — tactical neo-retro blueprint tokens
+   Source of truth: BRAND.md §2 (light) + §7 (dark / negative print)
+   --------------------------------------------------------------- */
+
+:root {
+  /* Surface palette */
+  --background: #F5F4EE;          /* Weathered engineering cream */
+  --foreground: #1A1A1A;          /* Off-black high-readability type */
+  --card: #FFFFFF;                /* Pure white card canvas */
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F4EE;
+  --secondary-foreground: #1A1A1A;
+  --muted: #EFEDE5;
+  --muted-foreground: #666666;
+  --accent: #000000;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #000000;              /* Strong structural linework */
+  --border-muted: #CCCCCC;        /* Accent matrix grids */
+  --input: #000000;
+  --ring: #000000;
+  --radius: 0px;                  /* Square by default — no rounded corners */
+
+  /* Inverted Flash interaction */
+  --flash-bg: #000000;            /* Light mode: black */
+  --flash-fg: #FFFFFF;            /* Light mode: white */
+}
+
+.dark {
+  /* Amber CRT terminal — BRAND.md §7. Warm sepia, NOT cold modern dark mode.
+     Lower contrast (~8:1) than the rejected cold variant (~18:1). */
+  --background:         #1F1B14;  /* sepia-dark = Hemeon cream inverted */
+  --foreground:         #D4CDB8;  /* warm cream-grey */
+  --card:               #2A251C;  /* slightly raised, warmer */
+  --card-foreground:    #D4CDB8;
+  --popover:            #2A251C;
+  --popover-foreground: #D4CDB8;
+  --primary:            #D4CDB8;
+  --primary-foreground: #1F1B14;
+  --secondary:          #2A251C;
+  --secondary-foreground: #D4CDB8;
+  --muted:              #2A251C;
+  --muted-foreground:   #847E6E;
+  --accent:             #D4CDB8;
+  --accent-foreground:  #1F1B14;
+  --destructive:        #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border:             #D4CDB8;
+  --border-muted:       #4A4538;
+  --input:              #D4CDB8;
+  --ring:               #D4CDB8;
+
+  /* Hemeon orange — "hot key" highlight on amber CRT. Never green, never bright cream. */
+  --flash-bg: #E04A2A;
+  --flash-fg: #1F1B14;
+}
+
+@theme inline {
+  --font-mono: var(--font-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-mono);  /* default sans = mono — BRAND mandates mono everywhere */
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-flash: var(--flash-bg);
+  --color-flash-fg: var(--flash-fg);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-mono antialiased;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Empty-state dither — BRAND.md §2
+   --------------------------------------------------------------- */
+@utility bg-dither {
+  background-color: #FFFFFF;
+  background-image: radial-gradient(#000000 1px, transparent 1px),
+                    radial-gradient(#000000 1px, #FFFFFF 1px);
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+}
+
+.dark .bg-dither {
+  background-color: #1F1B14;
+  background-image: radial-gradient(#D4CDB8 1px, transparent 1px),
+                    radial-gradient(#D4CDB8 1px, #1F1B14 1px);
+}
+
+/* ---------------------------------------------------------------
+   Utilities preserved from prior theme
+   --------------------------------------------------------------- */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 0;
+  }
+}
