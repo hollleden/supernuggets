@@ -258,6 +258,12 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 - **Echo downloaded videos back to user** — after yt-dlp downloads a URL video, the bot uploads the mp4 to chat via `bot.send_video` (BufferedInputFile) before sending the receipt. User can re-watch from chat history without revisiting the original URL. Telegram caches the file_id for free re-use. Failure is non-fatal — the receipt sends regardless.
 - **SaveAsBot signature stripping** — `pipeline.clean_user_caption` removes `"Рад был помочь! Ваш, @SaveAsBot"` (Russian) and English variants from captions before AI ingest. Applied at every caption-read site: `_handle_photo_batch`, `on_video`, `_handle_url`. Extend `_BOT_SIGNATURES` regex list for additional helper bots.
 
+### Known bugs to investigate
+
+| Severity | Bug | Where to start |
+|---|---|---|
+| Medium | **Same TikTok video, two paths → different AI outputs.** User-confirmed 2026-05-26. Sending a TikTok video as a file vs. forwarding the TikTok URL produces materially different `title` / `MENTIONED` / `FACT-CHECK` / `tags` even when the transcript is essentially identical. The URL path adds `SOURCE: TikTok · @hanchen_xu` and `TITLE/DESCRIPTION` framing to the AI input via `pipeline.build_video_url_input`; the file path sends only the bare transcript via `on_video`. The AI legitimately uses that extra context to surface the uploader under MENTIONED (e.g. "Han Chen Xu") instead of the topical entities ("Lyocell", "Viscose", "Modal") that the file path surfaces. **Likely fix**: harmonize prompts — either (a) the file path should also call out "no source available" to dampen the difference, or (b) the URL path should de-emphasize the platform metadata so topic entities still win MENTIONED. Need to compare both prompts side-by-side and look at the system prompt in `pipeline.py`. Two real receipt examples are in the chat handoff that spawned this entry (FILE: `[PERSONAL] LYOCELL VS VISCOSE: CHOOSING SUSTAINABLE FABRICS` vs URL: title-less receipt with `Han Chen Xu` mentioned). Not a blocker. |
+
 ### Backlog (deferred)
 
 | Priority | Item | Where |
@@ -299,14 +305,38 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 3. **Scheduler** — APScheduler for weekly/quarterly digests (port from old `digest.py`)
 4. **Deploy to Railway**
 
-## Phase C — Cleanup + magic URL
+## Phase C — Cleanup + magic URL (⏸ PAUSED 2026-05-26)
 
-1. **Magic URL** for the web frontend: `supernuggets.app/u/<token>` — bot DMs each user their personal link. Replaces the deleted login screen. Token = `secrets.token_urlsafe(32)` stored in `users.token`. Frontend route looks up `user_id` from token, fetches that user's entries. "Share-link security" (like Notion share links).
-2. **Fix frontend persistence bug** (edit/delete writes back to Supabase)
-3. **Enable RLS** on `entries` + `users` once magic URL exists
-4. ✅ `git init` in `~/supernuggets`, pushed to https://github.com/hollleden/supernuggets
-5. **Delete old bot folders** (ASK user first): `~/listo-bot/`, `~/Desktop/listo/`, `~/Downloads/listo-app-ui/`, `~/listo-bot-docs/`
-6. ✅ **Deploy frontend to Vercel** — live at https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app
+**Status:** code-complete locally, NOT deployed. Work parked while we do a code-review pass + investigate a bot-output inconsistency bug (see "Known bugs to investigate" below). Resume by checking out the branch / staging files described below.
+
+### Where the parked work lives
+
+- **Frontend** (`~/supernuggets/`): local branch `phase-c-magic-url`. Not pushed to GitHub. Resume with `git checkout phase-c-magic-url`. `main` is back at `433fb19` (pre-Phase C) and is what Vercel still serves.
+- **Bot** (`~/supernuggets-bot/`, no git): Phase C versions of `bot.py` + `database.py` are stashed in `.phase-c-staging/`. Resume with `cp .phase-c-staging/{bot,database}.py .` (or diff + cherry-pick by hand).
+- **Supabase**: the `users` table got unique constraints on `user_id` + `token`, an index on `token`, and the legacy 11-char token was regenerated to a proper 43-char urlsafe one. These DB changes are **additive and harmless** — no current code touches the `users` table.
+
+### What Phase C did (when resumed, all of this is ready)
+
+1. **Magic URL**: `vercel.app/u/<token>` — bot DMs each user their personal link on `/start`. Token = `secrets.token_urlsafe(32)` stored in `users.token`. Frontend route resolves `user_id` from token, fetches that user's entries only. "Share-link security" (like Notion share links). All routes (`/u/[token]/`, `/u/[token]/n/[id]`, `/u/[token]/stats`) scope by user_id.
+2. **`/myvault` bot command** added — re-DMs the magic URL on demand.
+3. **Token-aware components** via `useParams()` — every internal `Link`, `router.push`, sidebar/bottom-nav nav item respects the current token prefix.
+4. **Server-action ownership checks** — `updateNuggetFolder`, `updateNuggetTags`, `deleteNugget` all take `token` as first arg, look up `user_id`, and refuse to mutate rows that don't match.
+5. **Legacy `/n/[id]` and `/stats` routes** become `redirect('/')` so old bot OPEN buttons land somewhere sane.
+6. **Landing page (`/`)** rewritten as a small "message @supernuggetss_bot to get your magic URL" card. Renders without AppShell.
+7. **Bot `entry_keyboard`** updated to build OPEN URLs as `{WEB_URL}/u/{token}/?focus={id}`. Adds an in-process `_token_cache` so receipts don't pay a DB roundtrip.
+8. **`WEB_URL=https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app`** added to `~/supernuggets-bot/.env` (left in place after revert — harmless, still used by the old v0.5 OPEN button).
+
+### What was deliberately deferred
+
+- **RLS (C-7)** — never enabled. anon key still reads `entries` + `users` freely. The block-anon policies are pre-written in `HANDOFF-phase-c.md` but were never applied.
+- **Validation step (between C-6 and C-7)** — never run because we paused before deploying.
+
+### Other Phase C items unrelated to magic URL
+
+- **Fix frontend persistence bug** ✅ — verified during Phase C audit that this was *already done*. Edit/delete writes correctly via `supabaseAdmin` server actions. The old "bug" note in earlier handoffs is stale.
+- **Deploy frontend to Vercel** ✅ — already live at https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app (pre-Phase C state).
+- **`git init` in `~/supernuggets`** ✅ — pushed to https://github.com/hollleden/supernuggets.
+- **Delete old bot folders** (ASK user first): `~/listo-bot/`, `~/Desktop/listo/`, `~/Downloads/listo-app-ui/`, `~/listo-bot-docs/`
 
 ---
 
