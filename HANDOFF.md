@@ -1,222 +1,269 @@
-# HANDOFF — Phase B remainder: bot menus (`/recent`, `/today`, `/folder`, `/search`)
+# HANDOFF — Phase C: multi-user (magic URL + RLS)
 
-**Context:** Ingestion pipeline is **feature-complete** — text, photos, video, video URL (TikTok / IG Reels / YT Shorts / Twitter / Pinterest / Reddit / Threads), photo carousels, and articles all ingest end-to-end with the SOURCE footer + button. Whisper transcription, OCR-forced vision, source URL persistence, video echo, SaveAsBot signature stripping, cost-cut to ~$3-4/mo (Haiku for vision + tightened caps) — all shipped. This next session picks up with **bot menus** — letting the user browse and filter their vault directly from Telegram without opening the web UI.
+**Context:** Ingestion pipeline is **feature-complete** (text, photos, video, video URL, photo carousels, articles) and cost-optimized (~$3-4/mo). The vault has been single-user since day one — `user_id` IS stored on every row, but the frontend reads `SELECT *` and shows everything to anyone with the URL. This session locks the vault per user and ships **magic URL** auth: the bot DMs each user a personal `supernuggets.app/u/<token>` URL on `/start`; that token resolves to their entries only. After magic URLs work, **enable Postgres RLS** to make the lockdown structural rather than just convention.
 
 **Read first:**
-- [`CLAUDE.md`](CLAUDE.md) — full living state. The "URL handler reference" + "Bot history" + "Telegram API safety" sections are mandatory reading before touching the bot.
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system design, data flow per ingest type, decisions log.
-- [`docs/API.md`](docs/API.md) — Supabase schema + module reference (you'll need this for the new query functions).
-- [`~/supernuggets-bot/bot.py`](../supernuggets-bot/bot.py) — every existing handler. The new menu commands go alongside them.
-- [`~/supernuggets-bot/database.py`](../supernuggets-bot/database.py) — currently has `get_today_count`, `save_entry`, `delete_entry`. You'll add list/query functions.
-- TeleForge patterns reference (don't fork, just steal): https://github.com/zerox9dev/TeleForge — clean inline-keyboard pagination for browsing.
+- [`CLAUDE.md`](CLAUDE.md) — full living state. Phase C section + "Bot history" + "Telegram API safety" are mandatory reading.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — data flow per ingest type; the `entries` row shape.
+- [`docs/API.md`](docs/API.md) — Supabase schema. **The `users` table is "reserved" but does not yet exist** — you'll create it.
+- [`~/supernuggets-bot/database.py`](../supernuggets-bot/database.py) — `save_entry` already stores `user_id`; you'll add user CRUD + token lookup.
+- [`~/supernuggets-bot/bot.py`](../supernuggets-bot/bot.py) — `on_start` is where you'll DM the magic URL. `entry_keyboard`'s OPEN button URL needs the token appended.
+- [`~/supernuggets/app/page.tsx`](app/page.tsx) — current home, reads ALL entries. Will be replaced with a no-data landing page.
+- [`~/supernuggets/app/n/[id]/page.tsx`](app/n/[id]/page.tsx) — detail page; will be moved under `app/u/[token]/n/[id]/page.tsx`.
+- [`~/supernuggets/actions/`](actions/) — server actions for folder/tag/delete mutations. **Known bug**: they may not actually write to Supabase. Investigate before assuming they work post-token-scope.
+- TeleForge patterns reference: https://github.com/zerox9dev/TeleForge (steal, don't fork) — useful if any bot UX touches this.
 
-**Run the bot locally to test:** `cd ~/supernuggets-bot && .venv/bin/python bot.py`
+**Run the bot locally:** `cd ~/supernuggets-bot && .venv/bin/python bot.py`
 
 **Kill bot reliably:** `kill -9 $(ps -ef | grep "bot.py" | grep -v grep | awk '$NF=="bot.py" {print $2}')` — **NOT** `pkill -f`. See CLAUDE.md "Killing the bot reliably" for why.
 
 ---
 
-## What's done (this session, 2026-05-26)
+## What's done (previous session, 2026-05-26)
 
-- ✅ **URL handler** — yt-dlp branch (TikTok video, IG Reel/photo, YT Shorts, Twitter, Pinterest, Reddit, Threads) + trafilatura article fallback. Per-platform duration caps. TikTok `/photo/` URLs rejected with @SaveAsBot pointer.
-- ✅ **Source URL surfacing** — stored as flat keys in `enrichment` JSON; SOURCE footer in receipts (after TAGS); `↗ SOURCE` inline button on URL-derived entries; web UI shows source on cards + detail pages.
-- ✅ **Video echo** — `_ingest_url_video` uploads the downloaded mp4 to chat via `bot.send_video` so the user can re-watch from history.
-- ✅ **SaveAsBot signature stripping** — `pipeline.clean_user_caption` applied at every caption-read site.
-- ✅ **Cost cuts** — Haiku 4.5 for vision (A/B confirmed quality holds); tightened `URL_DURATION_CAPS` (TikTok 180s, IG 90s, default 180s). Worst-case URL ingest: $0.018 → $0.06 reduced to $0.018. Per-album: $0.03 → $0.005.
-- ✅ **Docs set** — README, CHANGELOG, docs/ARCHITECTURE, docs/API, docs/SRS, docs/DEPLOYMENT all written and pushed.
-- ✅ **Bot ops learned** — kill-by-PID, `/close` API for session release, never set webhook to a domain we don't own. All baked into CLAUDE.md.
-- ✅ **Token rotation playbook** — `setup_env.sh` rewritten to keep current values on blank input (one-key rotation without re-pasting everything); `fix_env.py` companion to repair `.env` corruption from the v1 bug.
-
----
-
-## What to build: bot menus
-
-**User flow:** user types `/recent` (or `/today`, `/folder Beauty`, `/search korean`) in chat → bot replies with a paginated list of nuggets matching the query → tap an entry's title → opens the web detail page → tap `← BACK` (callback) to return to the list → tap `← NEXT 10 →` to paginate.
-
-### Commands to implement
-
-| Command | Behavior |
-|---|---|
-| `/recent` | Last 10 entries, newest first, paginated |
-| `/today` | Entries created today (UTC), paginated |
-| `/folder <name>` | Entries in that folder (e.g. `/folder Beauty`). If name omitted → show folder picker keyboard with the 12 folders |
-| `/search <query>` | Substring search across title + tags + raw_content. Paginated |
-
-### Receipt format for list views
-
-One Telegram message per page, ~10 entries each. Single block, monospaced:
-
-```
-[RECENT · PAGE 1/3]
---------------------
-1 · [BEAUTY] BARCELONA WINE BARS GUIDE
-    05/24 · #wine_bars #travel
-2 · [HEALTH] CICAPLAST FOR SEBACEOUS FILAMENTS
-    05/24 · #skincare #korean_beauty
-3 · [GROW] Y COMBINATOR OPEN-SOURCES GSTACK
-    05/26 · #ai_agents #startup
-...
---------------------
-TOTAL: 27 entries · showing 1-10
-```
-
-Inline keyboard under each page: `[← PREV] [PAGE 1/3] [NEXT →]` (PREV hidden on page 1, NEXT hidden on last page). Each entry's title is a `tg://` deep link OR a button — TBD during implementation (see "Open question" below).
-
-### Implementation plan (in order)
-
-#### 1. Add query functions to `database.py`
-
-```python
-def get_entries(
-    user_id: int,
-    *,
-    folder: str | None = None,
-    today_only: bool = False,
-    search: str | None = None,
-    limit: int = 10,
-    offset: int = 0,
-) -> tuple[list[dict], int]:
-    """Returns (rows, total_count). Filters compose."""
-    params = {
-        "select": "id,created_at,folder,title,tags",
-        "user_id": f"eq.{user_id}",
-        "order": "created_at.desc,id.desc",
-        "limit": str(limit),
-        "offset": str(offset),
-    }
-    if folder:
-        params["folder"] = f"eq.{folder}"
-    if today_only:
-        params["created_at"] = f"eq.{_today_utc()}"
-    if search:
-        # Postgres `or` filter syntax. Substring on title + raw_content.
-        q = search.replace(",", " ").strip()
-        params["or"] = f"(title.ilike.*{q}*,raw_content.ilike.*{q}*,tags.ilike.*{q}*)"
-    headers = {**_HEADERS, "Prefer": "count=exact"}
-    with httpx.Client() as c:
-        r = c.get(_url("entries"), params=params, headers=headers)
-        if r.status_code >= 400:
-            raise RuntimeError(f"supabase {r.status_code}: {r.text}")
-        cr = r.headers.get("content-range", "*/0")
-        total = int(cr.rsplit("/", 1)[-1]) if "/" in cr else 0
-        return r.json(), total
-```
-
-This single function with optional filters covers all four commands. Keeps the surface small.
-
-#### 2. Add command handlers to `bot.py`
-
-Pattern: each command calls a shared `_send_list_page` helper. Pagination state lives in `callback_data` (e.g. `list:recent:0`, `list:folder:Beauty:10`), so no server-side state to track.
-
-Skeleton:
-```python
-from aiogram.filters import Command
-
-PAGE_SIZE = 10
-
-@dp.message(Command("recent"))
-async def on_recent(message: Message) -> None:
-    if not message.from_user: return
-    await _send_list_page(message, kind="recent", page=0, user_id=message.from_user.id)
-
-@dp.message(Command("today"))
-async def on_today(message: Message) -> None:
-    if not message.from_user: return
-    await _send_list_page(message, kind="today", page=0, user_id=message.from_user.id)
-
-@dp.message(Command("folder"))
-async def on_folder(message: Message) -> None:
-    if not message.from_user: return
-    # /folder Beauty → filter; /folder alone → show picker
-    args = (message.text or "").split(maxsplit=1)
-    folder_arg = args[1].strip() if len(args) > 1 else None
-    if folder_arg:
-        await _send_list_page(message, kind="folder", page=0, user_id=message.from_user.id, folder=folder_arg)
-    else:
-        await message.answer("[FOLDER] pick one:", reply_markup=_folder_picker_keyboard())
-
-@dp.message(Command("search"))
-async def on_search(message: Message) -> None:
-    if not message.from_user: return
-    args = (message.text or "").split(maxsplit=1)
-    if len(args) < 2:
-        await message.answer("[search] usage: /search <query>")
-        return
-    await _send_list_page(message, kind="search", page=0, user_id=message.from_user.id, query=args[1])
-```
-
-`_send_list_page` queries `database.get_entries`, renders the monospaced list block, attaches the pagination keyboard, and either sends as a new message OR edits the existing one (when called from a pagination callback). Use `message.answer` for new, `callback.message.edit_text` for paginate.
-
-#### 3. Pagination callback handler
-
-```python
-@dp.callback_query(F.data.startswith("list:"))
-async def on_list_paginate(callback: CallbackQuery) -> None:
-    # callback.data shape: list:<kind>:<page>[:<arg>]
-    # e.g. list:recent:1, list:folder:Beauty:2, list:search:korean:0
-    ...
-```
-
-#### 4. Folder picker keyboard
-
-Inline keyboard with the 12 folders (3 cols × 4 rows). Each button's `callback_data` is `list:folder:Grow:0` etc. Tapping = jumps into that folder's list.
-
-#### 5. Update `/start` help text
-
-Add the four new commands to the `on_start` reply in bot.py.
-
-#### 6. Test scenarios
-
-- `/recent` → see 10 most recent, pagination works
-- `/today` when 0 today → "no entries today" message
-- `/folder Beauty` → filtered list
-- `/folder` (no arg) → picker → tap Beauty → filtered list
-- `/search korean` → matches title/tags/raw_content
-- `/search` (no arg) → usage message
-- Pagination NEXT on last page → graceful (hide button)
+- ✅ **URL handler** (yt-dlp + trafilatura): TikTok video, IG Reel/photo, YT Shorts, Twitter, Pinterest, Reddit, Threads, articles — all branches working. Per-platform duration caps. TikTok `/photo/` rejection with @SaveAsBot pointer.
+- ✅ **Source URL persistence**: flat keys in `enrichment` JSON; SOURCE footer in receipts; `↗ SOURCE` inline button; web UI surfacing on cards + detail page.
+- ✅ **Video echo**: bot uploads downloaded mp4 to chat so user can re-watch.
+- ✅ **SaveAsBot signature stripping**: `pipeline.clean_user_caption` applied everywhere.
+- ✅ **Cost cuts**: Haiku 4.5 for vision (A/B confirmed); tightened duration caps. Worst-case URL ingest $0.06 → $0.018.
+- ✅ **Docs set**: README, CHANGELOG, docs/ARCHITECTURE/API/SRS/DEPLOYMENT all written + pushed.
+- ✅ **Bot ops learned**: kill-by-PID, Telegram `bot/close` API, never set webhook to a domain we don't own, never paste tokens in chat.
 
 ---
 
-## Open question for the next session
+## What to build: magic URL + RLS
 
-**How does tapping a list entry open its detail?** Two options:
+User lifecycle after Phase C:
+1. New user opens `@supernuggetss_bot` → sends `/start`
+2. Bot generates a `secrets.token_urlsafe(32)` token, upserts into `users` (telegram_id ↔ token)
+3. Bot DMs the user `https://supernuggets-...vercel.app/u/<token>` plus a brief "this is your private vault, don't share" note
+4. User taps the URL → frontend looks up `user_id` from the token → loads only that user's entries
+5. Owner (admin) gets the same flow but the token they receive is the canonical one they bookmark
+6. Entries' `OPEN` button in receipts uses `/u/<token>/?focus=<entry_id>`
+7. Once magic URLs are out → enable RLS on `entries` so direct Supabase access can't bypass the token scope
 
-| Option | UX | Pros | Cons |
+### Phased rollout
+
+| # | What | Where | Risk |
 |---|---|---|---|
-| **A — Numbered list, no per-entry buttons** | User reads list, opens web UI manually for full detail | Clean, 10-entry pages stay short | Extra friction; user has to know URL |
-| **B — Per-entry inline button** | Each entry has a `[OPEN]` button → links to web detail page | One tap to open | More vertical space; only 5-6 entries per message before keyboard gets crowded |
+| **C-1** | Create `users` table in Supabase | SQL Editor (manual) | Low — additive |
+| **C-2** | Bot generates token + DMs URL on `/start` | `database.py` + `bot.py` | Low — affects new users only |
+| **C-3** | Frontend `/u/[token]` route resolves to user's entries | `app/u/[token]/page.tsx` + detail page | Medium — needs proper data scoping |
+| **C-4** | Home `/` becomes a landing page (no data) | `app/page.tsx` rewrite | Low |
+| **C-5** | Update bot's OPEN button URL to include token | `bot.py` `entry_keyboard` | Low |
+| **C-6** | Fix edit/delete persistence (server actions actually write to Supabase) | `actions/` + each editor component | **Medium — investigate the bug first** |
+| **C-7** | Enable RLS on `entries` + `users` | Supabase SQL Editor | **High — easy to lock yourself out if policies are wrong** |
 
-Recommend Option A for v1 — keeps the format spartan. We can add buttons later if it turns out clicking-through is the actual use case.
+**Recommend stopping after C-6 and validating end-to-end** (owner uses their magic URL, edits a folder, sees the change persist) before touching RLS. RLS is the irrevocable step.
+
+### C-1 — `users` table schema
+
+Run in Supabase SQL Editor:
+```sql
+create table public.users (
+  id bigserial primary key,
+  telegram_id bigint not null unique,
+  token text not null unique,
+  created_at timestamptz not null default now()
+);
+create index users_token_idx on public.users (token);
+```
+Then backfill the owner row so the existing entries are reachable:
+```sql
+-- Replace 445276 with ADMIN_ID if it ever changes.
+insert into public.users (telegram_id, token)
+values (445276, encode(gen_random_bytes(32), 'base64'));
+-- Note the token returned — paste it into ~/supernuggets-bot/.env as
+--   ADMIN_TOKEN=<value>
+-- (optional, only needed if you want the bot to skip generating a new one for admin)
+```
+
+### C-2 — Bot side
+
+`database.py` additions:
+```python
+import secrets
+
+def ensure_user(telegram_id: int) -> str:
+    """Upsert by telegram_id; return the user's token (creates if missing)."""
+    # Try fetch first (cheap path for existing users).
+    with httpx.Client() as c:
+        r = c.get(
+            _url("users"),
+            params={"select": "token", "telegram_id": f"eq.{telegram_id}", "limit": "1"},
+            headers=_HEADERS,
+        )
+        r.raise_for_status()
+        rows = r.json()
+        if rows:
+            return rows[0]["token"]
+        # Create.
+        token = secrets.token_urlsafe(32)
+        r = c.post(
+            _url("users"),
+            json={"telegram_id": telegram_id, "token": token},
+            headers={**_HEADERS, "Prefer": "return=representation"},
+        )
+        r.raise_for_status()
+        return r.json()[0]["token"]
+```
+
+`bot.py` — update `on_start`:
+```python
+@dp.message(CommandStart())
+async def on_start(message: Message) -> None:
+    if not message.from_user:
+        return
+    user_id = message.from_user.id
+    token = await asyncio.to_thread(database.ensure_user, user_id)
+    vault_url = f"{WEB_URL}/u/{token}" if WEB_URL.startswith("https://") else f"<deploy first>"
+    await message.answer(
+        "supernuggets v0.6\n"
+        "--------------------\n"
+        "Send anything — text, photo, video, link.\n"
+        "I transcribe, summarize, fact-check, tag, file.\n\n"
+        "YOUR PRIVATE VAULT\n"
+        f"↗ {vault_url}\n"
+        "[bookmark this — anyone with the URL sees your entries]\n\n"
+        # ... existing limits + contact sections ...
+    )
+```
+
+Add a `/myvault` command that re-DMs the URL anytime.
+
+### C-3, C-4, C-5 — Frontend
+
+**Move the home page under `/u/[token]/`:**
+```
+app/
+  page.tsx              ← rewrite as landing (no data)
+  u/
+    [token]/
+      page.tsx          ← copy of OLD app/page.tsx, scoped to one user
+      n/
+        [id]/
+          page.tsx      ← move from app/n/[id]/page.tsx, scoped
+```
+
+Token → user_id lookup helper in `lib/users.ts`:
+```ts
+export async function userIdFromToken(token: string): Promise<number | null> {
+  const { data } = await supabase
+    .from('users')
+    .select('id')
+    .eq('token', token)
+    .maybeSingle()
+  return data?.id ?? null
+}
+```
+
+In `app/u/[token]/page.tsx`:
+```tsx
+const userId = await userIdFromToken(params.token)
+if (!userId) notFound()
+const { data: rows } = await supabase
+  .from('entries')
+  .select('*')
+  .eq('user_id', userId)            // ← was missing before
+  .order('created_at', { ascending: false })
+```
+
+Same scoping for the detail page. Server actions (edit folder/tags/delete) take the token in the form payload and validate before writing.
+
+**Home page rewrite (`app/page.tsx`):**
+```tsx
+export default function Home() {
+  return (
+    <main className="min-h-screen flex items-center justify-center font-mono">
+      <pre>
+{`supernuggets · personal second brain
+------------------------------------
+get your private vault via @supernuggetss_bot
+send /start to receive your magic URL`}
+      </pre>
+    </main>
+  )
+}
+```
+
+**Bot OPEN button** (`bot.py` `entry_keyboard`) — fetch the token once per save call. Cleanest: pass it down from the handler that knows `user_id`. Cache for the bot process lifetime via a simple `{user_id: token}` dict — saves a DB roundtrip per receipt.
+
+### C-6 — Edit/delete persistence bug
+
+Currently the frontend's tag/folder/delete editors mutate local React state and may not call the Supabase mutation. Before scoping by token, **read each `actions/*.ts` file** and trace whether the corresponding component (`tag-editor.tsx`, `folder-editor.tsx`, `delete-button.tsx`) actually awaits the action. If not, wire it up.
+
+Once fixed, every server action takes `token` as part of its form payload and verifies via `userIdFromToken` before mutating. Reject if mismatch.
+
+### C-7 — RLS (do LAST, only after C-1 through C-6 are validated)
+
+Policies (run in Supabase SQL Editor):
+```sql
+alter table public.entries enable row level security;
+alter table public.users enable row level security;
+
+-- Anon SELECT on entries: only if a matching users row exists with the
+-- token presented via a request header `x-vault-token` (set by the frontend).
+-- This requires the frontend to use a custom Supabase client that injects
+-- the header, OR move all reads through server actions.
+-- SIMPLER: keep reads on the server (server components) using the secret key,
+-- and only enable RLS to prevent anon clients from reading. Frontend never
+-- talks to entries directly post-RLS.
+create policy entries_no_anon on public.entries
+  for all to anon
+  using (false);
+
+-- (Same on users — they're never read from the browser.)
+create policy users_no_anon on public.users
+  for all to anon
+  using (false);
+```
+
+**The simpler RLS model:** block anon entirely, route all reads through Next.js server components using the secret key. This works because Next.js servers can scope by `user_id` based on the URL's `token`. The anon key becomes inert — won't expose anything.
+
+If you ever want browser-side reads (e.g., realtime subscriptions, client-rendered components), the policy needs to be smarter (e.g., JWT-based or RPC functions that take the token as a param). Defer until the use case appears.
+
+---
+
+## Open questions for the session
+
+1. **Should `/start` regenerate the token if the user explicitly requests it (e.g., `/start regenerate`)?** Could be useful if a user accidentally shares their URL. v1 says no — keep it simple, revisit if needed.
+2. **What about the existing OPEN buttons on old entries?** They point at `/?focus=<id>` (no token). After C-3, those URLs no longer work. Options:
+   - (a) Live with the breakage — old buttons just open the landing page
+   - (b) Regenerate `formatted_output` for all existing entries via a one-time SQL update
+   - (c) Make the landing page detect `?focus=N` and prompt the user to message the bot for their URL
+3. **Should the bot also offer a "give me a fresh URL" command?** `/myvault` is the bare minimum. Add `/regenerate` for security-conscious users? Defer.
 
 ---
 
 ## Env vars (`.env`)
 
-Unchanged from current — no new keys needed for menus. Confirm with:
+Unchanged from current. After C-2, optionally add `ADMIN_TOKEN=...` if you want to skip the lookup for the admin user — but it's not necessary, the lookup is cheap.
+
+Verify with:
 ```bash
 cd ~/supernuggets-bot && awk -F= '/^[A-Z]/ { if (length($2) > 0) print "  " $1 "=<SET>"; else print "  " $1 "=<EMPTY>" }' .env
 ```
 
-Should show all of: `BOT_TOKEN`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `ADMIN_ID`, `CLAUDE_MODEL_VISION`.
+---
+
+## Gotchas
+
+- **Kill bot by PID, not `pkill -f`.** See CLAUDE.md.
+- **NEVER touch `setWebhook` for evictions.** Use `bot/close` API.
+- **NEVER paste tokens in chat.** Use `setup_env.sh` for secret rotation.
+- **Supabase RLS gotcha**: server-side reads from the bot use the SECRET key which bypasses RLS. The anon-block policy only stops the browser. Verify this by hitting the REST API with the anon key after enabling RLS — should return empty.
+- **Token format**: `secrets.token_urlsafe(32)` gives ~43 chars of URL-safe base64. Long enough that brute-force is infeasible, short enough that the magic URL fits in a Telegram message.
+- **Owner's URL**: bookmark it. Once RLS is on, losing the token = losing access to your own vault until you re-DM `/start` (the bot will give you back the same token, the same vault).
+- **Auto-deploy on push**: every `git push origin main` rebuilds Vercel. Test the C-4 home rewrite locally (`npm run dev`) before pushing.
 
 ---
 
-## Gotchas to remember
+## After multi-user: what's next
 
-- **Kill bot by PID, not `pkill -f`.** Multiple zombie bot.py processes from earlier sessions caused every "phantom polling" bug we hit. See CLAUDE.md "Killing the bot reliably".
-- **NEVER touch `setWebhook`.** Use `bot/close` API to release session state. The webhook eviction trick is what got @supernuggets_bot display-banned.
-- **NEVER paste tokens in chat.** Use `setup_env.sh` for any secret rotation. The script keeps current values on blank input.
-- **Telegram HTML escape** — use `html.escape(s, quote=False)`, never `quote=True`. Numeric entities like `&#x27;` break Telegram parsing.
-- **`load_dotenv(override=True)`** — already in `bot.py`. Don't remove it.
-- **Supabase REST `or` filter syntax** is unusual (`or=(col.op.val,col.op.val)`); confirm via the Supabase docs page before debugging.
+1. **Bot menus** (`/recent`, `/today`, `/folder`, `/search`) — paginated browse inside Telegram. Self-contained, ~1-2 hours.
+2. **Weekly digest scheduler** — APScheduler hits owner with Sunday-evening summary.
+3. **Deploy bot to Railway** — `docs/DEPLOYMENT.md` has the playbook.
+4. **Native TikTok photo carousel support** (HIGH backlog) — Playwright build, 1-2 days.
+5. **Magic URL hardening** — regenerate-token command, login-by-Telegram (if multi-device gets real).
 
----
-
-## After menus: what's next
-
-1. **Weekly digest scheduler** — APScheduler hits the user with a Sunday-evening summary of the week's nuggets. Cron-style trigger inside the bot process.
-2. **Deploy bot to Railway** — Procfile already exists; just need to wire env vars in the Railway dashboard. See `docs/DEPLOYMENT.md` for the playbook.
-3. **TikTok photo carousel native support** (HIGH backlog) — biggest missing feature. Four implementation paths documented in CLAUDE.md backlog; recommend Playwright as the first attempt.
-4. **Magic URL multi-user** (Phase C) — `supernuggets.app/u/<token>` per-user vaults, RLS, fix frontend persistence bug.
-
-User profile: non-technical. Explain steps before running. Confirm before destructive actions. They asked for this explicitly: "Challenge their decisions when you disagree."
+User profile: non-technical. Explain steps before running. Confirm before destructive actions (especially the RLS step). Challenge their decisions when you disagree — they asked for this explicitly.
