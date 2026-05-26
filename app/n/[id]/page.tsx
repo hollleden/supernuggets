@@ -13,6 +13,7 @@ import { FolderEditor } from '@/components/vault/folder-editor'
 import { TagEditor } from '@/components/vault/tag-editor'
 import { DeleteButton } from '@/components/vault/delete-button'
 import { SearchBar } from '@/components/vault/search-bar'
+import { sourceHeaderLine } from '@/lib/nuggets'
 
 // Pinterest-style detail page. Top: sticky search bar (no breadcrumb / no back —
 // browser back handles nav). Article: 2/3 content + 1/3 related rail on desktop.
@@ -104,6 +105,34 @@ export default async function NuggetPage({
             <h1 className="font-mono text-2xl md:text-3xl font-extrabold uppercase leading-tight text-foreground my-8">
               {nugget.title}
             </h1>
+
+            {/* SOURCE — sits between title and SUMMARY for URL-derived entries.
+                Matches the TG receipt's ↗ SOURCE block; uppercase mono, raw URL underneath. */}
+            {nugget.sourceInfo && (
+              <Section title="SOURCE">
+                <div className="font-mono text-sm leading-relaxed">
+                  <a
+                    href={nugget.sourceInfo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-foreground hover:bg-foreground hover:text-background underline underline-offset-2 decoration-1 uppercase tracking-wide font-bold"
+                  >
+                    <span>↗</span>
+                    <span>{sourceHeaderLine(nugget.sourceInfo) || 'OPEN ORIGINAL'}</span>
+                  </a>
+                  <div className="mt-1 text-muted-foreground break-all">
+                    <a
+                      href={nugget.sourceInfo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-foreground"
+                    >
+                      {nugget.sourceInfo.url}
+                    </a>
+                  </div>
+                </div>
+              </Section>
+            )}
 
             {nugget.summaryBullets.length > 0 && (
               <Section title="SUMMARY">

@@ -103,6 +103,55 @@ Bot status replies use bracketed text tags, never emojis:
 
 ---
 
+## URL handler reference
+
+**Detection.** `pipeline.find_first_url(text)` regex matches `https?://[^\s<>"]+`. `on_text` runs this first; if a URL is found, the message is routed to `_handle_url` and any non-URL text becomes the `caption` (USER NOTE for the AI). Otherwise it falls through to the text pipeline.
+
+**Two-path flow inside `_handle_url`:**
+1. `pipeline.extract_url_info(url)` — yt-dlp `extract_info` without download. Returns the info dict on success, or raises:
+   - `URLRejected(tag, message)` — we recognise the URL but refuse to ingest. Tags: `TIKTOK_PHOTO`, `YT_SHORTS_ONLY`, `VIDEO_TOO_LONG`. Bot replies `[limit] {tag} — {message}`.
+   - `URLUnsupported` — yt-dlp doesn't recognise the URL at all. Caller falls through to article extraction.
+2. If yt-dlp succeeded: `url_info_kind(info)` returns `'video'` or `'images'`.
+   - **video** → `download_url_video(info)` downloads best mp4 ≤ 25MB to a tempdir → `transcribe_video` (Whisper) → `build_video_url_input` formats SOURCE/TITLE/DESCRIPTION/USER NOTE/TRANSCRIPT for the AI → `process_text(ai_input, source)` → `_save_and_reply` with `media_type="video_url"`. `raw_content` stored in DB is the clean Whisper transcript (source meta lives in the SOURCE footer, no need to duplicate).
+   - **images** → `download_url_images(info, max_images=10)` fetches via `httpx` with browser headers → `process_images(images, enriched_caption, source)` (the vision pipeline gets a `"From {platform} · @{uploader}"` framing prepended to the caption) → `_save_and_reply` with `media_type="image_url"`.
+3. If yt-dlp raised `URLUnsupported`: `extract_article(url)` runs `trafilatura.extract` on a browser-headered fetch → returns `{body, title, author, sitename, source_url}`. If body is empty/short, the bot replies `[unsupported] URL_NOT_RECOGNIZED`. Otherwise → `build_article_input` formats SOURCE/TITLE/USER NOTE/ARTICLE for the AI → `process_text(ai_input, source)` → `_save_and_reply` with `media_type="article"`.
+
+**Per-platform duration caps** (in `pipeline.URL_DURATION_CAPS`, matched against `extractor` field lowercased):
+
+| Platform | Cap | Rationale |
+|---|---|---|
+| youtube | 60s | Shorts only; URL must contain `/shorts/`, else `YT_SHORTS_ONLY` |
+| tiktok | 600s | Current TikTok creator native cap (10 min) |
+| instagram | 180s | Reels are 90s; allow short IG video posts up to 3 min |
+| twitter / x | 140s | Twitter/X native cap is 2:20 |
+| pinterest | 300s | Default safety cap |
+| reddit | 300s | Default safety cap |
+| threads | 300s | Default safety cap |
+| any other | 300s | `URL_DURATION_CAP_DEFAULT` — Whisper costs $0.006/min, so 5 min = $0.03 worst case |
+
+**TikTok `/photo/` detection.** yt-dlp can't ingest TikTok photo carousels (TikTok serves photos via JS, no SSR'd URLs in HTML; the `__UNIVERSAL_DATA_FOR_REHYDRATION__` blob no longer carries `imagePost.images` URLs as of 2026-05). Before calling yt-dlp, `extract_url_info` resolves short links (`vt.tiktok.com/...`) via httpx HEAD/GET to learn the canonical URL, then checks for `/photo/` in the path. If present → raise `URLRejected("TIKTOK_PHOTO", ...)` with the SaveAsBot workaround pointer. The full implementation paths for native support are in the backlog (HIGH priority).
+
+**Source URL storage convention.** Embedded as FLAT keys in the existing `enrichment` JSON column (no schema migration). Keys (when present):
+- `source_url` — canonical URL (yt-dlp `webpage_url`, or article URL)
+- `source_platform` — yt-dlp `extractor` name or `"Article"`
+- `source_uploader` — yt-dlp `uploader` / `channel` / `uploader_id`, or article `sitename`
+- `source_duration_s` — only for videos
+- `source_kind` — `"video"`, `"images"`, or `"article"`
+
+Frontend (`lib/nuggets.ts`):
+- `parseSourceInfo(enrichmentJson)` builds a `SourceInfo` object
+- `sourceHeaderLine(info)` formats `"TikTok · @insiderforce · 1:19"` for both card + detail
+- Card shows the header line above tags; detail page renders a full SOURCE section between title and SUMMARY
+
+Receipt rendering (`pipeline.render(parsed, raw_content, source=...)`):
+- SOURCE footer is appended LAST (after TAGS), matching the receipt aesthetic preference
+- `_render_source_block` outputs `↗ TikTok · @insiderforce · 1:19` then the raw URL line
+- TRANSCRIPT budget (`TG_MAX_LEN - rest_len - trailing_len - ...`) accounts for the SOURCE footer so transcripts don't push past Telegram's 4096-char cap
+
+**Inline keyboard.** `entry_keyboard(entry_id, source_url=None)` adds `↗ SOURCE` between `⬈ OPEN` and `⌫ DELETE` when `source_url` is provided. Telegram URL-button URLs must be `https://`; localhost or invalid URLs get the button silently dropped. Known minor UX gap: after a user taps DELETE → CANCEL, the restored keyboard doesn't re-include the SOURCE button (we'd need to refetch from DB to know the source URL again). The URL is still visible in the receipt text, so it's a tolerable gap.
+
+---
+
 ## Supabase
 
 - **Project ID**: `yncxcnfgiwdfnxkigodo`
@@ -155,23 +204,23 @@ message_id (bigint, nullable)
 
 ---
 
-## Current state — Bot (✅ text + image handlers complete, 🚧 video handler next)
+## Current state — Bot (✅ text/image/video/URL/article handlers ALL complete — ingestion pipeline feature-complete)
 
 Location: `~/supernuggets-bot/` · venv at `.venv/`
 
 | File | Role |
 |---|---|
-| `bot.py` | aiogram entry: `/start`, text + photo handlers, album debouncer, DELETE flow, typing-loop, quota check. Helpers: `_check_quota_and_reject`, `_save_and_reply`, `_err`, `_time_until_utc_midnight`, `_sniff_mime`, `_download_photo_bytes`, `_handle_photo_batch`, `_flush_album`, `_forget_rejected_album` |
-| `pipeline.py` | Tool-use call to Claude (Haiku for text, Sonnet for vision, with prompt caching + 60s timeout) → render receipt-format HTML. Image optimizer (Pillow resize/JPEG re-encode) lives here. |
-| `database.py` | Supabase REST: `save_entry`, `delete_entry`, `get_today_count`. Uses UTC date for quota + `created_at`. |
-| `requirements.txt` | aiogram, python-dotenv, httpx, anthropic, **Pillow** |
-| `setup_env.sh` | Interactive prompt to populate `.env` without text-editor headaches |
-| `.env` | Secrets (gitignored) |
+| `bot.py` | aiogram entry: `/start`, text + photo + video + URL handlers, album debouncer, DELETE flow, typing-loop, quota check. Helpers: `_check_quota_and_reject`, `_save_and_reply` (now accepts `source` dict), `_err`, `_time_until_utc_midnight`, `_sniff_mime`, `_download_photo_bytes`, `_handle_photo_batch`, `_flush_album`, `_forget_rejected_album`, `_handle_url`, `_ingest_url_video`, `_ingest_url_images`, `entry_keyboard(entry_id, source_url=None)` (adds ↗ SOURCE button when present) |
+| `pipeline.py` | Tool-use call to Claude (Haiku for text, Sonnet for vision, with prompt caching + 60s timeout) → render receipt-format HTML with optional SOURCE footer. Helpers: image optimizer (Pillow), Whisper `transcribe_video`, yt-dlp `extract_url_info`/`download_url_video`/`download_url_images`, trafilatura `extract_article`, prompt builders `build_video_url_input`/`build_article_input`, source-dict builders `source_from_info`/`source_from_article`. URL routing + duration caps live here. |
+| `database.py` | Supabase REST: `save_entry`, `delete_entry`, `get_today_count`. Uses UTC date for quota + `created_at`. Source URL is embedded in the existing `enrichment` JSON column — no schema migration. |
+| `requirements.txt` | aiogram, python-dotenv, httpx, anthropic, **Pillow**, **openai** (Whisper), **yt-dlp**, **trafilatura** |
+| `setup_env.sh` | Interactive prompt to populate `.env` without text-editor headaches. **Use this for `BOT_TOKEN` rotations — never paste tokens in chat.** |
+| `.env` | Secrets (gitignored). Required keys: `BOT_TOKEN`, `ADMIN_ID`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` (Whisper). |
 | `Procfile` | Railway entry: `worker: python bot.py` |
 
 **Run locally**: `cd ~/supernuggets-bot && .venv/bin/python bot.py` → polling loop. See [RUN-LOCALLY.md](RUN-LOCALLY.md).
 
-**Bot username**: `@supernuggets_bot` (id `8945896609`).
+**Bot username**: `@supernuggetss_bot` (id `8799818981`, double-s spelling — see "Bot history" below).
 
 **Owner Telegram user_id**: `445276` (set as `ADMIN_ID`).
 
@@ -194,13 +243,23 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 - **Tool use** — both modes use the `save_nugget` Anthropic tool with `tool_choice` forced. Cleaner output, no JSON-parsing fragility, fewer output tokens.
 - **Schema strictness** — `additionalProperties: false`, `minItems`/`maxItems` (needed because Haiku otherwise leaked XML `<parameter>` syntax)
 - **Haiku 4.5 for text mode** — ~70% cheaper than Sonnet for the structured-classification task
-- **Helpers extracted** — `_check_quota_and_reject` and `_save_and_reply` shared by text + photo paths
+- **Helpers extracted** — `_check_quota_and_reject` and `_save_and_reply` shared by text + photo + video + URL paths
 - **No-emoji aesthetic** — bracketed status tags (`[err]`, `[batch]`, `[FOLDER]`); `@holeden` footer on real errors
+- **Video handler** — `F.video | F.video_note`, 20MB Telegram cap pre-flight, Whisper transcription (`pipeline.transcribe_video`), caption support (prepended to AI input), graceful fallback on silent clips (`[err] TRANSCRIPTION_FAILED`), `media_type="video"`. Whisper costs $0.006/min.
+- **URL handler** — `on_text` detects http(s) URLs via regex; routes to `_handle_url`. Two paths:
+  - **Media (yt-dlp)**: TikTok video, Instagram Reel/photo carousel, YouTube Shorts (`/shorts/` only), Twitter/X video, Pinterest, Reddit, Threads, etc. Branches on `url_info_kind(info)` → 'video' (download mp4 → Whisper → text pipeline) or 'images' (download images → vision pipeline). Per-platform duration caps in `URL_DURATION_CAPS` (YT=60s/Shorts, TT=600s, IG=180s, Twitter=140s, default=300s). Saves with `media_type="video_url"` / `"image_url"`.
+  - **Article (trafilatura fallback)**: when yt-dlp raises `URLUnsupported`, the bot fetches with browser headers and runs `trafilatura.extract` for main text. Paywalled articles return only public lede — accepted ethically (no paywall bypass). Saves with `media_type="article"`.
+- **TikTok `/photo/` rejection** — yt-dlp can't extract TikTok photo carousels (URLs are JS-rendered, no SSR'd photo URLs in HTML; `__UNIVERSAL_DATA_FOR_REHYDRATION__` no longer carries them as of 2026-05). Bot pre-checks the resolved URL and replies `[limit] TIKTOK_PHOTO — forward to @SaveAsBot, then send images back here`. See backlog for native-support implementation paths.
+- **YouTube non-Shorts rejection** — only `/shorts/` URLs accepted; regular YT videos return `[limit] YT_SHORTS_ONLY`. Hours-long videos would blow the Whisper budget.
+- **Source URL persistence** — for every URL-derived entry, the bot's `_save_and_reply` embeds `source_url`, `source_platform`, `source_uploader`, `source_duration_s`, `source_kind` as FLAT keys in the existing `enrichment` JSON column (next to `mentioned`). No schema migration needed. Frontend parser `parseSourceInfo` reads them back. Receipt renders a SOURCE footer (after TAGS) and an inline `↗ SOURCE` button alongside `⬈ OPEN` and `⌫ DELETE`. Web UI shows a SOURCE section between title and SUMMARY on the detail page + a `↗ {platform} · @{uploader}` line above tags on cards.
+- **OCR field forced required** — `ocr_text` is now in the `save_nugget` tool schema's `required` array (was optional). Sonnet kept skipping verbatim OCR for text-heavy images to save tokens; making it required fixed it. Text mode emits `""` per the field description.
+- **`load_dotenv(override=True)`** — required in `bot.py` so the shell's pre-set empty env vars (notably `ANTHROPIC_API_KEY=""`) don't shadow real values from `.env`. Plain `load_dotenv()` won't override.
 
 ### Backlog (deferred)
 
 | Priority | Item | Where |
 |---|---|---|
+| **HIGH** | **Native TikTok photo carousel support** — current behavior rejects `/photo/` URLs with `[limit] TIKTOK_PHOTO` and points to @SaveAsBot. yt-dlp doesn't help (TikTok serves photo posts via client-side JS, no SSR'd image URLs). Four implementation paths, ranked: (a) **Headless browser** (Playwright) — $0, ~150MB Chromium dep, slow per request (~5-10s), TikTok actively fingerprints browsers. (b) **Paid scraping API** (RapidAPI/Apify/ScrapingBee) — $10-50/month, fast, reliable; vendor handles the cat-and-mouse. (c) **Reverse-engineer TikTok's mobile API endpoint** — $0, breaks every few months. (d) **Programmatic SaveAsBot forwarding** — $0 but depends on SaveAsBot staying free and the bot-to-bot forwarding ToS. **Recommendation when revisited:** start with (a) for the dev experience, fall back to (b) if reliability matters more than cost. Estimated effort: 1-2 days. | `pipeline.py` (new `extract_tiktok_photo` helper) + `bot.py` (replace the `[limit] TIKTOK_PHOTO` branch in `_handle_url` with the new path) |
 | Medium | **Duplicate detection** — bot checks whether the same URL / video / image hash already exists in the user's vault before processing; refuses with `[WARN] DUPLICATE_DETECTED` showing the existing entry id + date. Admin can bypass (`/force` reply, or `[ ⚠ FORCE_INGEST ]` inline button on the dup warning). Don't waste Claude tokens re-processing what's already saved. | `bot.py` + `database.py` (add `has_dup_for_user(user_id, key)`); needs a `content_hash` column for images + URL-normalized lookup for links |
 | Medium | `AsyncAnthropic` + `httpx.AsyncClient` instead of `asyncio.to_thread` | `bot.py` |
 | Medium | Resize/compress originals saved in DB (web grid currently shows nothing for image entries) | future schema |
@@ -209,6 +268,11 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 | Low | Module-level `httpx.Client` for connection reuse | `database.py` |
 | Low | Add `media_count` column + persist Telegram `file_id`s so web grid can show thumbnails | schema migration |
 | Low | Optional: local OCR via Tesseract for text-heavy images (cuts vision cost ~70-90% on screenshots) | new dep |
+| Medium | **Voice messages** (`F.voice`) — same Whisper pipeline as video, no caption. ~10 lines mirroring `on_video`. | `bot.py` |
+| Medium | **Audio files** (`F.audio`) — same Whisper pipeline, may have title/performer/caption metadata worth prepending. | `bot.py` |
+| Low | **Animated GIFs** (`F.animation`) — Telegram delivers as silent mp4 in `.animation` field. Mostly silent so Whisper returns nothing; might pair with future vision-on-first-frame. | `bot.py` |
+| Low | **Video sent as document** (`F.document` with `mime_type` starting `video/`) — common from Apple Photos "Save Original" mode. Route through the same video pipeline. | `bot.py` |
+| Low | **Bulk video albums** — Telegram allows multi-video albums (same `media_group_id` mechanism as photos). Current handler treats each video as a separate entry. Build `_handle_video_batch` with concatenated transcripts (`--- clip 2 ---` separators) and `media_type="video_group"`. | `bot.py` |
 
 ---
 
@@ -222,15 +286,15 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 1. ✅ Scaffold + text handler (Telegram → Claude → Supabase → reply → frontend grid)
 2. ✅ Image handler (single + albums, image optimizer, tool use, Haiku/Sonnet split, no-emoji aesthetic)
 3. ✅ Brand & design spec locked — see [BRAND.md](BRAND.md)
+4. ✅ **Web UI redesign** — BRAND.md "tactical neo-retro blueprint" spec fully applied. Deployed to Vercel.
+5. ✅ **Video handler** — Whisper transcription, caption support, 20MB Telegram size cap, silent-clip handling.
+6. ✅ **URL handler** — yt-dlp for media (TikTok video, IG Reel/photo, YT Shorts, Twitter, Pinterest, Reddit, Threads) + trafilatura fallback for articles. Per-platform duration caps, source URL stored in `enrichment` JSON, ↗ SOURCE button + footer in receipts, web UI displays source on cards + detail page.
 
 **Next, in order:**
-1. ✅ **Web UI redesign** — BRAND.md "tactical neo-retro blueprint" spec fully applied. Deployed to Vercel.
-2. **Apply BRAND.md bot copy to `bot.py`** — replace current bot strings with the mainframe-style copy from BRAND.md §3. Small follow-up, can pair with the video handler or do solo.
-3. **Video handler** ← **NEXT** — download video bytes → Whisper transcription → pipeline → save with `media_type="video"`
-4. **URL handler** — `yt-dlp` to download from TikTok/Instagram/YouTube/etc. → branch into image or video handler based on content type
-5. **Menus** — `/recent`, `/today`, `/folder <name>`, `/search <q>` inline keyboards (TeleForge patterns: https://github.com/zerox9dev/TeleForge)
-6. **Scheduler** — APScheduler for weekly/quarterly digests (port from old `digest.py`)
-7. **Deploy to Railway**
+1. **Apply BRAND.md bot copy to `bot.py`** — replace current bot strings with the mainframe-style copy from BRAND.md §3. Small follow-up.
+2. **Menus** — `/recent`, `/today`, `/folder <name>`, `/search <q>` inline keyboards (TeleForge patterns: https://github.com/zerox9dev/TeleForge)
+3. **Scheduler** — APScheduler for weekly/quarterly digests (port from old `digest.py`)
+4. **Deploy to Railway**
 
 ## Phase C — Cleanup + magic URL
 
@@ -276,6 +340,52 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 
 ---
 
+## Bot history (which token is live)
+
+| Date | Bot | Status | Why retired |
+|---|---|---|---|
+| pre-2026-05-24 | first listo bot (old leaked token) | dead | token leaked in screenshot |
+| 2026-05-24 → 2026-05-25 | `@supernuggets_bot` id `8945896609` | display-banned by Telegram | Claude (this assistant) ran a `setWebhook` → `deleteWebhook` eviction trick pointing at `google.com/__supernuggets_evict__` to kick a stale cloud poller; Telegram's automated abuse detection flagged the pattern (foreign domain + sub-second lifetime + suspicious path) and restricted the bot's profile display. API still responded (`getMe` ok) but users saw "This bot can't be displayed because it violated Telegram's Terms of Service". Token still valid; user should `/revoke` via BotFather + ideally hunt down the cloud poller that was racing us. |
+| 2026-05-25 → 2026-05-26 | `@supernuggetss_bot` id `8799818981` (double-s) — first token | token leaked via chat paste | user pasted the fresh BotFather token in plain text in a Claude chat session. Within an hour, `getUpdates` returned a 409 Conflict — something else was actively polling. Bot itself was never banned, but the token had to be rotated. Going forward, tokens go through `setup_env.sh` / `nano .env`, never the chat. |
+| 2026-05-26 → now | **`@supernuggetss_bot` id `8799818981`** (rotated token) | ✅ live | second token for the same bot, issued via BotFather `/revoke`. Same username + bot id, fresh token in `.env` only. |
+
+## Telegram API safety (do NOT repeat the bans)
+
+- **NEVER** paste a bot token in plain text in a Claude chat, screenshot, or anywhere else that can be logged. Bots scrape chat transcripts and Telegram-token-format strings get grabbed within minutes. If the user needs to share a token, they paste it directly into `.env` via `nano` or `setup_env.sh` — Claude never needs to see it.
+- **NEVER** call `setWebhook` with a domain you don't own (no `google.com`, no third-party hosts, no random URLs). Telegram's abuse detection treats this as botnet behavior.
+- **NEVER** do a set-then-delete-webhook eviction trick to take over polling from another instance. Even with a domain you own, sub-second webhook lifetimes look automated and risk a flag.
+- **DO** ask the user where else the bot might be running before reaching for API tricks. Stale Railway/cloud pollers are the usual cause of `TelegramConflictError`.
+- **DO** use `drop_pending_updates=True` in `dp.start_polling()` for clean restarts, never for eviction.
+- If `TelegramConflictError` appears again, the right move is: `/revoke` the token via BotFather (rotates the token, keeps the bot), not API trickery.
+
+## Killing the bot reliably (do NOT trust `pkill -f`)
+
+`pkill -f "supernuggets-bot.*bot.py"` is **NOT reliable** on macOS with the framework Python. The actual `ps -ef` cmdline of a venv-launched bot is something like:
+```
+/Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python bot.py
+```
+…which `pkill -f "supernuggets-bot.*bot.py"` matches but the venv wrapper sometimes intercepts and ignores the signal. Across a long session, zombie `bot.py` processes accumulate — each holding its own getUpdates session against Telegram. That's the mechanism behind nearly every "phantom poller" / `TelegramConflictError` we hit. **Most damaging consequence:** the original @supernuggets_bot display ban was a direct result of running the `setWebhook` eviction trick to kick what we thought was a remote poller but was actually our own zombie processes.
+
+**The right way to verify nothing is leaked and clean up:**
+```bash
+# 1. List every local Python connected to Telegram's edge servers.
+lsof -nP -iTCP -sTCP:ESTABLISHED | awk '/149\.154\./ && /Python/ {print $1, $2, $9}'
+
+# 2. Kill by PID with SIGKILL — leaves no zombies, no graceful shutdown drama.
+kill -9 <pid> <pid> <pid>
+
+# 3. Confirm the connections are gone (the lsof above should return nothing).
+
+# 4. (Optional but clean) Tell Telegram to release any lingering session state:
+curl -s "https://api.telegram.org/bot${BOT_TOKEN}/close"   # → {"ok":true,"result":true}
+```
+`/close` is the official, sanctioned API call for releasing a bot's polling session. It is NOT the webhook trick — it does not touch URLs and does not trip abuse detection. Always prefer it over webhook gymnastics.
+
+Diagnostic checklist when `TelegramConflictError` appears:
+1. `lsof | grep telegram` — local zombies? (kill them by PID, not by name)
+2. `getUpdates` directly via curl — does Telegram still report conflict after zombies are dead?
+3. If yes after step 1+2: ask the user whether they have a cloud deploy with this token. Do NOT call `setWebhook`.
+
 ## Gotchas you'd otherwise re-discover
 
 - **Telegram HTML parser** only accepts named entities `&amp; &lt; &gt; &quot;`. Numeric like `&#x27;` (apostrophe) gets the whole message rejected. Always escape with `html.escape(s, quote=False)`.
@@ -287,4 +397,10 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 - **Haiku tool use needs strict schemas** — Haiku 4.5 leaks XML-style `<parameter name="...">` tags into JSON array fields if the tool schema is loose. Always set `additionalProperties: false` on objects and `minItems`/`maxItems` on arrays. Sonnet doesn't have this issue.
 - **Telegram album items arrive as separate messages** with a shared `media_group_id`. Use a debounce buffer (1.5s) keyed by group id so albums become one entry. Captions only attach to the FIRST item.
 - **Pillow opens HEIC/PNG/GIF/WebP/JPEG** but JPEG can't carry alpha — flatten RGBA/LA/P onto white before re-encoding, else PIL raises.
-- **`load_dotenv()` without args sometimes doesn't override** if the env var is already set to empty. Use `load_dotenv(".env", override=True)` in test scripts.
+- **`load_dotenv()` without args sometimes doesn't override** if the env var is already set to empty. Use `load_dotenv(".env", override=True)` in test scripts. `bot.py` now calls `load_dotenv(override=True)` unconditionally — fixes a real-world failure where an empty `ANTHROPIC_API_KEY` shell export shadowed the real `.env` value.
+- **`ocr_text` must be in the `save_nugget` tool's `required` array** — Sonnet (and Haiku) will skip filling it to save output tokens otherwise, causing TRANSCRIPT to show `[image — no text extracted]` even when there's text everywhere. Text mode is taught (via the VISION_ADDENDUM being absent + the field description) to emit `""`.
+- **`__UNIVERSAL_DATA_FOR_REHYDRATION__` on TikTok no longer carries photo URLs** as of 2026-05. The script tag exists and has a 250k+ char JSON blob, but image URLs are loaded client-side via JS. Don't waste time scraping the SSR'd HTML. Native TikTok photo support requires Playwright or a paid API — see backlog.
+- **yt-dlp returns `'tiktok'`, `'instagram'`, `'youtube'`, `'twitter'`, etc. as the `extractor` field, lowercase.** Match against substrings, not exact equality, since `extractor` for YouTube Shorts may be `'youtube:shorts'` or similar variants.
+- **Whisper accepts the mp4 container directly** (peels out the audio internally) — no need to ffmpeg-extract audio. Cap input at 25MB (Whisper's hard limit). yt-dlp's `format: 'best[filesize<25M]/best[filesize_approx<25M]/mp4/best'` picks a fitting stream.
+- **Telegram URL-button URLs must be `https://` and resolvable** — `http://localhost:3000/...` gets the button silently dropped (or rejected on send). The `OPEN` button gates on `WEB_URL.startswith("https://")` for this reason; `SOURCE` button gates the same way.
+- **`trafilatura` does NOT bypass paywalls** — it extracts what an anonymous browser tab sees. Paywalled articles yield only the public lede (still useful for "what was this article about" recall). Don't add login/cookie support without an explicit user-side credential flow.
