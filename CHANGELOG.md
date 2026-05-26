@@ -14,6 +14,31 @@ All notable changes to supernuggets. Format loosely follows [Keep a Changelog](h
 
 ---
 
+## [0.5.1] — 2026-05-26 — "Cost cut + UX polish"
+
+### Added
+- **Video echo for URL videos** — after yt-dlp downloads a TikTok/IG/YT-Shorts/Twitter/etc. video, the bot uploads the mp4 to Telegram chat so the user can re-watch from history without revisiting the source. Receipt arrives after as a separate message. Filename pattern: `{platform}_{uploader}.mp4`.
+- **SaveAsBot signature stripping** (`pipeline.clean_user_caption`) — removes `"Рад был помочь! Ваш, @SaveAsBot"` (Russian) + English variants from user captions before AI ingest. Applied to photo, video, and URL handlers.
+
+### Changed
+- **Vision model switched from Sonnet 4.6 → Haiku 4.5** after A/B test confirmed quality holds on a text-heavy 8-image skincare album. ~70% cheaper per call. Revert via `CLAUDE_MODEL_VISION=claude-sonnet-4-6` in `.env`.
+- **Tightened per-platform duration caps** in `URL_DURATION_CAPS`:
+  - TikTok: 600s → 180s
+  - Instagram: 180s → 90s
+  - Pinterest / Reddit / Threads / default: 300s → 180s
+  - YouTube Shorts (60s) and Twitter/X (140s) unchanged
+  - Worst-case URL ingest Whisper bill: $0.06 → $0.018 (~70% reduction).
+
+### Ops
+- Documented `kill -9 <pid>` as the reliable way to stop bot processes (vs `pkill -f`, which doesn't catch all macOS framework-Python instances). Multiple zombie bot processes from earlier sessions had been causing phantom `TelegramConflictError` events — including the original @supernuggets_bot display ban incident, which is now understood as self-inflicted via the (also-misguided) webhook eviction trick.
+- Documented Telegram's `bot{TOKEN}/close` API as the sanctioned way to release session state (replaces the `setWebhook → deleteWebhook` trick that triggered Telegram's abuse detection).
+- Bot history extended with the second @supernuggetss_bot token rotation (token-paste leak).
+
+### Fixed
+- `setup_env.sh` bug: previous version added a leading newline to every captured value via a misplaced `echo`, corrupting `.env` on save. Rewrote to use `printf >&2` for cursor advancement and global `RESULT` instead of command substitution. Companion script `fix_env.py` rejoins KEY=value lines that were split across two lines by the old bug.
+
+---
+
 ## [0.5.0] — 2026-05-26 — "Pipeline complete"
 
 ### Added

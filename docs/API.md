@@ -103,7 +103,7 @@ created_at  timestamptz default now()
 
 #### Constants
 - `MODEL_TEXT = "claude-haiku-4-5-20251001"` (env override: `CLAUDE_MODEL_TEXT`)
-- `MODEL_VISION = "claude-sonnet-4-6"` (env override: `CLAUDE_MODEL_VISION`)
+- `MODEL_VISION = "claude-haiku-4-5-20251001"` (env override: `CLAUDE_MODEL_VISION` — set to `claude-sonnet-4-6` to revert to the bigger model if vision quality regresses)
 - `MAX_TOKENS = 1200` — Claude output cap per call
 - `TG_MAX_LEN = 4000` — Telegram receipt length budget (reserves 96 from the 4096 limit)
 - `MAX_IMAGE_DIM = 1568` — Anthropic recommended max

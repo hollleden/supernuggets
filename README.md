@@ -85,7 +85,7 @@ Full setup including secret rotation: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 | Database | Supabase (Postgres) | Shared between bot + web; REST API; row-level security ready |
 | Bot framework | aiogram v3 (Python) | First-class async; clean handler/filter API |
 | AI — text | Claude Haiku 4.5 | ~70% cheaper than Sonnet for structured classification |
-| AI — vision | Claude Sonnet 4.6 | Vision quality still wants the bigger model |
+| AI — vision | Claude Haiku 4.5 | Switched from Sonnet 4.6 on 2026-05-26 after A/B test — quality holds at ~70% lower cost |
 | Transcription | OpenAI Whisper | $0.006/min, accepts mp4 directly |
 | Media downloader | yt-dlp | TikTok / IG / YouTube / Twitter / Pinterest / Reddit / Threads |
 | Article extractor | trafilatura | Mature, low-maintenance; honest about paywalls |
@@ -116,13 +116,13 @@ Enforced at the bot (Claude system prompt constrains output to this enum). Defin
 | Input | Cost per ingest |
 |---|---|
 | Text message | ~$0.001 |
-| Single image | ~$0.005 |
-| Image album (8) | ~$0.03 |
+| Single image | ~$0.002 (Haiku vision) |
+| Image album (8) | ~$0.005-0.008 (Haiku vision) |
 | 1-min video | $0.006 (Whisper) + ~$0.001 (Haiku) = $0.007 |
-| 10-min video (max) | ~$0.07 |
+| 3-min video (URL ingest max) | ~$0.019 |
 | Article (1k words) | ~$0.002 |
 
-Hard caps protect against runaway costs — per-platform duration limits enforce ~10-min worst-case Whisper spend.
+Hard caps protect against runaway costs — per-platform duration limits enforce 3-min worst-case Whisper spend ($0.018). As of 2026-05-26: ~70% off image/vision calls (Haiku vs Sonnet), ~40% off URL video Whisper bills (tightened duration caps).
 
 ---
 
