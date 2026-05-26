@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import type { Nugget, FolderType } from '@/lib/nuggets'
-import { FOLDER_COLOR_HEX } from '@/lib/nuggets'
+import { FOLDER_COLOR_HEX, sourceHeaderLine } from '@/lib/nuggets'
 
 interface NuggetCardProps {
   nugget: Nugget
@@ -47,9 +47,24 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         {nugget.title}
       </h3>
 
+      {/* SOURCE — present only for URL-derived entries. Sits above tags so
+          the platform/uploader is visible at-a-glance on the card. */}
+      {nugget.sourceInfo && (
+        <a
+          href={nugget.sourceInfo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="font-mono text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wide mt-auto pt-3 truncate"
+          title={nugget.sourceInfo.url}
+        >
+          ↗ {sourceHeaderLine(nugget.sourceInfo) || 'SOURCE'}
+        </a>
+      )}
+
       {/* Tags — bottom-pinned via flex-1 above. Plain text, clickable. */}
       {nugget.tags.length > 0 && (
-        <div className="flex flex-wrap gap-x-2 gap-y-1 mt-auto pt-3">
+        <div className={`flex flex-wrap gap-x-2 gap-y-1 ${nugget.sourceInfo ? 'pt-1' : 'mt-auto pt-3'}`}>
           {nugget.tags.slice(0, 3).map(tag => (
             <Link
               key={tag}

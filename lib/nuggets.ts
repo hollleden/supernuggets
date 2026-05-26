@@ -12,6 +12,14 @@ export interface FactCheck {
   searchQuery?: string
 }
 
+export interface SourceInfo {
+  url: string            // canonical original URL (yt-dlp webpage_url) or article URL
+  platform?: string      // 'TikTok', 'Instagram', 'YouTube', 'Article'…
+  uploader?: string      // creator handle or article sitename
+  durationS?: number     // for videos
+  kind?: 'video' | 'images' | 'article' | string
+}
+
 export interface Nugget {
   id: number
   title: string
@@ -27,6 +35,10 @@ export interface Nugget {
   factChecks: FactCheck[]
   transcript: string    // raw_content (user's original message) — NOT the bot's formatted_output
   extractedLinks: string[]
+  // URL-derived entries (TikTok video, Instagram Reel, Article, etc.) carry
+  // the original source URL — set by the bot's URL handler, surfaced as the
+  // ↗ SOURCE block on cards + detail pages.
+  sourceInfo?: SourceInfo
 }
 
 export type FolderType =
@@ -142,6 +154,25 @@ function extractLinks(text: string | null | undefined): string[] {
 // Strategy: walk every top-level key whose value is an array, flatten items
 // into a deduped {label, url} list. Synthesize Google search URLs when no
 // explicit url is given (matches the bot's invisible-link convention).
+// URL-derived entries (TikTok, Instagram, Article, etc.) tuck the source URL
+// + platform metadata into the same `enrichment` JSON blob, under flat keys
+// the bot's _save_and_reply uses. Absent for text/image entries from direct chat.
+function parseSourceInfo(raw: string | null | undefined): SourceInfo | undefined {
+  if (!raw) return undefined
+  let parsed: unknown
+  try { parsed = JSON.parse(String(raw).trim()) } catch { return undefined }
+  if (!parsed || typeof parsed !== 'object') return undefined
+  const obj = parsed as Record<string, unknown>
+  const url = typeof obj.source_url === 'string' ? obj.source_url.trim() : ''
+  if (!url) return undefined
+  const out: SourceInfo = { url }
+  if (typeof obj.source_platform === 'string') out.platform = obj.source_platform
+  if (typeof obj.source_uploader === 'string') out.uploader = obj.source_uploader
+  if (typeof obj.source_duration_s === 'number') out.durationS = obj.source_duration_s
+  if (typeof obj.source_kind === 'string') out.kind = obj.source_kind
+  return out
+}
+
 function parseMentioned(raw: string | null | undefined): Mentioned[] {
   if (!raw) return []
   let parsed: unknown
@@ -214,6 +245,7 @@ export function mapRowToNugget(row: EntryRow): Nugget {
   const summaryBullets = parseSummaryBullets(row.summary)
   const mentioned = parseMentioned(row.enrichment)
   const factChecks = parseFactChecks(row.fact_check)
+  const sourceInfo = parseSourceInfo(row.enrichment)
 
   const title =
     row.title?.trim() ||
@@ -243,5 +275,27 @@ export function mapRowToNugget(row: EntryRow): Nugget {
     factChecks,
     transcript: (row.raw_content ?? '').trim(),
     extractedLinks,
+    sourceInfo,
   }
+}
+
+/** Format seconds into m:ss or h:mm:ss. Returns '' for 0/null. Mirrors the bot's _format_duration. */
+export function formatDuration(seconds: number | undefined | null): string {
+  if (!seconds) return ''
+  const s = Math.floor(seconds)
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+  return `${m}:${String(sec).padStart(2, '0')}`
+}
+
+/** Build the human-readable header line for a SOURCE block, e.g. "TikTok · @user · 1:19". */
+export function sourceHeaderLine(info: SourceInfo): string {
+  const bits: string[] = []
+  if (info.platform) bits.push(info.platform)
+  if (info.uploader) bits.push(info.uploader.startsWith('@') ? info.uploader : `@${info.uploader}`)
+  const dur = formatDuration(info.durationS)
+  if (dur) bits.push(dur)
+  return bits.join(' · ')
 }
