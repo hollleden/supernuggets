@@ -28,7 +28,7 @@ Old broken bot at `~/Desktop/listo/` (reference only — do NOT extend). Other s
 | Media downloader | yt-dlp | ⏳ not added yet |
 | Transcription (audio/video) | OpenAI Whisper API | ⏳ not added yet |
 | AI brain — text mode | Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) via tool use | ✅ |
-| AI brain — vision mode | Claude Sonnet 4.6 (`claude-sonnet-4-6`) via tool use | ✅ |
+| AI brain — vision mode | Claude Haiku 4.5 (same model) via tool use — switched from Sonnet 4.6 on 2026-05-26 after A/B test confirmed quality holds; ~70% cheaper | ✅ |
 | Prompt caching | ephemeral, on system + tools | ✅ ~90% input discount after first call |
 | Bot hosting | Railway | ⏳ not deployed |
 | Frontend hosting | Vercel | ✅ live — https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app |
@@ -116,18 +116,18 @@ Bot status replies use bracketed text tags, never emojis:
    - **images** → `download_url_images(info, max_images=10)` fetches via `httpx` with browser headers → `process_images(images, enriched_caption, source)` (the vision pipeline gets a `"From {platform} · @{uploader}"` framing prepended to the caption) → `_save_and_reply` with `media_type="image_url"`.
 3. If yt-dlp raised `URLUnsupported`: `extract_article(url)` runs `trafilatura.extract` on a browser-headered fetch → returns `{body, title, author, sitename, source_url}`. If body is empty/short, the bot replies `[unsupported] URL_NOT_RECOGNIZED`. Otherwise → `build_article_input` formats SOURCE/TITLE/USER NOTE/ARTICLE for the AI → `process_text(ai_input, source)` → `_save_and_reply` with `media_type="article"`.
 
-**Per-platform duration caps** (in `pipeline.URL_DURATION_CAPS`, matched against `extractor` field lowercased):
+**Per-platform duration caps** (in `pipeline.URL_DURATION_CAPS`, matched against `extractor` field lowercased — tightened 2026-05-26 to match real-world post lengths, not outer platform limits):
 
 | Platform | Cap | Rationale |
 |---|---|---|
 | youtube | 60s | Shorts only; URL must contain `/shorts/`, else `YT_SHORTS_ONLY` |
-| tiktok | 600s | Current TikTok creator native cap (10 min) |
-| instagram | 180s | Reels are 90s; allow short IG video posts up to 3 min |
+| tiktok | 180s | <5% of TikToks exceed 3 min in practice |
+| instagram | 90s | Reels native max; covers 99% of IG videos |
 | twitter / x | 140s | Twitter/X native cap is 2:20 |
-| pinterest | 300s | Default safety cap |
-| reddit | 300s | Default safety cap |
-| threads | 300s | Default safety cap |
-| any other | 300s | `URL_DURATION_CAP_DEFAULT` — Whisper costs $0.006/min, so 5 min = $0.03 worst case |
+| pinterest | 180s | Default safety cap |
+| reddit | 180s | Default safety cap |
+| threads | 180s | Default safety cap |
+| any other | 180s | `URL_DURATION_CAP_DEFAULT` — Whisper costs $0.006/min, so 3 min = $0.018 worst case |
 
 **TikTok `/photo/` detection.** yt-dlp can't ingest TikTok photo carousels (TikTok serves photos via JS, no SSR'd URLs in HTML; the `__UNIVERSAL_DATA_FOR_REHYDRATION__` blob no longer carries `imagePost.images` URLs as of 2026-05). Before calling yt-dlp, `extract_url_info` resolves short links (`vt.tiktok.com/...`) via httpx HEAD/GET to learn the canonical URL, then checks for `/photo/` in the path. If present → raise `URLRejected("TIKTOK_PHOTO", ...)` with the SaveAsBot workaround pointer. The full implementation paths for native support are in the backlog (HIGH priority).
 
@@ -254,6 +254,9 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 - **Source URL persistence** — for every URL-derived entry, the bot's `_save_and_reply` embeds `source_url`, `source_platform`, `source_uploader`, `source_duration_s`, `source_kind` as FLAT keys in the existing `enrichment` JSON column (next to `mentioned`). No schema migration needed. Frontend parser `parseSourceInfo` reads them back. Receipt renders a SOURCE footer (after TAGS) and an inline `↗ SOURCE` button alongside `⬈ OPEN` and `⌫ DELETE`. Web UI shows a SOURCE section between title and SUMMARY on the detail page + a `↗ {platform} · @{uploader}` line above tags on cards.
 - **OCR field forced required** — `ocr_text` is now in the `save_nugget` tool schema's `required` array (was optional). Sonnet kept skipping verbatim OCR for text-heavy images to save tokens; making it required fixed it. Text mode emits `""` per the field description.
 - **`load_dotenv(override=True)`** — required in `bot.py` so the shell's pre-set empty env vars (notably `ANTHROPIC_API_KEY=""`) don't shadow real values from `.env`. Plain `load_dotenv()` won't override.
+- **Tightened duration caps + Haiku for vision (2026-05-26, cost cut)** — `URL_DURATION_CAPS` shrunk to match what creators actually post (TikTok 180s, IG 90s, default 180s instead of 300s+) and `MODEL_VISION` defaults switched from Sonnet 4.6 → Haiku 4.5. Combined: per-album cost ~$0.005 (was ~$0.03), per-URL-video Whisper bill ~$0.018 worst case (was ~$0.06). Override `CLAUDE_MODEL_VISION` in `.env` to revert to Sonnet if quality ever regresses.
+- **Echo downloaded videos back to user** — after yt-dlp downloads a URL video, the bot uploads the mp4 to chat via `bot.send_video` (BufferedInputFile) before sending the receipt. User can re-watch from chat history without revisiting the original URL. Telegram caches the file_id for free re-use. Failure is non-fatal — the receipt sends regardless.
+- **SaveAsBot signature stripping** — `pipeline.clean_user_caption` removes `"Рад был помочь! Ваш, @SaveAsBot"` (Russian) and English variants from captions before AI ingest. Applied at every caption-read site: `_handle_photo_batch`, `on_video`, `_handle_url`. Extend `_BOT_SIGNATURES` regex list for additional helper bots.
 
 ### Backlog (deferred)
 

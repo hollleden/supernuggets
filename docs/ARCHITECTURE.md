@@ -130,10 +130,13 @@ URL where yt-dlp raises URLUnsupported
 - **Enforces the 12-folder enum natively** — Claude can't return an invalid folder
 - **Schema strictness matters** — `additionalProperties: false`, `minItems`/`maxItems`, all object fields `required`. Without this, Haiku leaked literal `<parameter name="...">` XML tags into array fields. Sonnet doesn't, but the schema constrains both consistently.
 
-### 3.2 Why Haiku for text, Sonnet for vision
-- Haiku 4.5 is ~3-5× cheaper for the structured-classification task
-- Vision quality on Haiku is real but inconsistent for OCR-heavy images — Sonnet's reliability won
-- Single `save_nugget` tool schema serves both (the `ocr_text` field is `required` but empty-string-OK for text mode)
+### 3.2 Why Haiku for everything (text AND vision)
+- Haiku 4.5 is ~3-5× cheaper than Sonnet 4.6 for the structured-classification task
+- Vision was initially on Sonnet because we worried about OCR quality on text-heavy images
+- A/B tested 2026-05-26 with an 8-image skincare album packed with text overlays: Haiku held up on verbatim OCR, mentioned-brand extraction, fact-check claims, and summary quality. The OCR field being `required` in the tool schema (not optional) is what makes both models behave — without that constraint, Sonnet skipped OCR to save tokens too.
+- Outcome: ~70% off every image/album call going forward
+- Single `save_nugget` tool schema serves both modes (the `ocr_text` field is `required` but empty-string-OK for text mode)
+- Revert is trivial: set `CLAUDE_MODEL_VISION=claude-sonnet-4-6` in `.env` and restart; no code change needed
 
 ### 3.3 Why prompt caching is non-negotiable
 - System prompt + tool schema run ~1400 tokens per call
@@ -203,12 +206,12 @@ Match each platform's native upload limits so anything a real creator posts is a
 | Platform | Native cap | Our cap | Whisper cost worst case |
 |---|---|---|---|
 | YouTube Shorts | 60s | 60s | $0.006 |
-| TikTok | 600s (10 min creator) | 600s | $0.06 |
-| Instagram | 180s (Reels=90s) | 180s | $0.018 |
+| TikTok | 600s (10 min creator) | 180s | $0.018 |
+| Instagram | 180s (Reels=90s) | 90s | $0.009 |
 | Twitter/X | 140s (2:20) | 140s | $0.014 |
-| Pinterest/Reddit/Threads/other | varies | 300s | $0.03 |
+| Pinterest/Reddit/Threads/other | varies | 180s | $0.018 |
 
-Per-URL ingest worst case ≈ $0.06. Hard ceilings prevent surprise bills.
+Per-URL ingest worst case ≈ $0.018 (was $0.06 pre-2026-05-26 tightening). The caps match what creators ACTUALLY post — <5% of TikToks exceed 3 min, IG Reels max out at 90s natively. Hard ceilings prevent surprise bills.
 
 ---
 
