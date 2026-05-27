@@ -137,15 +137,6 @@ export function Sidebar({
         </button>
       </div>
 
-      {/* Version stamp */}
-      <div
-        className={cn(
-          'p-2 border-t border-foreground font-mono text-[9px] font-bold text-muted-foreground uppercase tracking-widest text-center',
-          isCollapsed ? '[writing-mode:vertical-lr] rotate-180' : ''
-        )}
-      >
-        {isCollapsed ? 'V0.6' : 'SYS_V0.6'}
-      </div>
     </nav>
   )
 }
