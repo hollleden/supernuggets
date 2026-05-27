@@ -31,7 +31,7 @@ Old broken bot at `~/Desktop/listo/` (reference only — do NOT extend). Other s
 | AI brain — vision mode | Claude Haiku 4.5 (same model) via tool use — switched from Sonnet 4.6 on 2026-05-26 after A/B test confirmed quality holds; ~70% cheaper | ✅ |
 | Prompt caching | ephemeral, on system + tools | ✅ ~90% input discount after first call |
 | Bot hosting | Railway | ✅ live (deployed 2026-05-27) — auto-deploys from `hollleden/supernuggets-bot` main branch |
-| Frontend hosting | Vercel | ✅ live — https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app |
+| Frontend hosting | Vercel | ✅ live — https://supernuggets.vercel.app |
 
 ---
 
@@ -188,7 +188,7 @@ message_id (bigint, nullable)
 
 ## Current state — Web frontend (✅ Phase B UI complete — deployed)
 
-- **Live URL**: https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app
+- **Live URL**: https://supernuggets.vercel.app
 - **GitHub**: https://github.com/hollleden/supernuggets (public repo, `main` branch)
 - **Auto-deploy**: every `git push` → Vercel rebuilds automatically
 - UI rebuilt to BRAND.md "tactical neo-retro blueprint" spec: cream bg, black borders, monospaced type, 12-folder accent strips, dithered empty state
@@ -351,7 +351,7 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 5. **Legacy `/n/[id]` and `/stats` routes** become `redirect('/')` so old bot OPEN buttons land somewhere sane.
 6. **Landing page (`/`)** rewritten as a small "message @supernuggetss_bot to get your magic URL" card. Renders without AppShell.
 7. **Bot `entry_keyboard`** updated to build OPEN URLs as `{WEB_URL}/u/{token}/?focus={id}`. Adds an in-process `_token_cache` so receipts don't pay a DB roundtrip.
-8. **`WEB_URL=https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app`** added to `~/supernuggets-bot/.env` (left in place after revert — harmless, still used by the old v0.5 OPEN button).
+8. **`WEB_URL=https://supernuggets.vercel.app`** added to `~/supernuggets-bot/.env` (left in place after revert — harmless, still used by the old v0.5 OPEN button).
 
 ### What was deliberately deferred
 
@@ -361,7 +361,7 @@ Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Lo
 ### Other Phase C items unrelated to magic URL
 
 - **Fix frontend persistence bug** ✅ — verified during Phase C audit that this was *already done*. Edit/delete writes correctly via `supabaseAdmin` server actions. The old "bug" note in earlier handoffs is stale.
-- **Deploy frontend to Vercel** ✅ — already live at https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app (pre-Phase C state).
+- **Deploy frontend to Vercel** ✅ — already live at https://supernuggets.vercel.app (pre-Phase C state).
 - **`git init` in `~/supernuggets`** ✅ — pushed to https://github.com/hollleden/supernuggets.
 - **Delete old bot folders** (ASK user first): `~/listo-bot/`, `~/Desktop/listo/`, `~/Downloads/listo-app-ui/`, `~/listo-bot-docs/`
 
