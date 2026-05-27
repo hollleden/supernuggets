@@ -12,6 +12,9 @@ interface SearchHeaderProps {
   onFolderChange: (folder: FolderType) => void
   totalNuggets: number
   filteredNuggets: number
+  folderCounts: Record<string, number>
+  activeTag: string
+  onClearTag: () => void
 }
 
 const FOLDER_LABELS: Record<FolderType, string> = {
@@ -37,14 +40,32 @@ export function SearchHeader({
   onFolderChange,
   totalNuggets,
   filteredNuggets,
+  folderCounts,
+  activeTag,
+  onClearTag,
 }: SearchHeaderProps) {
   return (
     <header className="sticky top-0 bg-background z-30 border-b border-foreground">
-      {/* Search bar */}
+      {/* Search bar + active-tag chip + nugget count */}
       <div className="p-4 border-b border-foreground">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 flex-wrap">
           <SearchBar value={searchQuery} onChange={onSearchChange} />
-          <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground border border-foreground px-3 py-2 bg-card">
+
+          {/* Active tag chip — appears when user clicks a tag on a card */}
+          {activeTag && (
+            <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] uppercase tracking-wider px-2 py-[7px] shrink-0">
+              <span>#{activeTag}</span>
+              <button
+                onClick={onClearTag}
+                className="ml-1 leading-none hover:opacity-70 transition-opacity"
+                aria-label="Clear tag filter"
+              >
+                ×
+              </button>
+            </div>
+          )}
+
+          <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground border border-foreground px-3 py-2 bg-card ml-auto shrink-0">
             {filteredNuggets === totalNuggets
               ? `${totalNuggets} NUGGETS`
               : `${filteredNuggets}/${totalNuggets} FILTERED`}
@@ -52,11 +73,13 @@ export function SearchHeader({
         </div>
       </div>
 
-      {/* Folder filter tabs — manilla style. Each chip gets a 2px top accent in folder color. */}
+      {/* Folder filter tabs. Each chip gets a 2px top accent in folder color.
+          Count shown after the label so the user can see which folders have content. */}
       <div className="flex flex-wrap items-stretch">
         {FOLDERS.map((folder) => {
           const isActive = selectedFolder === folder
           const accentColor = FOLDER_COLOR_HEX[folder]
+          const count = folder === 'all' ? folderCounts.all : (folderCounts[folder] ?? 0)
           return (
             <button
               key={folder}
@@ -72,6 +95,14 @@ export function SearchHeader({
               style={{ borderTopColor: accentColor }}
             >
               {FOLDER_LABELS[folder]}
+              {count > 0 && (
+                <span className={cn(
+                  'ml-1.5 font-mono text-[8px] font-normal',
+                  isActive ? 'opacity-60' : 'text-muted-foreground'
+                )}>
+                  {count}
+                </span>
+              )}
             </button>
           )
         })}

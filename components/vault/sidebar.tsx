@@ -12,6 +12,7 @@ import {
   Sun,
   ChevronLeft,
   ChevronRight,
+  Bot,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -111,6 +112,13 @@ export function Sidebar({
         {/* Footer nav */}
         <div className="border-t border-foreground pt-2">
           <NavItem
+            icon={<Bot className="w-4 h-4" />}
+            label="BOT"
+            href="https://t.me/supernuggetss_bot"
+            isCollapsed={isCollapsed}
+            external
+          />
+          <NavItem
             icon={isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             label={isDarkMode ? 'LIGHT' : 'DARK'}
             onClick={onToggleDarkMode}
@@ -136,7 +144,7 @@ export function Sidebar({
           isCollapsed ? '[writing-mode:vertical-lr] rotate-180' : ''
         )}
       >
-        {isCollapsed ? 'V0.4' : 'SYS_V0.4'}
+        {isCollapsed ? 'V0.6' : 'SYS_V0.6'}
       </div>
     </nav>
   )
@@ -149,9 +157,10 @@ interface NavItemProps {
   isCollapsed: boolean
   onClick?: () => void
   href?: string
+  external?: boolean
 }
 
-function NavItem({ icon, label, isActive, isCollapsed, onClick, href }: NavItemProps) {
+function NavItem({ icon, label, isActive, isCollapsed, onClick, href, external }: NavItemProps) {
   const className = cn(
     'w-full rounded-none h-9 font-mono text-[10px] uppercase tracking-wider transition-colors inline-flex items-center',
     isCollapsed ? 'justify-center px-0' : 'justify-start px-3',
@@ -168,7 +177,11 @@ function NavItem({ icon, label, isActive, isCollapsed, onClick, href }: NavItemP
   )
 
   const node = href ? (
-    <Link href={href} className={className}>{inner}</Link>
+    external ? (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{inner}</a>
+    ) : (
+      <Link href={href} className={className}>{inner}</Link>
+    )
   ) : (
     <Button
       variant="ghost"

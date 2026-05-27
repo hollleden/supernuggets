@@ -267,24 +267,48 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 | Medium | **MENTIONED should be empty when there are no real entities** — currently it gets filled with whatever the AI can scrape, including bot handles, generic terms, etc. User-confirmed 2026-05-27. Mirror the existing FACT-CHECK "leave empty if nothing to verify" rule for MENTIONED. **Fix**: tweak the system prompt + tool schema description in `pipeline.py` to instruct: "MENTIONED is only for specific named entities (brands, products, people, places) discussed within the content. Leave empty if there are none — do not list helper bots, attribution sources, or generic categories." |
 | ✅ Shipped 2026-05-27 | **Russian "Спасибо, что пользуетесь" SaveAsBot signature wasn't being stripped.** Bot was treating it as content, producing receipts like `[CURATION] SAVEASBOT TOOL MENTION`. Fixed in `pipeline._BOT_SIGNATURES` with two changes: added a regex for the "Спасибо, что пользуетесь" variant, and updated all patterns to allow trailing morphology suffixes (`\S*` after `@SaveAsBot` catches Russian instrumental case `'ом`, etc.). 8 unit-tested cases pass. Commit `7b9a2cb` on `hollleden/supernuggets-bot`. |
 
-### Backlog (deferred)
+### Backlog
 
-| Priority | Item | Where |
+#### ✅ TIER 1 — Shipped 2026-05-27
+
+| Item | Notes |
+|---|---|
+| **Bot commands menu** (`/setcommands` + `/help`) | Registered with Telegram; menu appears on `/` in chat |
+| **Voice message handler** (`F.voice → Whisper`) | OGG/OPUS, same pipeline as video. `media_type="voice"` |
+| **Card CSS polish** — title `line-clamp-3` + "+N" border box | Prevents grid height blowout on long titles |
+| **Tag filtering** — dedicated `?tag=` URL param (exact-match) | NuggetCard tag links → `/?tag=<name>`; chip shows in header |
+| **Folder counts** in filter bar (e.g., `GROW · 12`) | Computed from initialNuggets in HomeGrid |
+| **Bot link + About** in sidebar | `⬈ @BOT` nav item linking to Telegram bot |
+
+---
+
+#### TIER 2 — Next sprint
+
+| Priority | Item | Notes |
 |---|---|---|
-| **HIGH** | **Native TikTok photo carousel support** — current behavior rejects `/photo/` URLs with `[limit] TIKTOK_PHOTO` and points to @SaveAsBot. yt-dlp doesn't help (TikTok serves photo posts via client-side JS, no SSR'd image URLs). Four implementation paths, ranked: (a) **Headless browser** (Playwright) — $0, ~150MB Chromium dep, slow per request (~5-10s), TikTok actively fingerprints browsers. (b) **Paid scraping API** (RapidAPI/Apify/ScrapingBee) — $10-50/month, fast, reliable; vendor handles the cat-and-mouse. (c) **Reverse-engineer TikTok's mobile API endpoint** — $0, breaks every few months. (d) **Programmatic SaveAsBot forwarding** — $0 but depends on SaveAsBot staying free and the bot-to-bot forwarding ToS. **Recommendation when revisited:** start with (a) for the dev experience, fall back to (b) if reliability matters more than cost. Estimated effort: 1-2 days. | `pipeline.py` (new `extract_tiktok_photo` helper) + `bot.py` (replace the `[limit] TIKTOK_PHOTO` branch in `_handle_url` with the new path) |
-| Medium | **Duplicate detection** — bot checks whether the same URL / video / image hash already exists in the user's vault before processing; refuses with `[WARN] DUPLICATE_DETECTED` showing the existing entry id + date. Admin can bypass (`/force` reply, or `[ ⚠ FORCE_INGEST ]` inline button on the dup warning). Don't waste Claude tokens re-processing what's already saved. | `bot.py` + `database.py` (add `has_dup_for_user(user_id, key)`); needs a `content_hash` column for images + URL-normalized lookup for links |
-| Medium | `AsyncAnthropic` + `httpx.AsyncClient` instead of `asyncio.to_thread` | `bot.py` |
-| Medium | Resize/compress originals saved in DB (web grid currently shows nothing for image entries) | future schema |
+| **HIGH** | **Weekly / monthly digest** | APScheduler → DM summary of last 7/30 days. Port from old `digest.py`. Highest-ROI re-engagement feature. |
+| **HIGH** | **Native TikTok photo carousel support** | yt-dlp can't extract (JS-rendered). Options: (a) Playwright (slow, fingerprinted), (b) paid API ($10-50/mo, recommended), (c) TikTok mobile API (breaks often), (d) programmatic SaveAsBot. Start with Playwright for dev experience, switch to paid API for reliability. |
+| Medium | **Duplicate detection** | Bot checks URL / image hash before processing. `[WARN] DUPLICATE_DETECTED` with existing entry id + date. Needs `content_hash` column + URL-normalized lookup. Saves Claude + Whisper tokens. |
+| Medium | **Author hashtags from URL source** | Parse hashtags from yt-dlp description, pass to Claude as "optional author tags — include only if topically specific, ignore #fyp/#viral/#trending." Do NOT append raw (spam risk). |
+| Medium | **Pin / favorite nuggets** | `pinned` boolean column. Pinned cards float to top. Simple schema + sort change. |
+| Medium | **Share specific nugget** | Public `/n/[id]` permalink (no login). Bundle with Phase C magic URL. |
+| Medium | **Note-taking on saved nuggets** | Add user annotation after the fact. `user_notes` text column. Edit UI on detail page. |
+| Medium | **Audio files** (`F.audio`) | Same Whisper pipeline as voice. May have title/performer/caption metadata worth prepending. |
+| Medium | `AsyncAnthropic` + `httpx.AsyncClient` instead of `asyncio.to_thread` | Proper async throughout — removes the thread pool overhead. |
+| Medium | Resize/compress originals saved in DB | Web grid shows nothing for image entries. Needs schema change. |
+| Low | **Onboarding flow** | `/start` multi-step walkthrough — reduces first-day drop-off if bot is ever shared. 3 messages: "send a TikTok URL", "send a screenshot", "send a voice note". |
+| Low | **Resurface enhancement** — "On This Day" | Same-date last year. Adds a memory/nostalgia dimension to the existing random resurface. |
+| Low | **Animated GIFs** (`F.animation`) | Telegram delivers as silent mp4. Mostly silent → Whisper returns nothing. Pair with future vision-on-first-frame. |
+| Low | **Video sent as document** | `F.document` with `mime_type` starting `video/` — common from Apple Photos "Save Original" mode. Route through video pipeline. |
+| Low | **Bulk video albums** | Multi-video albums via `media_group_id`. Concatenated transcripts (`--- clip 2 ---`). `media_type="video_group"`. |
+| Low | **Dark mode** (full) | BRAND.md §7 spec: Hemeon-orange-on-sepia. Effort: audit every component. Do after core features. |
+| Low | **Full-text search** | Supabase FTS (`to_tsvector` + `to_tsquery`). Fine under ~500 entries with client-side; add when needed. |
+| Low | **Bulk web operations** | Select + batch delete / move-to-folder. Real work — select mode, state management. After vault hits 500+ entries. |
+| Low | Add `media_count` column + persist Telegram `file_id`s | Web grid thumbnails. Schema migration. |
+| Low | Local OCR via Tesseract | Cuts vision cost 70-90% on screenshots. New dep. |
 | Low | `delete_entry` returns True on 0 rows — multi-user gap | `database.py` |
 | Low | `on_unsupported` matches service messages too | `bot.py` |
-| Low | Module-level `httpx.Client` for connection reuse | `database.py` |
-| Low | Add `media_count` column + persist Telegram `file_id`s so web grid can show thumbnails | schema migration |
-| Low | Optional: local OCR via Tesseract for text-heavy images (cuts vision cost ~70-90% on screenshots) | new dep |
-| Medium | **Voice messages** (`F.voice`) — same Whisper pipeline as video, no caption. ~10 lines mirroring `on_video`. | `bot.py` |
-| Medium | **Audio files** (`F.audio`) — same Whisper pipeline, may have title/performer/caption metadata worth prepending. | `bot.py` |
-| Low | **Animated GIFs** (`F.animation`) — Telegram delivers as silent mp4 in `.animation` field. Mostly silent so Whisper returns nothing; might pair with future vision-on-first-frame. | `bot.py` |
-| Low | **Video sent as document** (`F.document` with `mime_type` starting `video/`) — common from Apple Photos "Save Original" mode. Route through the same video pipeline. | `bot.py` |
-| Low | **Bulk video albums** — Telegram allows multi-video albums (same `media_group_id` mechanism as photos). Current handler treats each video as a separate entry. Build `_handle_video_batch` with concatenated transcripts (`--- clip 2 ---` separators) and `media_type="video_group"`. | `bot.py` |
+| ✅ Done | Module-level `httpx.Client` for connection reuse | Shipped 2026-05-27 in `database.py` |
 
 ---
 
