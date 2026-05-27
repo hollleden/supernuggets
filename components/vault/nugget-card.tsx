@@ -42,8 +42,9 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         </time>
       </div>
 
-      {/* Title — leads the card */}
-      <h3 className="font-mono text-base md:text-lg font-extrabold uppercase leading-[1.15] text-foreground mb-3 flex-1">
+      {/* Title — leads the card. line-clamp-3 prevents unbounded height blowout
+          on very long titles while keeping the grid rows uniform. */}
+      <h3 className="font-mono text-base md:text-lg font-extrabold uppercase leading-[1.15] text-foreground mb-3 flex-1 line-clamp-3">
         {nugget.title}
       </h3>
 
@@ -68,15 +69,15 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
           {nugget.tags.slice(0, 3).map(tag => (
             <Link
               key={tag}
-              href={`/?q=${encodeURIComponent(tag)}`}
+              href={`/?tag=${encodeURIComponent(tag)}`}
               onClick={(e) => e.stopPropagation()}
-              className="font-mono text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wide"
+              className="font-mono text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wide underline-offset-2 hover:underline"
             >
               #{tag}
             </Link>
           ))}
           {nugget.tags.length > 3 && (
-            <span className="font-mono text-[10px] text-muted-foreground/60 uppercase tracking-wide">
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wide border border-foreground/30 px-1">
               +{nugget.tags.length - 3}
             </span>
           )}
