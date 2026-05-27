@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { supabase } from '@/lib/supabaseClient'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import { FOLDERS } from '@/lib/nuggets'
 
 // Server actions for mutating nuggets. Run on the server using the secret
 // key, so they bypass RLS that blocks anon writes. After each mutation we
@@ -11,7 +12,13 @@ import { supabaseAdmin } from '@/lib/supabaseAdmin'
 
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
+// 'all' is a UI-only filter option, not a valid storage folder.
+const VALID_FOLDERS = new Set<string>(FOLDERS.filter(f => f !== 'all'))
+
 export async function updateNuggetFolder(id: number, folder: string): Promise<ActionResult> {
+  if (!VALID_FOLDERS.has(folder)) {
+    return { ok: false, error: `Invalid folder: ${folder}` }
+  }
   const { error, data } = await supabaseAdmin
     .from('entries')
     .update({ folder })
