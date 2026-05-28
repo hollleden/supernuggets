@@ -13,7 +13,7 @@ The system is built around a single use case: catching things you would otherwis
 3. Send anything — a message, a photo, a voice note, a video, or a link. The bot replies with a receipt confirming the nugget has been saved, its folder, its tags, and a link to the web view.
 4. Browse what you have saved in the web app (link is in the sidebar of the bot's `/start` message).
 
-Send `/help` at any time to re-show the same manifesto. Each non-owner account is currently rate-limited to five nuggets per UTC day.
+<img width="709" height="674" alt="image" src="https://github.com/user-attachments/assets/2265fd63-3fe0-41b9-96a8-e28f7ccd06e9" />
 
 ## What you can send to the bot
 
@@ -90,7 +90,10 @@ Each nugget also includes:
 
 ## How to browse what you have saved
 
-The web app presents your saved nuggets as a Pinterest-style card grid. From there you can:
+The web app presents your saved nuggets as a Pinterest-style card grid. 
+<img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/6b3bb2a1-431c-4977-80a5-a90f561d0ee4" />
+
+From there you can:
 
 - Filter the grid by folder
 - Click any tag to filter by that tag
@@ -99,10 +102,7 @@ The web app presents your saved nuggets as a Pinterest-style card grid. From the
 - Delete a nugget (with a confirmation step)
 
 The detail view is a real URL, so individual nuggets can be bookmarked and the browser back button works as expected.
-
-<img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/6b3bb2a1-431c-4977-80a5-a90f561d0ee4" />
-
-<img width="709" height="674" alt="image" src="https://github.com/user-attachments/assets/2265fd63-3fe0-41b9-96a8-e28f7ccd06e9" /> <img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/adc7d48e-f81c-4004-b9d1-64f5f93f38f3" />
+<img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/adc7d48e-f81c-4004-b9d1-64f5f93f38f3" />
 
 
 ## Built with
