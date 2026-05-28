@@ -28,6 +28,7 @@ async function loadStats(userId: number): Promise<Stats> {
     .select('id, title, folder, created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
     .limit(2000)
 
   const rows = (data ?? []) as Row[]

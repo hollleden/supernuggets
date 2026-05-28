@@ -11,7 +11,11 @@ async function loadNuggets(userId: number): Promise<Nugget[]> {
     .from('entries')
     .select('*')
     .eq('user_id', userId)
+    // Secondary sort by id desc: created_at is a date (not timestamp) so
+    // same-day entries tie and Postgres returns them in physical order.
+    // id is a bigserial — highest id is always the most recently inserted.
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
     .limit(2000)
   if (error || !data) return []
   return (data as EntryRow[]).map(mapRowToNugget)

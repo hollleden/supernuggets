@@ -37,6 +37,7 @@ async function loadRelated(folder: string, excludeId: number, userId: number): P
     .eq('user_id', userId)
     .neq('id', excludeId)
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
     .limit(16)
   if (error || !data) return []
   const all = (data as EntryRow[]).map(mapRowToNugget)
