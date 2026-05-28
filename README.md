@@ -20,7 +20,7 @@ You send the bot **anything**:
 
 Each saved nugget lands in **one of 12 folders** (Grow · Leisure · Health · Creativity · Money · Work · Curation · Personal · Beauty · Food · Travel · Sport), gets 3-5 hashtags, a 2-3 bullet summary, a fact-check pass on verifiable claims, and a `↗ SOURCE` link back to the original.
 
-You browse the result at **[supernuggets-a3hhdfxc8-hollledens-projects.vercel.app](https://supernuggets-a3hhdfxc8-hollledens-projects.vercel.app)** — Pinterest-style grid, filter by folder, search by tag, click into the detail view.
+You browse the result at Vercel dashborad — Pinterest-style grid, filter by folder, search by tag, click into the detail view.
 
 ---
 
