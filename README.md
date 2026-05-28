@@ -6,6 +6,15 @@ supernuggets is a personal knowledge capture tool. It pairs a Telegram bot with 
 
 The system is built around a single use case: catching things you would otherwise forget, without having to stop what you are doing to organize them.
 
+## Getting started
+
+1. Open the bot in Telegram: **[@supernuggetss_bot](https://t.me/supernuggetss_bot)**
+2. Tap **Start** (or send `/start`) to see the system manifesto and capability list.
+3. Send anything — a message, a photo, a voice note, a video, or a link. The bot replies with a receipt confirming the nugget has been saved, its folder, its tags, and a link to the web view.
+4. Browse what you have saved in the web app (link is in the sidebar of the bot's `/start` message).
+
+Send `/help` at any time to re-show the same manifesto. Each non-owner account is currently rate-limited to five nuggets per UTC day.
+
 ## What you can send to the bot
 
 The bot accepts six input types. Each one is handled by a different pipeline, but the result is always the same shape — a nugget with a folder, summary, tags, and (where it applies) a link back to the source.
@@ -103,7 +112,3 @@ The detail view is a real URL, so individual nuggets can be bookmarked and the b
 | Language and vision AI | Anthropic Claude |
 | Audio transcription | OpenAI Whisper |
 | Media extraction | yt-dlp, trafilatura, Pillow |
-
-## License
-
-Personal project. Not open source.
