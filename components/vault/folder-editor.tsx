@@ -8,12 +8,13 @@ import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 interface FolderEditorProps {
   nuggetId: number
   initialFolder: string
+  token: string
 }
 
 // Boxed dropdown that fully matches the [← BACK] / [⌫ DELETE] button treatment.
 // Uses server action (bypasses RLS), then router.refresh re-runs the server page
 // so the sticky bar / breadcrumb / accent colors all update at once.
-export function FolderEditor({ nuggetId, initialFolder }: FolderEditorProps) {
+export function FolderEditor({ nuggetId, initialFolder, token }: FolderEditorProps) {
   const router = useRouter()
   const [folder, setFolder] = useState(initialFolder)
   // `saving` gates the select during the async DB call.
@@ -27,7 +28,7 @@ export function FolderEditor({ nuggetId, initialFolder }: FolderEditorProps) {
     const previous = folder
     setFolder(next) // optimistic
     setSaving(true)
-    const result = await updateNuggetFolder(nuggetId, next)
+    const result = await updateNuggetFolder(token, nuggetId, next)
     setSaving(false)
     if (!result.ok) {
       alert(`[FAIL] DB_WRITE_REJECTED: ${result.error}`)

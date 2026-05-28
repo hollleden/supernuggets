@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 
@@ -26,6 +26,9 @@ export function SearchBar({
   className,
 }: SearchBarProps) {
   const router = useRouter()
+  const params = useParams<{ token?: string }>()
+  const tokenPrefix = params?.token ? `/u/${params.token}` : ''
+  const homeHref = tokenPrefix || '/'
   const [internal, setInternal] = useState('')
   const controlled = value !== undefined
   const current = controlled ? value! : internal
@@ -39,7 +42,7 @@ export function SearchBar({
     e.preventDefault()
     if (!navigateOnSubmit) return
     const q = current.trim()
-    router.push(q ? `/?q=${encodeURIComponent(q)}` : '/')
+    router.push(q ? `${homeHref}?q=${encodeURIComponent(q)}` : homeHref)
   }
 
   return (

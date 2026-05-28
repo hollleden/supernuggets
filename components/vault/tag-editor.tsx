@@ -9,18 +9,19 @@ import { updateNuggetTags } from '@/app/actions/nuggets'
 interface TagEditorProps {
   nuggetId: number
   initialTags: string[]
+  token: string
 }
 
 // Editable tag list. Click X to remove a tag. Type into the +TAG input + Enter to add.
 // Server-action backed so writes actually persist (anon RLS would otherwise drop them).
-export function TagEditor({ nuggetId, initialTags }: TagEditorProps) {
+export function TagEditor({ nuggetId, initialTags, token }: TagEditorProps) {
   const router = useRouter()
   const [tags, setTags] = useState<string[]>(initialTags)
   const [draft, setDraft] = useState('')
   const [, startTransition] = useTransition()
 
   const persist = async (next: string[]) => {
-    const result = await updateNuggetTags(nuggetId, next)
+    const result = await updateNuggetTags(token, nuggetId, next)
     if (!result.ok) {
       alert(`[FAIL] DB_WRITE_REJECTED: ${result.error}`)
       return false
@@ -61,7 +62,7 @@ export function TagEditor({ nuggetId, initialTags }: TagEditorProps) {
           className="font-mono text-xs uppercase tracking-wide text-muted-foreground inline-flex items-center group"
         >
           <Link
-            href={`/?q=${encodeURIComponent(tag)}`}
+            href={`/u/${token}?q=${encodeURIComponent(tag)}`}
             className="hover:text-foreground"
           >
             #{tag}
