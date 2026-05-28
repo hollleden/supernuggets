@@ -36,6 +36,7 @@ The web app presents your saved nuggets as a card grid. You can:
 - Search or filter by tag
 - Open any nugget for the full detail view, including the original transcript or article body
 - Edit a nugget's folder or tags, or delete it
+<img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/6b3bb2a1-431c-4977-80a5-a90f561d0ee4" />
 
 ## Built with
 
