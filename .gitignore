@@ -33,3 +33,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# internal docs — keep locally only, never push to GitHub
+BRAND.md
+CHANGELOG.md
+CLAUDE.md
+HANDOFF.md
+HANDOFF-*.md
+RUN-LOCALLY.md
+docs/
+
