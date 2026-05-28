@@ -9,11 +9,14 @@ The system is built around a single use case: catching things you would otherwis
 ## Getting started
 
 1. Open the bot in Telegram: **[@supernuggetss_bot](https://t.me/supernuggetss_bot)**
-2. Tap **Start** (or send `/start`) to see the system manifesto and capability list.
-3. Send anything — a message, a photo, a voice note, a video, or a link. The bot replies with a receipt confirming the nugget has been saved, its folder, its tags, and a link to the web view.
-4. Browse what you have saved in the web app.
+2. Tap **Start** (or send `/start`). The bot replies with the system manifesto **and your personal vault link** — something like `https://supernuggets.app/u/<your-token>`. This is your private dashboard.
+3. **Bookmark the vault link.** Anyone who has it can read your nuggets, so treat it like a password. If you ever need it again, send `/myvault` to the bot.
+4. Send anything to the bot — a message, a photo, a voice note, a video, or a link. The bot replies with a receipt confirming the nugget has been saved, its folder, its tags, and a one-tap **OPEN** button that deep-links into your private vault.
+5. Browse, search, edit, and rediscover what you have saved in the web app.
 
-Send `/help` at any time to re-show the manifesto. Each non-owner account is rate-limited to five nuggets per UTC day; the bot tells you exactly how long until the next reset when you hit the cap.
+The public site at **[supernuggets.app](https://supernuggets.app)** itself only shows a landing card pointing at the bot — every visitor needs their own vault link to see anything.
+
+Each non-owner account is rate-limited to five nuggets per UTC day; the bot tells you exactly how long until the next reset when you hit the cap.
 
 <img width="709" height="674" alt="image" src="https://github.com/user-attachments/assets/2265fd63-3fe0-41b9-96a8-e28f7ccd06e9" />
 
@@ -93,10 +96,11 @@ The aesthetic is deliberately spartan: monospace, no picture emojis, status mess
 
 | Command | What it does |
 |---|---|
-| `/start` | Shows the manifesto and capability list |
-| `/help` | Same as `/start` — a reminder of what the bot accepts |
+| `/start` | Shows the manifesto, capability list, and your personal vault link |
+| `/help` | Same as `/start` — a reminder of what the bot accepts and your vault URL |
+| `/myvault` | Re-sends just your private vault link (useful if you lost the bookmark) |
 
-Both commands are registered with Telegram so they appear in the command-suggestion popup when you type `/`.
+All three are registered with Telegram so they appear in the command-suggestion popup when you type `/`.
 
 ### Delete flow
 
