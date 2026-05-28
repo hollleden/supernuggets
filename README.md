@@ -102,6 +102,8 @@ The detail view is a real URL, so individual nuggets can be bookmarked and the b
 
 <img width="1440" height="813" alt="image" src="https://github.com/user-attachments/assets/6b3bb2a1-431c-4977-80a5-a90f561d0ee4" />
 
+<img width="1439" height="812" alt="image" src="https://github.com/user-attachments/assets/a2f9f352-6a7a-47f7-9492-0ce574b0e4e2" />
+
 ## Built with
 
 | Layer | Technology |
