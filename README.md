@@ -2,8 +2,6 @@
 
 A personal "second brain" — anything you send to a Telegram bot becomes an AI-summarized, fact-checked, tagged, file-cabineted nugget in a Pinterest-style web vault.
 
-> "I'm thirty-three. Trust me — I will forget that wine bar. You won't."
-
 ---
 
 ## What it does
