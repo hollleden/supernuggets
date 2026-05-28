@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { AppShell } from '@/components/vault/app-shell'
 import './globals.css'
 
 const jetbrainsMono = JetBrains_Mono({
@@ -42,7 +41,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
       </head>
       <body className="font-mono antialiased bg-background text-foreground">
-        <AppShell>{children}</AppShell>
+        {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
@@ -64,8 +64,15 @@ export function Sidebar({
   isResurfaceActive,
 }: SidebarProps) {
   const pathname = usePathname()
-  const isHome = pathname === '/'
-  const isStats = pathname === '/stats'
+  const params = useParams<{ token?: string }>()
+  // When inside /u/[token]/*, prefix internal nav so we don't bounce to the
+  // public landing page. Outside, fall back to the legacy paths (which now
+  // redirect to '/' — harmless during the C-3/C-4 transition).
+  const tokenPrefix = params?.token ? `/u/${params.token}` : ''
+  const homeHref = tokenPrefix || '/'
+  const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
+  const isHome = pathname === homeHref
+  const isStats = pathname === statsHref
   return (
     <nav
       className={cn(
@@ -88,7 +95,7 @@ export function Sidebar({
         <NavItem
           icon={<Grid3X3 className="w-4 h-4" />}
           label="BROWSE"
-          href="/"
+          href={homeHref}
           isActive={isHome}
           isCollapsed={isCollapsed}
         />
@@ -102,7 +109,7 @@ export function Sidebar({
         <NavItem
           icon={<Activity className="w-4 h-4" />}
           label="STATS"
-          href="/stats"
+          href={statsHref}
           isActive={isStats}
           isCollapsed={isCollapsed}
         />

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
 import { Grid3X3, Sparkles, Moon, Sun, Activity } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,13 +17,17 @@ interface BottomNavProps {
 
 export function BottomNav({ isDarkMode, onToggleDarkMode, onResurface }: BottomNavProps) {
   const pathname = usePathname()
-  const isHome = pathname === '/'
-  const isStats = pathname === '/stats'
+  const params = useParams<{ token?: string }>()
+  const tokenPrefix = params?.token ? `/u/${params.token}` : ''
+  const homeHref = tokenPrefix || '/'
+  const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
+  const isHome = pathname === homeHref
+  const isStats = pathname === statsHref
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card border-t-2 border-foreground flex md:hidden">
       <BottomItem
-        href="/"
+        href={homeHref}
         icon={<Grid3X3 className="w-4 h-4" />}
         label="BROWSE"
         isActive={isHome}
@@ -34,7 +38,7 @@ export function BottomNav({ isDarkMode, onToggleDarkMode, onResurface }: BottomN
         onClick={onResurface}
       />
       <BottomItem
-        href="/stats"
+        href={statsHref}
         icon={<Activity className="w-4 h-4" />}
         label="STATS"
         isActive={isStats}

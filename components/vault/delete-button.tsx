@@ -6,12 +6,13 @@ import { deleteNugget } from '@/app/actions/nuggets'
 
 interface DeleteButtonProps {
   nuggetId: number
+  token: string
   className?: string
 }
 
 // Destructive action — confirm then permanently delete via server action + redirect home.
 // Matches the bot's [✓ YES DELETE / ✗ CANCEL] verb-noun confirm pattern.
-export function DeleteButton({ nuggetId, className }: DeleteButtonProps) {
+export function DeleteButton({ nuggetId, token, className }: DeleteButtonProps) {
   const router = useRouter()
   const [pending, setPending] = useState(false)
 
@@ -21,13 +22,13 @@ export function DeleteButton({ nuggetId, className }: DeleteButtonProps) {
     )
     if (!confirmed) return
     setPending(true)
-    const result = await deleteNugget(nuggetId)
+    const result = await deleteNugget(token, nuggetId)
     if (!result.ok) {
       setPending(false)
       alert(`[FAIL] DB_DELETE_REJECTED: ${result.error}`)
       return
     }
-    router.push('/')
+    router.push(`/u/${token}`)
     router.refresh()
   }
 

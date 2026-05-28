@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams, useRouter, useParams } from 'next/navigation'
 import { SearchHeader } from '@/components/vault/search-header'
 import { MasonryGrid } from '@/components/vault/nugget-card'
 import type { Nugget, FolderType } from '@/lib/nuggets'
@@ -16,6 +16,9 @@ interface HomeGridProps {
 export function HomeGrid({ initialNuggets }: HomeGridProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const params = useParams<{ token?: string }>()
+  const tokenPrefix = params?.token ? `/u/${params.token}` : ''
+  const homeHref = tokenPrefix || '/'
   const urlQuery = searchParams.get('q') ?? ''
   const urlFolder = (searchParams.get('folder') ?? 'all') as FolderType
   const urlTag = searchParams.get('tag') ?? ''
@@ -61,18 +64,18 @@ export function HomeGrid({ initialNuggets }: HomeGridProps) {
     setSearchQuery('')
     setSelectedFolder('all')
     setActiveTag('')
-    if (urlQuery || urlFolder !== 'all' || urlTag) router.replace('/')
+    if (urlQuery || urlFolder !== 'all' || urlTag) router.replace(homeHref)
   }
 
   const handleClearTag = () => {
     setActiveTag('')
     // If the tag came from the URL, clean up without blowing away other params.
     if (urlTag) {
-      const params = new URLSearchParams()
-      if (searchQuery) params.set('q', searchQuery)
-      if (selectedFolder !== 'all') params.set('folder', selectedFolder)
-      const qs = params.toString()
-      router.replace(qs ? `/?${qs}` : '/')
+      const qsParams = new URLSearchParams()
+      if (searchQuery) qsParams.set('q', searchQuery)
+      if (selectedFolder !== 'all') qsParams.set('folder', selectedFolder)
+      const qs = qsParams.toString()
+      router.replace(qs ? `${homeHref}?${qs}` : homeHref)
     }
   }
 

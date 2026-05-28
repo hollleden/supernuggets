@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import type { Nugget, FolderType } from '@/lib/nuggets'
 import { FOLDER_COLOR_HEX, sourceHeaderLine } from '@/lib/nuggets'
 
@@ -14,10 +15,12 @@ interface NuggetCardProps {
 // Uniform sizing via CSS grid + flex-col + min-h on container.
 export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
   const folderColor = FOLDER_COLOR_HEX[nugget.folder as FolderType] ?? FOLDER_COLOR_HEX.all
+  const params = useParams<{ token?: string }>()
+  const tokenPrefix = params?.token ? `/u/${params.token}` : ''
 
   return (
     <Link
-      href={`/n/${nugget.id}`}
+      href={`${tokenPrefix}/n/${nugget.id}`}
       className="flex flex-col bg-card p-5 h-full min-h-[14rem]
         border border-transparent border-t-2
         transition-all duration-150
@@ -69,7 +72,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
           {nugget.tags.slice(0, 3).map(tag => (
             <Link
               key={tag}
-              href={`/?tag=${encodeURIComponent(tag)}`}
+              href={`${tokenPrefix || '/'}?tag=${encodeURIComponent(tag)}`}
               onClick={(e) => e.stopPropagation()}
               className="font-mono text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wide underline-offset-2 hover:underline"
             >

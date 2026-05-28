@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { Sidebar } from './sidebar'
 import { BottomNav } from './bottom-nav'
 import { pickRandomNuggetId } from '@/app/actions/nuggets'
@@ -15,6 +15,8 @@ interface AppShellProps {
 // nav (mobile) + dark-mode toggle. Owns no data-fetching responsibility.
 export function AppShell({ children }: AppShellProps) {
   const router = useRouter()
+  const params = useParams<{ token?: string }>()
+  const token = params?.token
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   // Tracks whether the initial DOM read has completed. Guards the class-sync
@@ -46,8 +48,9 @@ export function AppShell({ children }: AppShellProps) {
   }, [])
 
   const handleResurface = async () => {
-    const id = await pickRandomNuggetId()
-    if (id != null) router.push(`/n/${id}`)
+    if (!token) return
+    const id = await pickRandomNuggetId(token)
+    if (id != null) router.push(`/u/${token}/n/${id}`)
   }
 
   return (
