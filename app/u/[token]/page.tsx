@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
 import { mapRowToNugget, type EntryRow, type Nugget } from '@/lib/nuggets'
 import { HomeGrid } from '@/components/vault/home-grid'
@@ -7,7 +7,7 @@ import { HomeGrid } from '@/components/vault/home-grid'
 export const dynamic = 'force-dynamic'
 
 async function loadNuggets(userId: number): Promise<Nugget[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('entries')
     .select('*')
     .eq('user_id', userId)

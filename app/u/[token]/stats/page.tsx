@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 
@@ -23,7 +23,7 @@ interface Stats {
 type Row = { id: number; title: string | null; folder: string | null; created_at: string }
 
 async function loadStats(userId: number): Promise<Stats> {
-  const { data } = await supabase
+  const { data } = await supabaseAdmin
     .from('entries')
     .select('id, title, folder, created_at')
     .eq('user_id', userId)
