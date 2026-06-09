@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { supabase } from '@/lib/supabaseClient'
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
 import {
   mapRowToNugget,
@@ -19,7 +19,7 @@ import { sourceHeaderLine } from '@/lib/nuggets'
 export const dynamic = 'force-dynamic'
 
 async function loadNugget(id: number, userId: number): Promise<Nugget | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('entries')
     .select('*')
     .eq('id', id)
@@ -30,7 +30,7 @@ async function loadNugget(id: number, userId: number): Promise<Nugget | null> {
 }
 
 async function loadRelated(folder: string, excludeId: number, userId: number): Promise<Nugget[]> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('entries')
     .select('*')
     .eq('folder', folder)

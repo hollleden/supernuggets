@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { supabase } from '@/lib/supabaseClient'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
 import { FOLDERS } from '@/lib/nuggets'
@@ -93,7 +92,7 @@ export async function deleteNugget(token: string, id: number): Promise<ActionRes
 export async function pickRandomNuggetId(token: string): Promise<number | null> {
   const owner = await resolveOwner(token)
   if (!owner.ok) return null
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('entries')
     .select('id')
     .eq('user_id', owner.userId)
