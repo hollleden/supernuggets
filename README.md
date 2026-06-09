@@ -192,4 +192,16 @@ The left sidebar holds the primary nav (`BROWSE`, `RESURFACE`, `STATS`), a quick
 | Database | Supabase (Postgres) |
 | Language and vision AI | Anthropic Claude |
 | Audio transcription | OpenAI Whisper |
-| Media extraction | yt-dlp, trafilatura, Pillow |
+| Media extraction | yt-dlp, trafilatura, Pillow, ffmpeg |
+
+---
+
+## Changelog
+
+### 2026-06-10 — On-screen URL capture for listicle videos
+
+The bot now picks up websites that videos only show on screen. For TikToks in the "free websites you should know", "secret sites", "no one tells you about these tools" style — where the voice-over never names the website but the browser address bar appears for a split second — the bot extracts frames from the video, reads the URL with vision AI, and surfaces it in the receipt's **MENTIONED** section as a direct clickable link.
+
+Previously, these videos produced accurate-sounding receipts with no actual way to return to the recommended website. Now the link sits one tap away.
+
+Works on both directly-pasted TikTok URLs and videos forwarded via helper bots (e.g. `@SaveAsBot`). Non-listicle videos are unaffected — the new code path only fires when the transcript matches a curated set of cue phrases.
