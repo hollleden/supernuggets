@@ -75,7 +75,7 @@ export default async function NuggetPage({
       <div className="px-4 md:px-6 py-3 border-b border-black/10">
         <Link
           href={`/u/${token}`}
-          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black rounded-full transition-colors"
+          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
         >
           ← BACK
         </Link>
