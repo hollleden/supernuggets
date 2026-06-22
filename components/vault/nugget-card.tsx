@@ -68,7 +68,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         <div className="flex items-center justify-between mb-3">
           <span
             className="font-mono text-[8px] font-bold tracking-wider border px-2 py-0.5 rounded-full bg-card"
-            style={{ color: folderColor, borderColor: folderColor }}
+            style={{ color: folderColor, borderColor: folderColor + '99' }}
           >
             {mediaBadgeLabel(nugget.mediaType)}
           </span>

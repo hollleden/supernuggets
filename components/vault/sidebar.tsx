@@ -55,7 +55,7 @@ function SidebarInner({
   return (
     <aside
       className={cn(
-        'hidden md:flex flex-col sticky top-12 bg-card border-r border-black dark:border-white/10 shrink-0 transition-all duration-200 overflow-hidden',
+        'hidden md:flex flex-col sticky top-12 bg-card border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200 overflow-hidden',
         isCollapsed ? 'w-[56px]' : 'w-[220px]',
         'h-[calc(100vh-48px)]'
       )}
