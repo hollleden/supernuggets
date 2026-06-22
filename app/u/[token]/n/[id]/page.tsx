@@ -75,7 +75,7 @@ export default async function NuggetPage({
       <div className="px-4 md:px-6 py-3 border-b border-black/10">
         <Link
           href={`/u/${token}`}
-          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
+          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black rounded-full transition-colors"
         >
           ← BACK
         </Link>
@@ -84,14 +84,14 @@ export default async function NuggetPage({
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <article
-            className="lg:col-span-2 bg-card border border-black/10 rounded-xl p-5 md:p-7"
+            className="lg:col-span-2 bg-card border border-black/20 rounded-xl p-5 md:p-7"
             style={{ borderTopColor: folderColor, borderTopWidth: '3px' }}
           >
             <div className="flex items-center justify-between mb-5 pb-3 border-b border-black/10 gap-3 flex-wrap">
               <div className="flex items-center gap-3 flex-wrap">
                 <span
-                  className="font-mono text-[9px] border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider text-muted-foreground"
-                  style={{ color: folderColor, borderColor: folderColor + '40' }}
+                  className="font-mono text-[9px] border px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  style={{ color: folderColor, borderColor: folderColor }}
                 >
                   {(() => {
                     const m = nugget.mediaType
@@ -286,12 +286,12 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="block bg-card border border-black/10 rounded-xl p-4 relative hover:border-black/25 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
+      className="block bg-card border border-black/20 rounded-xl p-4 relative hover:border-black/50 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
       style={{ borderTopColor: folderColor, borderTopWidth: '3px' }}
     >
       <span
-        className="absolute top-3 left-4 font-mono text-[9px] border border-black/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider"
-        style={{ color: folderColor }}
+        className="absolute top-3 left-4 font-mono text-[9px] border px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+        style={{ color: folderColor, borderColor: folderColor }}
       >
         {nugget.folder.toUpperCase()}
       </span>

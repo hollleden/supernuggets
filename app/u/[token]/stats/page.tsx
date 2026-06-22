@@ -98,7 +98,7 @@ export default async function StatsPage({
       <div className="px-4 md:px-6 py-3 border-b border-black/10">
         <Link
           href={`/u/${token}`}
-          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
+          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black rounded-full transition-colors"
         >
           ← BACK
         </Link>
@@ -107,7 +107,7 @@ export default async function StatsPage({
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 space-y-4">
 
         {/* Counter card */}
-        <div className="bg-card border border-black/10 rounded-xl p-6 relative">
+        <div className="bg-card border border-black/20 rounded-xl p-6 relative">
           <span className="absolute top-4 left-5 font-mono text-[9px] text-muted-foreground border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
             [ COUNTER ]
           </span>
@@ -138,7 +138,7 @@ export default async function StatsPage({
           {stats.lastAdded ? (
             <Link
               href={`/u/${token}/n/${stats.lastAdded.id}`}
-              className="block bg-card border border-black/10 rounded-xl p-5 relative hover:border-black/30 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
+              className="block bg-card border border-black/20 rounded-xl p-5 relative hover:border-black/30 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
               style={{ borderTopColor: stats.lastAdded.folderColor, borderTopWidth: '3px' }}
             >
               <span className="absolute top-4 left-5 font-mono text-[9px] border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider"
@@ -160,7 +160,7 @@ export default async function StatsPage({
         </div>
 
         {/* Folder breakdown card */}
-        <div className="bg-card border border-black/10 rounded-xl p-6">
+        <div className="bg-card border border-black/20 rounded-xl p-6">
           <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-5 text-center">
             FOLDER BREAKDOWN
           </div>
@@ -199,7 +199,7 @@ export default async function StatsPage({
 
 function KpiTile({ badge, label, value, sub }: { badge: string; label: string; value: string; sub: string }) {
   return (
-    <div className="bg-card border border-black/10 rounded-xl p-5 relative">
+    <div className="bg-card border border-black/20 rounded-xl p-5 relative">
       <span className="absolute top-4 left-5 font-mono text-[9px] text-muted-foreground border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
         [ {badge} ]
       </span>

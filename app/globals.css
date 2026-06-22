@@ -158,7 +158,7 @@
 /* Nugget card: per-folder CSS variable hover system */
 .nugget-card {
   background-color: var(--card);
-  border: 1px solid rgba(0,0,0,0.12);
+  border: 1px solid #121110;
   border-radius: 12px;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -177,7 +177,7 @@
 /* Sidebar pill buttons */
 .pill-btn {
   border-radius: 9999px;
-  border: 1px solid rgba(0,0,0,0.2);
+  border: 1px solid #121110;
   padding: 7px 14px;
   font-size: 11px;
   font-weight: 700;
@@ -212,7 +212,7 @@
 /* Collapsed sidebar: icon-only circle buttons */
 .pill-btn-icon {
   border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.2);
+  border: 1px solid #121110;
   width: 36px;
   height: 36px;
   display: inline-flex;

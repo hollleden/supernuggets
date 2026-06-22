@@ -183,6 +183,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mounted) return
     document.documentElement.classList.toggle('dark', isDarkMode)
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light')
   }, [isDarkMode, mounted])
 
   useEffect(() => {
