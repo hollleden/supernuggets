@@ -217,7 +217,7 @@ export default async function NuggetPage({
 
             {nugget.transcript && (
               <Section title="TRANSCRIPT" actions={<CopyButton text={nugget.transcript} label="COPY" />}>
-                <pre className="font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words bg-muted/40 border border-foreground p-4">
+                <pre className="font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words bg-black/[0.03] border border-black/10 rounded-xl p-4">
                   {nugget.transcript}
                 </pre>
               </Section>
@@ -272,13 +272,19 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="block bg-card p-3 border border-transparent border-t-2 hover:border-foreground hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[4px_4px_0px_0px_var(--color-foreground)] transition-all duration-150"
-      style={{ borderTopColor: folderColor }}
+      className="block bg-card border border-black/10 rounded-xl p-4 relative hover:border-black/25 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
+      style={{ borderTopColor: folderColor, borderTopWidth: '3px' }}
     >
-      <time className="block font-mono text-[9px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
+      <span
+        className="absolute top-3 left-4 font-mono text-[9px] border border-black/10 px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+        style={{ color: folderColor }}
+      >
+        {nugget.folder.toUpperCase()}
+      </span>
+      <span className="absolute top-3 right-4 font-mono text-[9px] text-muted-foreground">
         {nugget.dateCompact}
-      </time>
-      <h3 className="font-mono text-sm font-extrabold uppercase leading-tight text-foreground line-clamp-3">
+      </span>
+      <h3 className="font-mono text-xs font-extrabold uppercase leading-tight text-foreground line-clamp-3 mt-6">
         {nugget.title}
       </h3>
     </Link>

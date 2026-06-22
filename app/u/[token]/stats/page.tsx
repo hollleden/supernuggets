@@ -94,66 +94,81 @@ export default async function StatsPage({
 
   return (
     <>
-      <div className="sticky top-0 z-30 bg-background border-b-2 border-foreground">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link
-            href={`/u/${token}`}
-            className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-2 py-2 border border-foreground transition-colors"
-          >
-            [ ← BACK ]
-          </Link>
-          <span className="flex-1 font-mono text-[10px] font-bold uppercase tracking-wider truncate">
-            VAULT STATS
-          </span>
-        </div>
+      {/* Back bar */}
+      <div className="px-4 md:px-6 py-3 border-b border-black/10">
+        <Link
+          href={`/u/${token}`}
+          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
+        >
+          ← BACK
+        </Link>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
-        <div className="mb-12">
-          <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-            TOTAL NUGGETS IN VAULT
-          </div>
-          <div className="font-mono text-6xl md:text-8xl font-extrabold leading-none text-foreground">
-            {stats.total.toLocaleString()}
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 space-y-4">
+
+        {/* Counter card */}
+        <div className="bg-card border border-black/10 rounded-xl p-6 relative">
+          <span className="absolute top-4 left-5 font-mono text-[9px] text-muted-foreground border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+            [ COUNTER ]
+          </span>
+          <div className="mt-5">
+            <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+              TOTAL NUGGETS IN VAULT
+            </div>
+            <div className="font-mono text-6xl md:text-8xl font-extrabold leading-none text-foreground">
+              {stats.total.toLocaleString()}
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
-          <KpiTile label="DAILY STREAK" value={`${stats.streak}d`} sub={stats.streak === 0 ? 'no nugget yet today' : 'consecutive days'} />
-          <KpiTile label="LAST 30 DAYS" value={stats.last30Days.toLocaleString()} sub="nuggets added" />
+        {/* KPI grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <KpiTile
+            badge="STREAK"
+            label="DAILY STREAK"
+            value={`${stats.streak}d`}
+            sub={stats.streak === 0 ? 'no nugget yet today' : 'consecutive days'}
+          />
+          <KpiTile
+            badge="ACTIVITY"
+            label="LAST 30 DAYS"
+            value={stats.last30Days.toLocaleString()}
+            sub="nuggets added"
+          />
           {stats.lastAdded ? (
             <Link
               href={`/u/${token}/n/${stats.lastAdded.id}`}
-              className="block bg-card border border-transparent border-t-2 p-4 hover:border-foreground hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[4px_4px_0px_0px_var(--color-foreground)] transition-all duration-150"
-              style={{ borderTopColor: stats.lastAdded.folderColor }}
+              className="block bg-card border border-black/10 rounded-xl p-5 relative hover:border-black/30 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
+              style={{ borderTopColor: stats.lastAdded.folderColor, borderTopWidth: '3px' }}
             >
-              <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                LAST ADDED · {stats.lastAdded.dateCompact}
-              </div>
-              <div className="font-mono text-xs font-extrabold uppercase leading-tight text-foreground line-clamp-3">
-                {stats.lastAdded.title}
+              <span className="absolute top-4 left-5 font-mono text-[9px] border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider"
+                style={{ color: stats.lastAdded.folderColor }}>
+                [ RECENT ]
+              </span>
+              <div className="mt-5">
+                <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+                  LAST ADDED · {stats.lastAdded.dateCompact}
+                </div>
+                <div className="font-mono text-xs font-extrabold uppercase leading-tight text-foreground line-clamp-3">
+                  {stats.lastAdded.title}
+                </div>
               </div>
             </Link>
           ) : (
-            <KpiTile label="LAST ADDED" value="—" sub="vault is empty" />
+            <KpiTile badge="RECENT" label="LAST ADDED" value="—" sub="vault is empty" />
           )}
         </div>
 
-        <section>
-          <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
-            <span className="flex-1 border-b border-muted-foreground/40" />
-            <span className="px-1">FOLDER BREAKDOWN</span>
-            <span className="flex-1 border-b border-muted-foreground/40" />
+        {/* Folder breakdown card */}
+        <div className="bg-card border border-black/10 rounded-xl p-6">
+          <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-5 text-center">
+            FOLDER BREAKDOWN
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3 max-w-2xl mx-auto">
             {stats.perFolder.map(({ folder, count, color }) => {
               const pct = maxFolderCount > 0 ? (count / maxFolderCount) * 100 : 0
               return (
-                <Link
-                  key={folder}
-                  href={count > 0 ? `/u/${token}?folder=${folder}` : '#'}
-                  className="block group"
-                >
+                <Link key={folder} href={count > 0 ? `/u/${token}?folder=${folder}` : '#'} className="block group">
                   <div className="flex items-center gap-3">
                     <span
                       className="font-mono text-[10px] font-bold uppercase tracking-wider w-24 shrink-0"
@@ -161,13 +176,13 @@ export default async function StatsPage({
                     >
                       {folder}
                     </span>
-                    <div className="flex-1 bg-muted/40 h-5 relative">
+                    <div className="flex-1 bg-black/5 h-5 rounded overflow-hidden">
                       <div
-                        className="h-full transition-all"
+                        className="h-full rounded transition-all"
                         style={{ width: `${pct}%`, backgroundColor: color }}
                       />
                     </div>
-                    <span className="font-mono text-xs font-bold tabular-nums w-12 text-right text-foreground">
+                    <span className="font-mono text-xs font-bold tabular-nums w-8 text-right text-foreground">
                       {count}
                     </span>
                   </div>
@@ -175,23 +190,29 @@ export default async function StatsPage({
               )
             })}
           </div>
-        </section>
+        </div>
+
       </div>
     </>
   )
 }
 
-function KpiTile({ label, value, sub }: { label: string; value: string; sub: string }) {
+function KpiTile({ badge, label, value, sub }: { badge: string; label: string; value: string; sub: string }) {
   return (
-    <div className="bg-card border border-foreground border-t-2 p-4" style={{ borderTopColor: 'var(--color-foreground)' }}>
-      <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
-        {label}
-      </div>
-      <div className="font-mono text-3xl md:text-4xl font-extrabold leading-none text-foreground mb-2">
-        {value}
-      </div>
-      <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-        {sub}
+    <div className="bg-card border border-black/10 rounded-xl p-5 relative">
+      <span className="absolute top-4 left-5 font-mono text-[9px] text-muted-foreground border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+        [ {badge} ]
+      </span>
+      <div className="mt-5">
+        <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+          {label}
+        </div>
+        <div className="font-mono text-3xl md:text-4xl font-extrabold leading-none text-foreground mb-1">
+          {value}
+        </div>
+        <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          {sub}
+        </div>
       </div>
     </div>
   )
