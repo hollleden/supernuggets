@@ -13,7 +13,6 @@ import { CopyButton } from '@/components/vault/copy-button'
 import { FolderEditor } from '@/components/vault/folder-editor'
 import { TagEditor } from '@/components/vault/tag-editor'
 import { DeleteButton } from '@/components/vault/delete-button'
-import { SearchBar } from '@/components/vault/search-bar'
 import { sourceHeaderLine } from '@/lib/nuggets'
 
 export const dynamic = 'force-dynamic'
@@ -73,25 +72,22 @@ export default async function NuggetPage({
 
   return (
     <>
-      <div className="sticky top-0 z-30 bg-background border-b-2 border-foreground">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link
-            href={`/u/${token}`}
-            className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-2 py-2 border border-foreground transition-colors"
-          >
-            [ ← BACK ]
-          </Link>
-          <SearchBar navigateOnSubmit />
-        </div>
+      <div className="px-4 md:px-6 py-3 border-b border-black/10">
+        <Link
+          href={`/u/${token}`}
+          className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
+        >
+          ← BACK
+        </Link>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <article
-            className="lg:col-span-2 bg-card border border-foreground p-6 md:p-8"
-            style={{ borderTopColor: folderColor, borderTopWidth: '4px' }}
+            className="lg:col-span-2 bg-card border border-black/10 rounded-xl p-5 md:p-7"
+            style={{ borderTopColor: folderColor, borderTopWidth: '3px' }}
           >
-            <div className="flex items-center justify-between mb-6 pb-3 border-b border-foreground gap-3 flex-wrap">
+            <div className="flex items-center justify-between mb-5 pb-3 border-b border-black/10 gap-3 flex-wrap">
               <div className="flex items-center gap-3 flex-wrap">
                 <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
                 <time className="font-mono text-[10px] font-bold tracking-widest text-muted-foreground uppercase">

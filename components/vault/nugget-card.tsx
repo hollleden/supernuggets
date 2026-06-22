@@ -20,12 +20,12 @@ const FOLDER_TEXTURE: Partial<Record<string, string>> = {
 }
 
 function mediaBadgeLabel(mediaType?: string): string {
-  if (!mediaType) return '[ 📝 TEXT ]'
-  if (mediaType.startsWith('image')) return '[ 📸 IMAGE ]'
-  if (mediaType.startsWith('video')) return '[ 📹 VIDEO ]'
-  if (mediaType === 'voice') return '[ 🎙️ VOICE ]'
-  if (mediaType === 'article') return '[ 📰 ARTICLE ]'
-  return '[ 📝 TEXT ]'
+  if (!mediaType) return '[ TEXT ]'
+  if (mediaType.startsWith('image')) return '[ IMAGE ]'
+  if (mediaType.startsWith('video')) return '[ VIDEO ]'
+  if (mediaType === 'voice') return '[ VOICE ]'
+  if (mediaType === 'article') return '[ ARTICLE ]'
+  return '[ TEXT ]'
 }
 
 interface NuggetCardProps {
@@ -48,7 +48,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className="nugget-card flex flex-col p-5 min-h-[210px] relative overflow-hidden cursor-pointer"
+      className="nugget-card flex flex-col p-4 min-h-[180px] relative overflow-hidden cursor-pointer"
       style={{
         '--card-accent': folderColor,
         '--card-accent-bg': accentBg,
