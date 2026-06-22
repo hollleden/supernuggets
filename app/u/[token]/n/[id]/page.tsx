@@ -89,6 +89,20 @@ export default async function NuggetPage({
           >
             <div className="flex items-center justify-between mb-5 pb-3 border-b border-black/10 gap-3 flex-wrap">
               <div className="flex items-center gap-3 flex-wrap">
+                <span
+                  className="font-mono text-[9px] border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider text-muted-foreground"
+                  style={{ color: folderColor, borderColor: folderColor + '40' }}
+                >
+                  {(() => {
+                    const m = nugget.mediaType
+                    if (!m) return '[ TEXT ]'
+                    if (m.startsWith('image')) return '[ IMAGE ]'
+                    if (m.startsWith('video')) return '[ VIDEO ]'
+                    if (m === 'voice') return '[ VOICE ]'
+                    if (m === 'article') return '[ ARTICLE ]'
+                    return '[ TEXT ]'
+                  })()}
+                </span>
                 <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
                 <time className="font-mono text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
                   {nugget.dateCompact}
@@ -97,7 +111,7 @@ export default async function NuggetPage({
               <DeleteButton nuggetId={nugget.id} token={token} />
             </div>
 
-            <h1 className="font-mono text-2xl md:text-3xl font-extrabold uppercase leading-tight text-foreground my-8">
+            <h1 className="font-mono text-2xl md:text-3xl font-extrabold uppercase leading-tight text-foreground my-6">
               {nugget.title}
             </h1>
 
