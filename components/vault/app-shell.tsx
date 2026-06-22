@@ -143,10 +143,10 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         </div>
 
         <div className="border-t border-black/10 pt-4 flex flex-col gap-1.5">
-          <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start" onClick={onClose}>
-            <span>🤖</span> BOT STATUS
+          <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start opacity-50 hover:opacity-80" onClick={onClose}>
+            <span>🤖</span> OPEN BOT
           </a>
-          <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start">
+          <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start opacity-50 hover:opacity-80">
             <span>{isDarkMode ? '☀️' : '🌙'}</span> {isDarkMode ? 'LIGHT MODE' : 'DARK MODE'}
           </button>
         </div>
@@ -216,12 +216,12 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex min-h-[56px]">
+      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex min-h-[48px]">
         {/* Logo — mirrors sidebar width */}
         <div
           className={cn(
-            'flex items-center justify-between px-4 border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200',
-            isSidebarCollapsed ? 'md:w-[64px]' : 'md:w-[264px]'
+            'flex items-center justify-between px-3 border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200',
+            isSidebarCollapsed ? 'md:w-[56px]' : 'md:w-[220px]'
           )}
         >
           <span className="font-mono text-xs font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5">
