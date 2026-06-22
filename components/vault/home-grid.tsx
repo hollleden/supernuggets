@@ -1,39 +1,27 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useEffect, useMemo, Suspense } from 'react'
 import { useSearchParams, useRouter, useParams } from 'next/navigation'
-import { SearchHeader } from '@/components/vault/search-header'
 import { MasonryGrid } from '@/components/vault/nugget-card'
+import { useVaultStats } from '@/lib/vault-stats-context'
 import type { Nugget, FolderType } from '@/lib/nuggets'
 
 interface HomeGridProps {
   initialNuggets: Nugget[]
 }
 
-// Client island that owns search + folder filter + tag filter state.
-// Initial nuggets come from the parent server component, so revalidatePath('/')
-// after a server action causes a fresh server fetch on next navigation.
-export function HomeGrid({ initialNuggets }: HomeGridProps) {
+function HomeGridInner({ initialNuggets }: HomeGridProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const params = useParams<{ token?: string }>()
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
+  const { setVaultStats } = useVaultStats()
+
   const urlQuery = searchParams.get('q') ?? ''
   const urlFolder = (searchParams.get('folder') ?? 'all') as FolderType
   const urlTag = searchParams.get('tag') ?? ''
 
-  const [selectedFolder, setSelectedFolder] = useState<FolderType>(urlFolder)
-  const [searchQuery, setSearchQuery] = useState(urlQuery)
-  const [activeTag, setActiveTag] = useState(urlTag)
-
-  // Sync inputs from URL changes (e.g. tag click on a card navs here with ?tag=)
-  useEffect(() => setSearchQuery(urlQuery), [urlQuery])
-  useEffect(() => setSelectedFolder(urlFolder), [urlFolder])
-  useEffect(() => setActiveTag(urlTag), [urlTag])
-
-  // Per-folder nugget counts — used to show "GROW · 12" in the filter bar.
-  // Computed from the full unfiltered set so counts don't shift as filters change.
   const folderCounts = useMemo(() => {
     const counts: Record<string, number> = { all: initialNuggets.length }
     for (const n of initialNuggets) {
@@ -43,11 +31,10 @@ export function HomeGrid({ initialNuggets }: HomeGridProps) {
   }, [initialNuggets])
 
   const filteredNuggets = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim()
-    const tag = activeTag.toLowerCase()
+    const q = urlQuery.toLowerCase().trim()
+    const tag = urlTag.toLowerCase()
     return initialNuggets.filter(n => {
-      const matchesFolder = selectedFolder === 'all' || n.folder === selectedFolder
-      // Tag filter is exact-match — clicking a tag on a card filters precisely to it.
+      const matchesFolder = urlFolder === 'all' || n.folder === urlFolder
       const matchesTag = !tag || n.tags.some(t => t.toLowerCase() === tag)
       if (!q) return matchesFolder && matchesTag
       const matchesSearch =
@@ -58,48 +45,65 @@ export function HomeGrid({ initialNuggets }: HomeGridProps) {
         n.folder.toLowerCase().includes(q)
       return matchesFolder && matchesTag && matchesSearch
     })
-  }, [initialNuggets, selectedFolder, searchQuery, activeTag])
+  }, [initialNuggets, urlFolder, urlQuery, urlTag])
 
-  const handleClearFilters = () => {
-    setSearchQuery('')
-    setSelectedFolder('all')
-    setActiveTag('')
-    if (urlQuery || urlFolder !== 'all' || urlTag) router.replace(homeHref)
-  }
+  // Publish live counts to context — header and sidebar consume these
+  useEffect(() => {
+    setVaultStats(initialNuggets.length, filteredNuggets.length, folderCounts)
+  }, [initialNuggets.length, filteredNuggets.length, folderCounts, setVaultStats])
 
   const handleClearTag = () => {
-    setActiveTag('')
-    // If the tag came from the URL, clean up without blowing away other params.
-    if (urlTag) {
-      const qsParams = new URLSearchParams()
-      if (searchQuery) qsParams.set('q', searchQuery)
-      if (selectedFolder !== 'all') qsParams.set('folder', selectedFolder)
-      const qs = qsParams.toString()
-      router.replace(qs ? `${homeHref}?${qs}` : homeHref)
-    }
+    const sp = new URLSearchParams(searchParams.toString())
+    sp.delete('tag')
+    const qs = sp.toString()
+    router.replace(qs ? `${homeHref}?${qs}` : homeHref)
+  }
+
+  const handleClearFilters = () => {
+    router.replace(homeHref)
   }
 
   return (
     <>
-      <SearchHeader
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedFolder={selectedFolder}
-        onFolderChange={setSelectedFolder}
-        totalNuggets={initialNuggets.length}
-        filteredNuggets={filteredNuggets.length}
-        folderCounts={folderCounts}
-        activeTag={activeTag}
-        onClearTag={handleClearTag}
-      />
+      {urlTag && (
+        <div className="px-4 pt-3 flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] uppercase tracking-wider px-2 py-1.5 rounded-full">
+            <span>#{urlTag}</span>
+            <button
+              onClick={handleClearTag}
+              className="ml-1 leading-none hover:opacity-70 transition-opacity"
+              aria-label="Clear tag filter"
+            >
+              ×
+            </button>
+          </div>
+          {filteredNuggets.length !== initialNuggets.length && (
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+              {filteredNuggets.length} OF {initialNuggets.length}
+            </span>
+          )}
+        </div>
+      )}
 
-      <section className="flex-1 p-4">
+      <section className="flex-1 p-4 md:p-6">
         <MasonryGrid
           nuggets={filteredNuggets}
-          hideFolder={selectedFolder !== 'all'}
+          hideFolder={urlFolder !== 'all'}
           onClearFilters={handleClearFilters}
         />
       </section>
     </>
+  )
+}
+
+export function HomeGrid({ initialNuggets }: HomeGridProps) {
+  return (
+    <Suspense fallback={
+      <div className="p-6 font-mono text-xs text-muted-foreground uppercase tracking-wider">
+        LOADING VAULT...
+      </div>
+    }>
+      <HomeGridInner initialNuggets={initialNuggets} />
+    </Suspense>
   )
 }

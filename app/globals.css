@@ -138,3 +138,103 @@
     border-radius: 0;
   }
 }
+
+/* Hide scrollbar while allowing scroll */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Scrolling marquee */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-content {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+/* Nugget card: per-folder CSS variable hover system */
+.nugget-card {
+  background-color: var(--card);
+  border: 1px solid #121110;
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nugget-card:hover {
+  border-color: var(--card-accent, #121110);
+  box-shadow: 4px 4px 0px 0px var(--card-accent, #121110);
+  background-color: var(--card-accent-bg, var(--card));
+}
+.dark .nugget-card {
+  border-color: oklch(0.35 0 0);
+}
+.dark .nugget-card:hover {
+  background-color: oklch(0.19 0 0);
+}
+
+/* Sidebar pill buttons */
+.pill-btn {
+  border-radius: 9999px;
+  border: 1px solid #121110;
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pill-btn:hover,
+.pill-btn.active {
+  background-color: #121110;
+  color: #fff;
+}
+.dark .pill-btn {
+  border-color: oklch(0.5 0 0);
+  color: oklch(0.985 0 0);
+  background-color: transparent;
+}
+.dark .pill-btn:hover,
+.dark .pill-btn.active {
+  background-color: oklch(0.985 0 0);
+  color: oklch(0.145 0 0);
+  border-color: oklch(0.985 0 0);
+}
+
+/* Collapsed sidebar: icon-only circle buttons */
+.pill-btn-icon {
+  border-radius: 50%;
+  border: 1px solid #121110;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pill-btn-icon:hover,
+.pill-btn-icon.active {
+  background-color: #121110;
+  color: #fff;
+}
+.dark .pill-btn-icon {
+  border-color: oklch(0.5 0 0);
+  color: oklch(0.985 0 0);
+}
+.dark .pill-btn-icon:hover,
+.dark .pill-btn-icon.active {
+  background-color: oklch(0.985 0 0);
+  color: oklch(0.145 0 0);
+  border-color: oklch(0.985 0 0);
+}
