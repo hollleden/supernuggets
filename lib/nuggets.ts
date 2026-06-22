@@ -39,6 +39,7 @@ export interface Nugget {
   // the original source URL — set by the bot's URL handler, surfaced as the
   // ↗ SOURCE block on cards + detail pages.
   sourceInfo?: SourceInfo
+  mediaType?: string
 }
 
 export type FolderType =
@@ -276,6 +277,7 @@ export function mapRowToNugget(row: EntryRow): Nugget {
     transcript: (row.raw_content ?? '').trim(),
     extractedLinks,
     sourceInfo,
+    mediaType: row.media_type ?? undefined,
   }
 }
 

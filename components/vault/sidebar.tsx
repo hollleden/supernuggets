@@ -1,20 +1,18 @@
 'use client'
 
+import { Suspense } from 'react'
 import Link from 'next/link'
-import { usePathname, useParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { usePathname, useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import {
-  Grid3X3,
-  Sparkles,
-  Activity,
-  Moon,
-  Sun,
-  ChevronLeft,
-  ChevronRight,
-  Bot,
-} from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
+import { useVaultStats } from '@/lib/vault-stats-context'
+
+const FOLDER_LABELS: Record<FolderType, string> = {
+  all: 'ALL', Grow: 'GROW', Leisure: 'LEISURE', Health: 'HEALTH',
+  Creativity: 'CREATIVITY', Money: 'MONEY', Work: 'WORK', Curation: 'CURATION',
+  Personal: 'PERSONAL', Beauty: 'BEAUTY', Food: 'FOOD', Travel: 'TRAVEL', Sport: 'SPORT',
+}
 
 interface SidebarProps {
   isDarkMode: boolean
@@ -25,180 +23,198 @@ interface SidebarProps {
   isResurfaceActive?: boolean
 }
 
-// 16x16 pixel floppy — BRAND.md §5 logo. Uses currentColor for fills so it
-// adapts to light/dark (cream + black in light, cream-grey + sepia in dark).
-function PixelFloppy({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-      shapeRendering="crispEdges"
-    >
-      {/* Outer body */}
-      <rect x="1" y="1" width="14" height="14" fill="currentColor" />
-      {/* Inner cutout — becomes the "card surface" */}
-      <rect x="2" y="2" width="12" height="12" fill="var(--card)" />
-      {/* Metal shutter band at top */}
-      <rect x="3" y="2" width="10" height="4" fill="currentColor" />
-      {/* Shutter slot — gives the metal piece its iconic notch */}
-      <rect x="6" y="3" width="3" height="2" fill="var(--card)" />
-      {/* Label window */}
-      <rect x="3" y="7" width="10" height="7" fill="currentColor" />
-      {/* Label paper area */}
-      <rect x="4" y="8" width="8" height="5" fill="var(--card)" />
-      {/* Two writing lines on the label */}
-      <rect x="5" y="9" width="6" height="1" fill="currentColor" />
-      <rect x="5" y="11" width="4" height="1" fill="currentColor" />
-    </svg>
-  )
-}
-
-export function Sidebar({
+function SidebarInner({
   isDarkMode,
   onToggleDarkMode,
   isCollapsed,
   onToggleCollapse,
   onResurface,
-  isResurfaceActive,
 }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const params = useParams<{ token?: string }>()
-  // When inside /u/[token]/*, prefix internal nav so we don't bounce to the
-  // public landing page. Outside, fall back to the legacy paths (which now
-  // redirect to '/' — harmless during the C-3/C-4 transition).
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
   const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
   const isHome = pathname === homeHref
   const isStats = pathname === statsHref
+  const { folderCounts } = useVaultStats()
+
+  const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
+
+  const handleFolderClick = (folder: FolderType) => {
+    const sp = new URLSearchParams(searchParams.toString())
+    if (folder === 'all') sp.delete('folder')
+    else sp.set('folder', folder)
+    sp.delete('tag')
+    const qs = sp.toString()
+    router.replace(qs ? `${homeHref}?${qs}` : homeHref)
+  }
+
   return (
-    <nav
+    <aside
       className={cn(
-        'h-screen bg-card hidden md:flex flex-col fixed left-0 top-0 bottom-0 z-40 border-r-2 border-foreground transition-all duration-300',
-        isCollapsed ? 'w-[52px]' : 'w-[180px]'
+        'hidden md:flex flex-col sticky top-14 bg-card border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200 overflow-hidden',
+        isCollapsed ? 'w-[64px]' : 'w-[264px]',
+        'h-[calc(100vh-56px)]'
       )}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2 p-3 border-b-2 border-foreground">
-        <PixelFloppy className="w-7 h-7 shrink-0 text-foreground" />
-        {!isCollapsed && (
-          <span className="font-mono text-xs font-extrabold uppercase tracking-tight text-foreground">
-            SUPERNUGGETS
-          </span>
-        )}
-      </div>
+      {/* Scrollable inner */}
+      <div className="flex flex-col flex-1 overflow-y-auto p-3 gap-1 no-scrollbar">
 
-      {/* Primary nav */}
-      <div className="flex flex-col flex-1 py-2">
-        <NavItem
-          icon={<Grid3X3 className="w-4 h-4" />}
-          label="BROWSE"
-          href={homeHref}
-          isActive={isHome}
-          isCollapsed={isCollapsed}
-        />
-        <NavItem
-          icon={<Sparkles className="w-4 h-4" />}
-          label="RESURFACE"
-          isCollapsed={isCollapsed}
-          onClick={onResurface}
-          isActive={isResurfaceActive}
-        />
-        <NavItem
-          icon={<Activity className="w-4 h-4" />}
-          label="STATS"
-          href={statsHref}
-          isActive={isStats}
-          isCollapsed={isCollapsed}
-        />
-
-        <div className="flex-1" />
-
-        {/* Footer nav */}
-        <div className="border-t border-foreground pt-2">
-          <NavItem
-            icon={<Bot className="w-4 h-4" />}
-            label="BOT"
-            href="https://t.me/supernuggetss_bot"
+        {/* Primary nav */}
+        <div className={cn('flex flex-col gap-1', !isCollapsed && 'mb-4')}>
+          <PillNavItem
+            icon="🎛️"
+            label="BROWSE"
+            href={homeHref}
+            isActive={isHome}
             isCollapsed={isCollapsed}
-            external
           />
-          <NavItem
-            icon={isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            label={isDarkMode ? 'LIGHT' : 'DARK'}
-            onClick={onToggleDarkMode}
+          <PillNavItem
+            icon="✨"
+            label="RESURFACE"
+            isActive={false}
+            isCollapsed={isCollapsed}
+            onClick={onResurface}
+          />
+          <PillNavItem
+            icon="📈"
+            label="STATS"
+            href={statsHref}
+            isActive={isStats}
             isCollapsed={isCollapsed}
           />
         </div>
+
+        {/* Folder list — desktop expanded only */}
+        {!isCollapsed && (
+          <>
+            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground px-1 mb-1 mt-1">
+              // FOLDERS
+            </div>
+            <div className="flex flex-col gap-1">
+              {FOLDERS.map((folder) => {
+                const isActive = folder === activeFolder
+                const count = folder === 'all' ? folderCounts.all : (folderCounts[folder] ?? 0)
+                const color = FOLDER_COLOR_HEX[folder]
+                return (
+                  <button
+                    key={folder}
+                    onClick={() => handleFolderClick(folder)}
+                    className={cn('pill-btn justify-between', isActive && 'active')}
+                    style={isActive ? {} : { '--pill-accent': color } as React.CSSProperties}
+                  >
+                    <span className="flex items-center gap-2">
+                      {folder !== 'all' && (
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{ backgroundColor: isActive ? 'currentColor' : color }}
+                        />
+                      )}
+                      {FOLDER_LABELS[folder]}
+                    </span>
+                    {count > 0 && (
+                      <span className="text-[9px] font-normal opacity-50 tabular-nums">
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </>
+        )}
+
+        {/* Folder dots — collapsed view */}
+        {isCollapsed && (
+          <div className="flex flex-col gap-1 mt-2">
+            {FOLDERS.filter(f => f !== 'all').map((folder) => {
+              const isActive = folder === activeFolder
+              const color = FOLDER_COLOR_HEX[folder]
+              return (
+                <Tooltip key={folder}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => handleFolderClick(folder)}
+                      className={cn('pill-btn-icon mx-auto', isActive && 'active')}
+                      style={{ borderColor: color }}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: isActive ? 'currentColor' : color }}
+                      />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="font-mono text-[10px] font-bold uppercase tracking-wider rounded-none">
+                    {FOLDER_LABELS[folder]}
+                  </TooltipContent>
+                </Tooltip>
+              )
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Collapse toggle */}
-      <div className="p-2 border-t border-foreground">
+      {/* Footer */}
+      <div className="p-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-1">
+        <PillNavItem
+          icon="🤖"
+          label="BOT STATUS"
+          href="https://t.me/supernuggetss_bot"
+          isActive={false}
+          isCollapsed={isCollapsed}
+          external
+        />
+        <PillNavItem
+          icon={isDarkMode ? '☀️' : '🌙'}
+          label={isDarkMode ? 'LIGHT MODE' : 'DARK MODE'}
+          isActive={false}
+          isCollapsed={isCollapsed}
+          onClick={onToggleDarkMode}
+        />
         <button
           onClick={onToggleCollapse}
-          className="w-full h-7 flex items-center justify-center text-foreground hover:bg-foreground hover:text-background transition-colors"
+          className={cn(
+            'pill-btn mt-1 border-dashed text-muted-foreground',
+            isCollapsed && 'pill-btn-icon mx-auto'
+          )}
         >
-          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">COLLAPSE PANEL</span></>}
         </button>
       </div>
-
-    </nav>
+    </aside>
   )
 }
 
-interface NavItemProps {
-  icon: React.ReactNode
+interface PillNavItemProps {
+  icon: React.ReactNode | string
   label: string
-  isActive?: boolean
+  isActive: boolean
   isCollapsed: boolean
   onClick?: () => void
   href?: string
   external?: boolean
 }
 
-function NavItem({ icon, label, isActive, isCollapsed, onClick, href, external }: NavItemProps) {
-  const className = cn(
-    'w-full rounded-none h-9 font-mono text-[10px] uppercase tracking-wider transition-colors inline-flex items-center',
-    isCollapsed ? 'justify-center px-0' : 'justify-start px-3',
-    isActive
-      ? 'bg-foreground text-background hover:bg-foreground hover:text-background font-bold'
-      : 'text-foreground hover:bg-foreground hover:text-background'
-  )
-
-  const inner = (
-    <>
-      {icon}
-      {!isCollapsed && <span className="ml-2">{label}</span>}
-    </>
-  )
+function PillNavItem({ icon, label, isActive, isCollapsed, onClick, href, external }: PillNavItemProps) {
+  const className = cn(isCollapsed ? 'pill-btn-icon mx-auto' : 'pill-btn', isActive && 'active')
+  const inner = isCollapsed ? icon : <>{icon}<span>{label}</span></>
 
   const node = href ? (
-    external ? (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{inner}</a>
-    ) : (
-      <Link href={href} className={className}>{inner}</Link>
-    )
+    external
+      ? <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{inner}</a>
+      : <Link href={href} className={className}>{inner}</Link>
   ) : (
-    <Button
-      variant="ghost"
-      size="sm"
-      className={className}
-      onClick={onClick}
-    >
-      {inner}
-    </Button>
+    <button onClick={onClick} className={className}>{inner}</button>
   )
 
   if (isCollapsed) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>{node}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          className="font-mono text-[10px] font-bold uppercase tracking-wider bg-foreground text-background border border-foreground rounded-none"
-        >
+        <TooltipContent side="right" className="font-mono text-[10px] font-bold uppercase tracking-wider rounded-none">
           {label}
         </TooltipContent>
       </Tooltip>
@@ -206,4 +222,12 @@ function NavItem({ icon, label, isActive, isCollapsed, onClick, href, external }
   }
 
   return node
+}
+
+export function Sidebar(props: SidebarProps) {
+  return (
+    <Suspense fallback={null}>
+      <SidebarInner {...props} />
+    </Suspense>
+  )
 }
