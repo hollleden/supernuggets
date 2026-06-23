@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
+import Link from 'next/link'
 import { useRouter, useParams, usePathname, useSearchParams } from 'next/navigation'
 import { Sidebar } from './sidebar'
 import { pickRandomNuggetId } from '@/app/actions/nuggets'
@@ -116,8 +117,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         <div>
           <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">// NAVIGATION</div>
           <div className="flex flex-col gap-1.5">
-            <a href={homeHref} onClick={onClose} className={cn('pill-btn justify-start', isHome && 'active')}><span>🎛️</span> BROWSE</a>
-            <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> RESURFACE</button>
+            <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> RANDOM NUGGET</button>
             <a href={statsHref} onClick={onClose} className={cn('pill-btn justify-start', isStats && 'active')}><span>📈</span> STATS</a>
           </div>
         </div>
@@ -125,16 +125,16 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         <div className="border-t border-black/10 pt-4">
           <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">// FOLDERS</div>
           <div className="grid grid-cols-2 gap-1.5">
-            {FOLDERS.map((folder) => {
+            {FOLDERS.filter(f => f !== 'all').map((folder) => {
               const isActive = folder === activeFolder
-              const count = folder === 'all' ? folderCounts.all : (folderCounts[folder] ?? 0)
+              const count = folderCounts[folder] ?? 0
               return (
                 <button
                   key={folder}
                   onClick={() => handleFolderClick(folder)}
                   className={cn('pill-btn justify-between', isActive && 'active')}
                 >
-                  <span>{folder === 'all' ? 'ALL' : folder.toUpperCase()}</span>
+                  <span>{folder.toUpperCase()}</span>
                   {count > 0 && <span className="text-[9px] font-normal opacity-50">{count}</span>}
                 </button>
               )
@@ -208,11 +208,10 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
 
-      {/* Scrolling marquee bar */}
-      <div className="w-full bg-[#FAFF00] border-b border-black py-1.5 overflow-hidden select-none">
-        <div className="marquee-content font-mono text-[10px] font-black uppercase tracking-wider text-black">
-          <span className="px-4 shrink-0">💎 SUPERNUGGETS DIGITAL VAULT // BRAIN DUMP ENGINE ╳ AUDIO, IMAGES, ARTICLES AND VIDEOS INGEST OK &nbsp;⚡︎ STOP CLUTTERING YOUR CAMERA ROLL ╳ RECLAIM YOUR CREATIVE CHAOS ╳ CAPTURED TODAY, REMEMBERED FOREVER ╳ SUPERNUGGETS ⚡︎</span>
-          <span className="px-4 shrink-0">💎 SUPERNUGGETS DIGITAL VAULT // BRAIN DUMP ENGINE ╳ AUDIO, IMAGES, ARTICLES AND VIDEOS INGEST OK &nbsp;⚡︎ STOP CLUTTERING YOUR CAMERA ROLL ╳ RECLAIM YOUR CREATIVE CHAOS ╳ CAPTURED TODAY, REMEMBERED FOREVER ╳ SUPERNUGGETS ⚡︎</span>
+      {/* Static top bar */}
+      <div className="w-full bg-[#FAFF00] border-b border-black py-1.5 select-none">
+        <div className="top-bar-text font-mono text-[10px] font-black uppercase tracking-wider text-black text-center px-4">
+          SUPERNUGGETS — DIGITAL VAULT // BRAIN DUMP ENGINE — STOP CLUTTERING YOUR CAMERA ROLL — RECLAIM YOUR CREATIVE CHAOS — CAPTURED TODAY, REMEMBERED FOREVER
         </div>
       </div>
 
@@ -225,11 +224,11 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             isSidebarCollapsed ? 'md:w-[56px]' : 'md:w-[220px]'
           )}
         >
-          <span className="font-mono text-xs font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5">
+          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-xs font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
             <span>💾</span>
             <span className="hidden md:inline">{isSidebarCollapsed ? 'SN' : 'SUPERNUGGETS'}</span>
             <span className="md:hidden">SUPERNUGGETS</span>
-          </span>
+          </Link>
 
           {/* Mobile right: count + burger */}
           <div className="flex items-center gap-2 md:hidden">

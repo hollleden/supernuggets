@@ -81,194 +81,205 @@ export default async function NuggetPage({
 
   return (
     <>
-      {/* Back bar */}
-      <div className="px-4 md:px-6 py-3 border-b border-gray-100">
+      {/* Back button */}
+      <div className="px-4 md:px-6 py-4">
         <Link
           href={`/u/${token}`}
-          className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider border border-gray-300 px-3 py-1 rounded bg-white hover:border-black transition-colors"
+          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase px-3 py-1.5 bg-white border border-gray-200 rounded-xl hover:border-black transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
         >
-          ← BACK
+          <span>←</span>
+          <span>BACK</span>
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="max-w-7xl mx-auto px-4 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
           {/* ── Main content card ── */}
-          <article
-            className="lg:col-span-2 bg-white border border-gray-200 rounded-xl shadow-[0_1px_2px_rgba(0,0,0,0.02)] overflow-hidden"
-          >
+          <main className="lg:col-span-8 bg-white border border-gray-200 rounded-2xl p-6 md:p-8 space-y-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+
             {/* Metadata bar */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 gap-3 flex-wrap">
-              <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
+              <div className="flex items-center gap-3">
                 <span
-                  className="font-mono text-[9px] border px-2 py-0.5 rounded uppercase"
-                  style={{ color: folderColor, borderColor: folderColor + '40' }}
+                  className="text-[10px] font-bold border px-2 py-0.5 rounded uppercase"
+                  style={{
+                    color: folderColor,
+                    borderColor: folderColor + '40',
+                    backgroundColor: folderColor + '12',
+                  }}
                 >
                   {mediaBadgeLabel(nugget.mediaType)}
                 </span>
                 <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
-                <time className="font-mono text-[10px] text-gray-400 tracking-wider">
-                  {nugget.dateCompact}
-                </time>
+                <span className="text-gray-400 text-[11px]">{nugget.dateCompact}</span>
               </div>
               <DeleteButton nuggetId={nugget.id} token={token} />
             </div>
 
             {/* Title */}
-            <div className="px-5 pt-5 pb-4 border-b border-gray-100">
-              <h1 className="font-mono text-xl md:text-2xl font-black tracking-tight text-black uppercase leading-tight">
-                {nugget.title}
-              </h1>
-            </div>
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-black uppercase leading-[1.15]">
+              {nugget.title}
+            </h1>
 
-            <div className="p-5 space-y-6">
-              {/* Source */}
-              {nugget.sourceInfo && (
-                <Section title="SOURCE">
-                  <div className="font-mono text-xs leading-relaxed">
+            {/* Source */}
+            {nugget.sourceInfo && (
+              <div className="space-y-2 pt-2">
+                <Divider>SOURCE</Divider>
+                <div className="space-y-1">
+                  <div className="text-[11px] font-bold text-gray-600 flex items-center gap-2">
+                    <span>↗</span>
                     <a
                       href={nugget.sourceInfo.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-black hover:underline underline-offset-2 uppercase tracking-wide font-bold"
+                      className="hover:text-black uppercase"
                     >
-                      <span>↗</span>
-                      <span>{sourceHeaderLine(nugget.sourceInfo) || 'OPEN ORIGINAL'}</span>
+                      {sourceHeaderLine(nugget.sourceInfo) || 'OPEN ORIGINAL'}
                     </a>
-                    <div className="mt-1 text-gray-400 break-all">
+                  </div>
+                  <a
+                    href={nugget.sourceInfo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] text-gray-400 hover:text-black underline truncate block max-w-full transition-colors"
+                  >
+                    {nugget.sourceInfo.url}
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Summary */}
+            {nugget.summaryBullets.length > 0 && (
+              <div className="space-y-4 pt-4">
+                <Divider>SUMMARY</Divider>
+                <ul className="space-y-3 text-[13px] leading-relaxed text-gray-800 pl-4">
+                  {nugget.summaryBullets.map((bullet, i) => (
+                    <li
+                      key={i}
+                      className="relative before:content-['▪'] before:absolute before:-left-4"
+                      style={{ ['--tw-before-color' as string]: folderColor }}
+                    >
+                      <span className="absolute -left-4" style={{ color: folderColor }}>▪</span>
+                      <span className="pl-1">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Mentioned */}
+            {nugget.mentioned.length > 0 && (
+              <div className="space-y-4 pt-4">
+                <Divider>MENTIONED</Divider>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {nugget.mentioned.map((m, i) => (
+                    <a
+                      key={i}
+                      href={m.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#fcfbfa] border border-gray-200 px-3 py-1.5 rounded-xl font-medium text-gray-700 flex items-center gap-1.5 hover:border-black transition-colors"
+                    >
+                      <span className="text-[10px]" style={{ color: folderColor }}>▪</span>
+                      {m.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Fact-check */}
+            {nugget.factChecks.length > 0 && (
+              <div className="space-y-4 pt-4">
+                <Divider>FACT-CHECK</Divider>
+                <div className="space-y-4 text-xs">
+                  {nugget.factChecks.map((fc, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="font-bold text-gray-900 flex items-center gap-1.5 uppercase tracking-tight">
+                        <span className="text-emerald-600 font-black">✓</span>
+                        {fc.searchQuery ? (
+                          <a
+                            href={`https://www.google.com/search?q=${encodeURIComponent(fc.searchQuery)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline underline-offset-2"
+                          >
+                            {fc.claim}
+                          </a>
+                        ) : (
+                          <span>{fc.claim}</span>
+                        )}
+                      </div>
+                      {fc.evidence && (
+                        <div className="text-gray-500 pl-4 leading-relaxed text-[11px]">
+                          {fc.evidence}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tags */}
+            <div className="space-y-3 pt-4">
+              <Divider>TAGS</Divider>
+              <TagEditor nuggetId={nugget.id} initialTags={nugget.tags} token={token} />
+            </div>
+
+            {/* Links */}
+            {nugget.extractedLinks.length > 0 && (
+              <div className="space-y-3 pt-4">
+                <Divider>LINKS</Divider>
+                <ul className="space-y-1 text-xs">
+                  {nugget.extractedLinks.map(url => (
+                    <li key={url} className="flex gap-2">
+                      <span className="text-gray-400 shrink-0">⬈</span>
                       <a
-                        href={nugget.sourceInfo.url}
+                        href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-black"
+                        className="text-gray-700 hover:text-black break-all underline underline-offset-2 decoration-1"
                       >
-                        {nugget.sourceInfo.url}
+                        {url}
                       </a>
-                    </div>
-                  </div>
-                </Section>
-              )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-              {/* Summary */}
-              {nugget.summaryBullets.length > 0 && (
-                <Section title="SUMMARY">
-                  <ul className="space-y-2">
-                    {nugget.summaryBullets.map((bullet, i) => (
-                      <li key={i} className="font-mono text-xs text-black leading-relaxed flex gap-3">
-                        <span className="text-gray-400 shrink-0">▪</span>
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
-
-              {/* Mentioned */}
-              {nugget.mentioned.length > 0 && (
-                <Section title="MENTIONED">
-                  <ul className="space-y-1">
-                    {nugget.mentioned.map((m, i) => (
-                      <li key={i} className="font-mono text-xs leading-relaxed flex gap-3">
-                        <span className="text-gray-400 shrink-0">•</span>
-                        <a
-                          href={m.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-black hover:underline underline-offset-2 decoration-1"
-                        >
-                          {m.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
-
-              {/* Fact-check */}
-              {nugget.factChecks.length > 0 && (
-                <Section title="FACT-CHECK">
-                  <ul className="space-y-4">
-                    {nugget.factChecks.map((fc, i) => (
-                      <li key={i} className="font-mono text-xs leading-relaxed">
-                        <div className="flex gap-3">
-                          <span className="text-gray-400 shrink-0">✓</span>
-                          {fc.searchQuery ? (
-                            <a
-                              href={`https://www.google.com/search?q=${encodeURIComponent(fc.searchQuery)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-bold uppercase tracking-wide text-black hover:underline underline-offset-2 decoration-1"
-                            >
-                              {fc.claim}
-                            </a>
-                          ) : (
-                            <span className="font-bold uppercase tracking-wide">{fc.claim}</span>
-                          )}
-                        </div>
-                        {fc.evidence && (
-                          <div className="text-gray-400 pl-7 mt-1">{fc.evidence}</div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
-
-              {/* Tags */}
-              <Section title="TAGS">
-                <TagEditor nuggetId={nugget.id} initialTags={nugget.tags} token={token} />
-              </Section>
-
-              {/* Links */}
-              {nugget.extractedLinks.length > 0 && (
-                <Section title="LINKS">
-                  <ul className="space-y-1">
-                    {nugget.extractedLinks.map(url => (
-                      <li key={url} className="font-mono text-xs flex gap-3">
-                        <span className="text-gray-400 shrink-0">⬈</span>
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-black hover:underline break-all underline-offset-2 decoration-1"
-                        >
-                          {url}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
-
-              {/* Transcript */}
-              {nugget.transcript && (
-                <Section title="RAW CAPTURE PAYLOAD" actions={<CopyButton text={nugget.transcript} label="COPY" />}>
-                  <div className="bg-stone-50 border border-gray-200 rounded-xl p-4">
-                    <pre className="font-mono text-[11px] text-gray-600 leading-relaxed whitespace-pre-wrap break-words">
-                      {nugget.transcript}
-                    </pre>
-                  </div>
-                </Section>
-              )}
-            </div>
-          </article>
+            {/* Raw Capture Payload */}
+            {nugget.transcript && (
+              <div className="space-y-2 pt-4">
+                <div className="flex justify-between items-center border-b border-gray-100 pb-1">
+                  <span className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">RAW CAPTURE PAYLOAD</span>
+                  <CopyButton text={nugget.transcript} label="COPY" />
+                </div>
+                <div className="bg-stone-50 border border-gray-200 rounded-xl p-4 text-gray-600 leading-relaxed text-[11px]">
+                  <pre className="font-mono whitespace-pre-wrap break-words">
+                    {nugget.transcript}
+                  </pre>
+                </div>
+              </div>
+            )}
+          </main>
 
           {/* ── Related sidebar ── */}
-          <aside className="lg:col-span-1">
-            <div className="font-mono text-[9px] font-black uppercase tracking-widest text-gray-400 mb-3">
+          <aside className="lg:col-span-4 space-y-3">
+            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest px-1 mb-1">
               RELATED IN {nugget.folder.toUpperCase()}
             </div>
             {related.length === 0 ? (
-              <p className="font-mono text-xs text-gray-400">
+              <p className="font-mono text-xs text-gray-400 px-1">
                 NO OTHER NUGGETS IN THIS FOLDER YET.
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                {related.map(r => (
-                  <RelatedCard key={r.id} nugget={r} token={token} />
-                ))}
-              </div>
+              related.map(r => (
+                <RelatedCard key={r.id} nugget={r} token={token} />
+              ))
             )}
           </aside>
 
@@ -278,29 +289,15 @@ export default async function NuggetPage({
   )
 }
 
-function Section({
-  title,
-  actions,
-  children,
-}: {
-  title: string
-  actions?: React.ReactNode
-  children: React.ReactNode
-}) {
+function Divider({ children }: { children: React.ReactNode }) {
   return (
-    <section>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="flex-1 border-b border-gray-100" />
-        <span className="font-mono text-[9px] text-gray-400 tracking-widest uppercase px-1">
-          {title}
-        </span>
-        {actions
-          ? <>{actions}</>
-          : <span className="flex-1 border-b border-gray-100" />
-        }
-      </div>
-      {children}
-    </section>
+    <div className="relative flex py-1 items-center">
+      <div className="flex-grow border-t border-gray-100" />
+      <span className="flex-shrink mx-4 text-[9px] text-gray-400 tracking-[0.2em] uppercase font-bold">
+        {children}
+      </span>
+      <div className="flex-grow border-t border-gray-100" />
+    </div>
   )
 }
 
@@ -309,24 +306,23 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="block bg-white border border-gray-200 rounded-xl p-4 relative shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-black cursor-pointer transition-all duration-150"
+      className="group block bg-white border border-gray-200 rounded-2xl p-4 hover:border-black transition-all min-h-[90px] shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col justify-between"
     >
-      <span
-        className="absolute top-3 left-4 font-mono text-[9px] border px-1.5 py-0.5 rounded uppercase tracking-wider"
-        style={{
-          color: folderColor,
-          borderColor: folderColor + '40',
-          backgroundColor: folderColor + '12',
-        }}
+      <div className="flex justify-between items-center w-full">
+        <span
+          className="text-[10px] font-bold uppercase tracking-wider"
+          style={{ color: folderColor }}
+        >
+          {nugget.folder.toUpperCase()}
+        </span>
+        <span className="text-[11px] text-gray-400">{nugget.dateCompact}</span>
+      </div>
+      <div
+        className="font-bold text-black text-xs uppercase tracking-tight line-clamp-2 group-hover:transition-colors mt-2"
+        style={{ ['--hover-color' as string]: folderColor }}
       >
-        {nugget.folder.toUpperCase()}
-      </span>
-      <span className="absolute top-3 right-4 font-mono text-[9px] text-gray-400">
-        {nugget.dateCompact}
-      </span>
-      <h3 className="font-mono text-xs font-black uppercase leading-tight text-black line-clamp-2 mt-6">
         {nugget.title}
-      </h3>
+      </div>
     </Link>
   )
 }
