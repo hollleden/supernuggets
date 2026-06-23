@@ -72,25 +72,25 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       <div className="flex-1 flex flex-col justify-between min-w-0">
         <div>
           <div className="flex items-center justify-between w-full mb-0.5">
-            <span
-              className="font-mono text-[8px] font-bold tracking-wider border px-1.5 py-0.5 rounded uppercase"
-              style={{ color: folderColor, borderColor: folderColor + '40', backgroundColor: folderColor + '12' }}
-            >
-              {mediaBadgeLabel(nugget.mediaType)}
-            </span>
+            {!hideFolder ? (
+              <span
+                className="font-mono text-[10px] font-bold uppercase"
+                style={{ color: folderColor }}
+              >
+                {nugget.folder}
+              </span>
+            ) : <span />}
             <time className="font-mono text-[10px] text-muted-foreground">
               {nugget.dateCompact}
             </time>
           </div>
 
-          {!hideFolder && (
-            <span
-              className="font-mono text-[9px] font-bold uppercase tracking-widest block mb-1"
-              style={{ color: folderColor }}
-            >
-              {nugget.folder}
-            </span>
-          )}
+          <span
+            className="font-mono text-[8px] font-bold tracking-wider border px-1.5 py-0.5 rounded uppercase inline-block mb-1.5"
+            style={{ color: folderColor, borderColor: folderColor + '40', backgroundColor: folderColor + '12' }}
+          >
+            {mediaBadgeLabel(nugget.mediaType)}
+          </span>
 
           <h3 className="font-mono text-xs font-extrabold uppercase tracking-tight leading-tight text-foreground line-clamp-2">
             {nugget.title}
@@ -149,7 +149,7 @@ TO INDEX AGAIN.`}
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {nuggets.map(nugget => (
         <NuggetCard key={nugget.id} nugget={nugget} hideFolder={hideFolder} />
       ))}
