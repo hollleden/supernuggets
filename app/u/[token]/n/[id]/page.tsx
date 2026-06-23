@@ -65,11 +65,15 @@ function mediaBadgeLabel(mediaType?: string): string {
 
 function MediaCapture({ nugget }: { nugget: Nugget }) {
   const info = nugget.sourceInfo!
+  const folderColor = FOLDER_COLOR_HEX[nugget.folder as FolderType] ?? FOLDER_COLOR_HEX.all
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-      <div className="text-[9px] text-gray-400 uppercase font-bold tracking-widest px-1">
-        Media Capture
-      </div>
+      <span
+        className="font-mono text-[9px] font-bold tracking-wider border px-2 py-0.5 rounded uppercase"
+        style={{ color: folderColor, borderColor: folderColor + '40', backgroundColor: folderColor + '12' }}
+      >
+        {mediaBadgeLabel(nugget.mediaType)}
+      </span>
 
       <a
         href={info.url}
