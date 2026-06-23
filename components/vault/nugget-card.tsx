@@ -48,7 +48,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className={`nugget-card ${hasThumbnail ? 'flex flex-row gap-3' : 'flex flex-col justify-between'} h-36 p-3 relative overflow-hidden cursor-pointer`}
+      className={`nugget-card ${hasThumbnail ? 'flex flex-row gap-3' : 'flex flex-col justify-between'} h-40 p-3 relative overflow-hidden cursor-pointer`}
       style={{
         '--card-accent': folderColor,
         '--card-accent-bg': folderColor + '1F',
