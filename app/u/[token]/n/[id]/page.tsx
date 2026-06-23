@@ -5,10 +5,12 @@ import { userIdFromToken } from '@/lib/users'
 import {
   mapRowToNugget,
   FOLDER_COLOR_HEX,
+  formatDuration,
   type EntryRow,
   type Nugget,
   type FolderType,
 } from '@/lib/nuggets'
+import { ThumbnailImage } from '@/components/vault/thumbnail-image'
 import { CopyButton } from '@/components/vault/copy-button'
 import { FolderEditor } from '@/components/vault/folder-editor'
 import { TagEditor } from '@/components/vault/tag-editor'
@@ -61,6 +63,52 @@ function mediaBadgeLabel(mediaType?: string): string {
   return '[ TEXT ]'
 }
 
+function MediaCapture({ nugget }: { nugget: Nugget }) {
+  const info = nugget.sourceInfo!
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+      <div className="text-[9px] text-gray-400 uppercase font-bold tracking-widest px-1">
+        Media Capture
+      </div>
+
+      <a
+        href={info.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full aspect-[9/16] bg-stone-100 rounded-xl overflow-hidden relative border border-gray-200 group"
+      >
+        <ThumbnailImage
+          src={info.thumbnailUrl!}
+          alt={nugget.title}
+          className="w-full h-full object-cover"
+        />
+        {info.durationS && (
+          <div className="absolute bottom-1.5 right-1.5 bg-black text-white font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tighter uppercase">
+            [ {formatDuration(info.durationS)} ]
+          </div>
+        )}
+      </a>
+
+      <div className="space-y-2 px-1 pt-1 border-t border-gray-100 text-[11px]">
+        <div>
+          <div className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Source</div>
+          <div className="text-[11px] font-bold text-gray-600 uppercase">
+            ↗ {sourceHeaderLine(info) || 'OPEN ORIGINAL'}
+          </div>
+          <a
+            href={info.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-gray-400 hover:text-black underline truncate block max-w-full transition-colors mt-0.5"
+          >
+            {info.url}
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default async function NuggetPage({
   params,
 }: {
@@ -84,8 +132,15 @@ export default async function NuggetPage({
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
+          {/* ── Media column (only when thumbnail available) ── */}
+          {nugget.sourceInfo?.thumbnailUrl && (
+            <div className="lg:col-span-3">
+              <MediaCapture nugget={nugget} />
+            </div>
+          )}
+
           {/* ── Main content card ── */}
-          <main className="lg:col-span-8 bg-white border border-gray-200 rounded-2xl p-6 md:p-8 space-y-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} bg-white border border-gray-200 rounded-2xl p-6 md:p-8 space-y-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)]`}>
 
             {/* Metadata bar with BACK button */}
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
@@ -118,8 +173,8 @@ export default async function NuggetPage({
               {nugget.title}
             </h1>
 
-            {/* Source */}
-            {nugget.sourceInfo && (
+            {/* Source — only shown in main column when there's no media column */}
+            {nugget.sourceInfo && !nugget.sourceInfo.thumbnailUrl && (
               <div className="space-y-2 pt-2">
                 <Divider>SOURCE</Divider>
                 <div className="space-y-1">
@@ -264,7 +319,7 @@ export default async function NuggetPage({
           </main>
 
           {/* ── Related sidebar ── */}
-          <aside className="lg:col-span-4 space-y-3">
+          <aside className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-3' : 'lg:col-span-4'} space-y-3`}>
             <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest px-1 mb-1">
               RELATED IN {nugget.folder.toUpperCase()}
             </div>
