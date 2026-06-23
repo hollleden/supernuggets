@@ -54,60 +54,50 @@ async function loadRelated(folder: string, excludeId: number, userId: number): P
   return out
 }
 
-function mediaBadgeLabel(mediaType?: string): string {
-  if (!mediaType) return '[ TEXT ]'
-  if (mediaType.startsWith('image')) return '[ IMAGE ]'
-  if (mediaType.startsWith('video')) return '[ VIDEO ]'
-  if (mediaType === 'voice') return '[ VOICE ]'
-  if (mediaType === 'article') return '[ ARTICLE ]'
-  return '[ TEXT ]'
+function mediaLabel(mediaType?: string): string {
+  if (!mediaType) return 'TEXT'
+  if (mediaType.startsWith('image')) return 'IMAGE'
+  if (mediaType.startsWith('video')) return 'VIDEO'
+  if (mediaType === 'voice') return 'VOICE'
+  if (mediaType === 'article') return 'ARTICLE'
+  return 'TEXT'
 }
 
 function MediaCapture({ nugget }: { nugget: Nugget }) {
   const info = nugget.sourceInfo!
-  const folderColor = FOLDER_COLOR_HEX[nugget.folder as FolderType] ?? FOLDER_COLOR_HEX.all
+  const label = mediaLabel(nugget.mediaType)
+  const duration = info.durationS ? formatDuration(info.durationS) : null
+  const via = info.uploader
+    ? `via ${info.uploader.startsWith('@') ? info.uploader : '@' + info.uploader}`
+    : null
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-      <span
-        className="font-mono text-[9px] font-bold tracking-wider border px-2 py-0.5 rounded uppercase"
-        style={{ color: folderColor, borderColor: folderColor + '40', backgroundColor: folderColor + '12' }}
-      >
-        {mediaBadgeLabel(nugget.mediaType)}
-      </span>
-
       <a
         href={info.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full aspect-[9/16] bg-stone-100 rounded-xl overflow-hidden relative border border-gray-200 group"
+        className="block w-full aspect-[9/16] bg-stone-100 rounded-xl overflow-hidden relative border border-gray-200"
       >
         <ThumbnailImage
           src={info.thumbnailUrl!}
           alt={nugget.title}
           className="w-full h-full object-cover"
         />
-        {info.durationS && (
-          <div className="absolute bottom-1.5 right-1.5 bg-black text-white font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tighter uppercase">
-            [ {formatDuration(info.durationS)} ]
-          </div>
-        )}
+        <div className="absolute bottom-2 left-2 bg-black/80 text-white font-mono font-bold px-2 py-1 rounded text-[10px] tracking-tight uppercase">
+          {label}{duration ? ` ${duration}` : ''}
+        </div>
       </a>
 
-      <div className="space-y-2 px-1 pt-1 border-t border-gray-100 text-[11px]">
-        <div>
-          <div className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Source</div>
-          <div className="text-[11px] font-bold text-gray-600 uppercase">
-            ↗ {sourceHeaderLine(info) || 'OPEN ORIGINAL'}
-          </div>
-          <a
-            href={info.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] text-gray-400 hover:text-black underline truncate block max-w-full transition-colors mt-0.5"
-          >
-            {info.url}
-          </a>
-        </div>
+      <div className="space-y-1.5 text-[12px] font-mono text-gray-500">
+        {via && <div>{via} · {(info.platform || '').toLowerCase()}</div>}
+        <a
+          href={info.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 hover:text-black underline truncate block transition-colors text-[11px]"
+        >
+          {info.url}
+        </a>
       </div>
     </div>
   )
@@ -164,7 +154,7 @@ export default async function NuggetPage({
                     backgroundColor: folderColor + '12',
                   }}
                 >
-                  {mediaBadgeLabel(nugget.mediaType)}
+                  {mediaLabel(nugget.mediaType)}
                 </span>
                 <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
                 <span className="text-gray-400 text-[11px]">{nugget.dateCompact}</span>
