@@ -14,11 +14,8 @@ export const metadata: Metadata = {
   description: 'High-performance pocket database for everything worth keeping.',
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    apple: '/apple-icon.png',
   },
 }
 
