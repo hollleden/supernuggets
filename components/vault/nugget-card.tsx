@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import type { Nugget, FolderType } from '@/lib/nuggets'
-import { FOLDER_COLOR_HEX, sourceHeaderLine } from '@/lib/nuggets'
+import { FOLDER_COLOR_HEX, sourceHeaderLine, formatDuration } from '@/lib/nuggets'
 import { ThumbnailImage } from '@/components/vault/thumbnail-image'
 
 const FOLDER_TEXTURE: Partial<Record<string, string>> = {
@@ -42,6 +42,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
   const texture = FOLDER_TEXTURE[nugget.folder] ?? ''
   const accentBg = folderColor + '1F'
   const cardHref = `${tokenPrefix}/n/${nugget.id}`
+  const hasThumbnail = !!nugget.sourceInfo?.thumbnailUrl
 
   return (
     <div
@@ -49,21 +50,28 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className={`nugget-card flex flex-col min-h-[180px] relative overflow-hidden cursor-pointer ${nugget.sourceInfo?.thumbnailUrl ? 'pb-4 px-4' : 'p-4'}`}
+      className={`nugget-card ${hasThumbnail ? 'flex flex-row gap-3 h-36' : 'flex flex-col min-h-[180px]'} p-3 relative overflow-hidden cursor-pointer`}
       style={{
         '--card-accent': folderColor,
         '--card-accent-bg': accentBg,
       } as React.CSSProperties}
     >
-      {nugget.sourceInfo?.thumbnailUrl && (
-        <ThumbnailImage
-          src={nugget.sourceInfo.thumbnailUrl}
-          alt={nugget.title}
-          className="w-full aspect-video object-cover rounded-t-xl"
-        />
+      {hasThumbnail && (
+        <div className="h-full aspect-[9/16] bg-stone-100 border border-gray-200 rounded-xl overflow-hidden relative shrink-0">
+          <ThumbnailImage
+            src={nugget.sourceInfo!.thumbnailUrl!}
+            alt={nugget.title}
+            className="w-full h-full object-cover"
+          />
+          {nugget.sourceInfo!.durationS && (
+            <div className="absolute bottom-1 right-1 bg-black text-white font-bold px-1 py-0.5 rounded text-[7px] tracking-tighter uppercase">
+              [ {formatDuration(nugget.sourceInfo!.durationS)} ]
+            </div>
+          )}
+        </div>
       )}
 
-      {texture && (
+      {!hasThumbnail && texture && (
         <div
           className="absolute inset-0 p-3 text-[11px] font-bold tracking-[0.25em] leading-relaxed break-all select-none pointer-events-none overflow-hidden"
           style={{ color: folderColor, opacity: 0.045 }}
@@ -73,63 +81,63 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         </div>
       )}
 
-      <div className={`relative z-10 flex flex-col flex-1 ${nugget.sourceInfo?.thumbnailUrl ? 'pt-4' : ''}`}>
-        <div className="flex items-center justify-between mb-3">
-          <span
-            className="font-mono text-[8px] font-bold tracking-wider border px-2 py-0.5 rounded-full bg-card"
-            style={{ color: folderColor, borderColor: folderColor + '99' }}
-          >
-            {mediaBadgeLabel(nugget.mediaType)}
-          </span>
-          <time className="font-mono text-[9px] font-bold tracking-widest text-muted-foreground">
-            {nugget.dateCompact}
-          </time>
+      <div className={`relative z-10 flex flex-col ${hasThumbnail ? 'flex-1 justify-between min-w-0' : 'flex-1'}`}>
+        <div>
+          <div className="flex items-center justify-between mb-0.5">
+            <span
+              className="font-mono text-[8px] font-bold tracking-wider border px-1.5 py-0.5 rounded-full bg-card"
+              style={{ color: folderColor, borderColor: folderColor + '99' }}
+            >
+              {mediaBadgeLabel(nugget.mediaType)}
+            </span>
+            <time className="font-mono text-[9px] font-bold tracking-widest text-muted-foreground">
+              {nugget.dateCompact}
+            </time>
+          </div>
+
+          {!hideFolder && (
+            <span
+              className="font-mono text-[9px] font-bold uppercase tracking-widest block mb-1"
+              style={{ color: folderColor }}
+            >
+              {nugget.folder}
+            </span>
+          )}
+
+          <h3 className={`font-mono text-xs font-extrabold uppercase tracking-tight leading-snug text-foreground ${hasThumbnail ? 'line-clamp-2' : 'mb-3 flex-1 line-clamp-3 md:text-sm'}`}>
+            {nugget.title}
+          </h3>
         </div>
 
-        {!hideFolder && (
-          <span
-            className="font-mono text-[10px] font-bold uppercase tracking-widest block mb-1"
-            style={{ color: folderColor }}
-          >
-            {nugget.folder}
-          </span>
-        )}
+        <div className="space-y-0.5 border-t border-neutral-200/60 pt-1.5">
+          {nugget.sourceInfo && (
+            <div
+              className="font-mono text-[9px] text-muted-foreground uppercase tracking-wide truncate"
+              title={nugget.sourceInfo.url}
+            >
+              ↗ {sourceHeaderLine(nugget.sourceInfo) || 'SOURCE'}
+            </div>
+          )}
 
-        <h3 className="font-mono text-xs md:text-sm font-extrabold uppercase tracking-tight leading-snug text-foreground mb-3 flex-1 line-clamp-3">
-          {nugget.title}
-        </h3>
-
-        {nugget.sourceInfo && (
-          <a
-            href={nugget.sourceInfo.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="font-mono text-[8px] text-muted-foreground hover:text-foreground uppercase tracking-wide mt-auto pt-2.5 border-t border-neutral-200/60 truncate block"
-            title={nugget.sourceInfo.url}
-          >
-            ↗ {sourceHeaderLine(nugget.sourceInfo) || 'SOURCE'}
-          </a>
-        )}
-
-        {nugget.tags.length > 0 && (
-          <div className={`flex flex-wrap gap-x-2 gap-y-1 ${nugget.sourceInfo ? 'pt-1' : 'mt-auto pt-2.5 border-t border-neutral-200/60'}`}>
-            {nugget.tags.slice(0, 3).map(tag => (
-              <button
-                key={tag}
-                onClick={(e) => { e.stopPropagation(); router.push(`${tokenPrefix || '/'}?tag=${encodeURIComponent(tag)}`) }}
-                className="font-mono text-[9px] text-muted-foreground hover:text-foreground uppercase tracking-wide underline-offset-2 hover:underline"
-              >
-                #{tag}
-              </button>
-            ))}
-            {nugget.tags.length > 3 && (
-              <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-wide border border-foreground/20 px-1 rounded-sm">
-                +{nugget.tags.length - 3}
-              </span>
-            )}
-          </div>
-        )}
+          {nugget.tags.length > 0 && (
+            <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+              {nugget.tags.slice(0, hasThumbnail ? 2 : 3).map(tag => (
+                <button
+                  key={tag}
+                  onClick={(e) => { e.stopPropagation(); router.push(`${tokenPrefix || '/'}?tag=${encodeURIComponent(tag)}`) }}
+                  className="font-mono text-[8px] text-muted-foreground hover:text-foreground uppercase tracking-wide underline-offset-2 hover:underline"
+                >
+                  #{tag}
+                </button>
+              ))}
+              {nugget.tags.length > (hasThumbnail ? 2 : 3) && (
+                <span className="font-mono text-[8px] text-muted-foreground uppercase tracking-wide border border-foreground/20 px-1 rounded-sm">
+                  +{nugget.tags.length - (hasThumbnail ? 2 : 3)}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
