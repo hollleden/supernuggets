@@ -296,20 +296,52 @@ export default async function NuggetPage({
               </div>
             )}
 
-            {/* Raw Capture Payload */}
-            {nugget.transcript && (
-              <div className="space-y-2 pt-4">
-                <div className="flex justify-between items-center border-b border-gray-100 pb-1">
-                  <span className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">RAW CAPTURE PAYLOAD</span>
-                  <CopyButton text={nugget.transcript} label="COPY" />
-                </div>
-                <div className="bg-stone-50 border border-gray-200 rounded-xl p-4 text-gray-600 leading-relaxed text-[11px]">
-                  <pre className="font-mono whitespace-pre-wrap break-words">
-                    {nugget.transcript}
-                  </pre>
-                </div>
-              </div>
-            )}
+            {/* Description + Raw Capture Payload */}
+            {nugget.transcript && (() => {
+              const raw = nugget.transcript;
+              let description = '';
+              let body = raw;
+              if (raw.startsWith('DESCRIPTION: ')) {
+                const idx = raw.indexOf('\n\n');
+                if (idx !== -1) {
+                  description = raw.slice('DESCRIPTION: '.length, idx).trim();
+                  body = raw.slice(idx + 2).trim();
+                } else {
+                  description = raw.slice('DESCRIPTION: '.length).trim();
+                  body = '';
+                }
+              }
+              return (
+                <>
+                  {description && (
+                    <div className="space-y-2 pt-4">
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-1">
+                        <span className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">DESCRIPTION</span>
+                        <CopyButton text={description} label="COPY" />
+                      </div>
+                      <div className="bg-stone-50 border border-gray-200 rounded-xl p-4 text-gray-600 leading-relaxed text-[11px]">
+                        <pre className="font-mono whitespace-pre-wrap break-words">
+                          {description}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                  {body && (
+                    <div className="space-y-2 pt-4">
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-1">
+                        <span className="text-[9px] text-gray-400 uppercase tracking-widest font-bold">RAW CAPTURE PAYLOAD</span>
+                        <CopyButton text={body} label="COPY" />
+                      </div>
+                      <div className="bg-stone-50 border border-gray-200 rounded-xl p-4 text-gray-600 leading-relaxed text-[11px]">
+                        <pre className="font-mono whitespace-pre-wrap break-words">
+                          {body}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </main>
 
           {/* ── Related sidebar ── */}
