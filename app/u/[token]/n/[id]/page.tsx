@@ -134,7 +134,7 @@ export default async function NuggetPage({
           )}
 
           {/* ── Main content ── */}
-          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0`}>
+          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white border border-gray-200 rounded-2xl p-6 md:p-8`}>
 
             {/* Metadata bar */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
