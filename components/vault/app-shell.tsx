@@ -226,7 +226,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           )}
         >
           <Link href={token ? `/u/${token}` : '/'} className="font-mono text-xs font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-8 h-8 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}>
               <g fill="#D97706"><rect x="6" y="5" width="10" height="12"/><rect x="4" y="8" width="2" height="8"/><rect x="16" y="7" width="4" height="8"/><rect x="3" y="10" width="1" height="4"/><rect x="5" y="17" width="3" height="1"/></g>
               <g fill="#B45309"><rect x="5" y="16" width="3" height="3"/><rect x="8" y="17" width="9" height="2"/><rect x="17" y="14" width="3" height="3"/><rect x="19" y="10" width="2" height="4"/></g>
               <g fill="#FBBF24"><rect x="6" y="6" width="2" height="1"/><rect x="5" y="8" width="1" height="2"/><rect x="15" y="8" width="1" height="3"/></g>

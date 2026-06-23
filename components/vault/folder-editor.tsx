@@ -46,7 +46,7 @@ export function FolderEditor({ nuggetId, initialFolder, token }: FolderEditorPro
         value={folder}
         onChange={(e) => handleChange(e.target.value)}
         disabled={saving}
-        className="font-mono text-[10px] font-bold uppercase tracking-wider bg-card border border-foreground px-2 py-1 pr-7 cursor-pointer appearance-none rounded-none focus:outline-none focus:ring-1 focus:ring-foreground hover:bg-foreground hover:text-background transition-colors disabled:opacity-50"
+        className="font-mono text-[10px] font-bold uppercase tracking-wider bg-card border border-foreground px-2 py-1 pr-7 appearance-none rounded-none focus:outline-none focus:ring-1 focus:ring-foreground hover:bg-foreground hover:text-background transition-colors disabled:opacity-50"
         style={{ color }}
       >
         {FOLDERS.filter(f => f !== 'all').map(f => (
