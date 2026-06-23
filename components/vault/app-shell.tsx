@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams, usePathname, useSearchParams } from 'next/navigation'
 import { Sidebar } from './sidebar'
+import { CursorWaitOnNav } from './cursor-wait-nav'
 import { pickRandomNuggetId } from '@/app/actions/nuggets'
 import { VaultStatsProvider, useVaultStats } from '@/lib/vault-stats-context'
 import { FOLDERS, type FolderType } from '@/lib/nuggets'
@@ -288,6 +289,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <VaultStatsProvider>
+      <CursorWaitOnNav />
       <AppShellInner>{children}</AppShellInner>
     </VaultStatsProvider>
   )
