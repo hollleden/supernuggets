@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation'
 import type { Nugget, FolderType } from '@/lib/nuggets'
 import { FOLDER_COLOR_HEX, sourceHeaderLine } from '@/lib/nuggets'
+import { ThumbnailImage } from '@/components/vault/thumbnail-image'
 
 const FOLDER_TEXTURE: Partial<Record<string, string>> = {
   Grow:       '/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /',
@@ -48,12 +49,20 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className="nugget-card flex flex-col p-4 min-h-[180px] relative overflow-hidden cursor-pointer"
+      className={`nugget-card flex flex-col min-h-[180px] relative overflow-hidden cursor-pointer ${nugget.sourceInfo?.thumbnailUrl ? 'pb-4 px-4' : 'p-4'}`}
       style={{
         '--card-accent': folderColor,
         '--card-accent-bg': accentBg,
       } as React.CSSProperties}
     >
+      {nugget.sourceInfo?.thumbnailUrl && (
+        <ThumbnailImage
+          src={nugget.sourceInfo.thumbnailUrl}
+          alt={nugget.title}
+          className="w-full aspect-video object-cover rounded-t-xl"
+        />
+      )}
+
       {texture && (
         <div
           className="absolute inset-0 p-3 text-[11px] font-bold tracking-[0.25em] leading-relaxed break-all select-none pointer-events-none overflow-hidden"
@@ -64,7 +73,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col flex-1">
+      <div className={`relative z-10 flex flex-col flex-1 ${nugget.sourceInfo?.thumbnailUrl ? 'pt-4' : ''}`}>
         <div className="flex items-center justify-between mb-3">
           <span
             className="font-mono text-[8px] font-bold tracking-wider border px-2 py-0.5 rounded-full bg-card"
