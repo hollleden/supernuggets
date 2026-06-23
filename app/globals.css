@@ -103,16 +103,25 @@
 @layer base {
   html {
     font-size: 95%;
-    cursor: url('/cursor.svg') 4 1, auto;
+  }
+  * {
+    cursor: url('/cursor-default.svg') 0 0, auto;
   }
   body {
     @apply bg-background text-foreground font-mono antialiased;
   }
-  a, button, [role="link"], input, select, textarea, label {
-    cursor: url('/cursor.svg') 4 1, pointer;
+  a, button, [role="link"], [role="button"],
+  input[type="submit"], input[type="button"], input[type="reset"],
+  select, label, summary, .pill-btn, .pill-btn-icon, .nugget-card {
+    cursor: url('/cursor-pointer.svg') 6 0, pointer;
+  }
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="password"], input[type="url"], input[type="tel"],
+  input[type="number"], textarea, [contenteditable="true"] {
+    cursor: text;
   }
   .cursor-wait, .cursor-wait * {
-    cursor: url('/cursor-wait.svg') 9 12, wait !important;
+    cursor: url('/cursor-wait.svg') 7 8, wait !important;
   }
 }
 

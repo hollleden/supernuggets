@@ -125,7 +125,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         <div className="border-t border-black/10 pt-4">
           <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">// FOLDERS</div>
           <div className="grid grid-cols-2 gap-1.5">
-            {FOLDERS.filter(f => f !== 'all').map((folder) => {
+            {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
               const count = folderCounts[folder] ?? 0
               return (
