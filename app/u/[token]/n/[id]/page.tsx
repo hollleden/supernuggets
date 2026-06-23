@@ -81,26 +81,22 @@ export default async function NuggetPage({
 
   return (
     <>
-      {/* Back button */}
-      <div className="px-4 md:px-6 py-4">
-        <Link
-          href={`/u/${token}`}
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase px-3 py-1.5 bg-white border border-gray-200 rounded-xl hover:border-black transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-        >
-          <span>←</span>
-          <span>BACK</span>
-        </Link>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 pb-8">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
           {/* ── Main content card ── */}
           <main className="lg:col-span-8 bg-white border border-gray-200 rounded-2xl p-6 md:p-8 space-y-8 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
 
-            {/* Metadata bar */}
+            {/* Metadata bar with BACK button */}
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
               <div className="flex items-center gap-3">
+                <Link
+                  href={`/u/${token}`}
+                  className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase px-2.5 py-1 bg-white border border-gray-200 rounded-lg hover:border-black transition-colors"
+                >
+                  <span>←</span>
+                  <span>BACK</span>
+                </Link>
                 <span
                   className="text-[10px] font-bold border px-2 py-0.5 rounded uppercase"
                   style={{

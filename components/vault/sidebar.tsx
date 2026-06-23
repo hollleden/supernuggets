@@ -88,7 +88,7 @@ function SidebarInner({
               // FOLDERS
             </div>
             <div className="flex flex-col gap-1">
-              {FOLDERS.filter(f => f !== 'all').map((folder) => {
+              {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
                 const count = folderCounts[folder] ?? 0
                 const color = FOLDER_COLOR_HEX[folder]
@@ -123,7 +123,7 @@ function SidebarInner({
         {/* Folder dots — collapsed view */}
         {isCollapsed && (
           <div className="flex flex-col gap-1 mt-2">
-            {FOLDERS.filter(f => f !== 'all').map((folder) => {
+            {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
               const color = FOLDER_COLOR_HEX[folder]
               return (
