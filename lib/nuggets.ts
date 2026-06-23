@@ -18,6 +18,7 @@ export interface SourceInfo {
   uploader?: string      // creator handle or article sitename
   durationS?: number     // for videos
   kind?: 'video' | 'images' | 'article' | string
+  thumbnailUrl?: string  // yt-dlp thumbnail or article OG image
 }
 
 export interface Nugget {
@@ -171,6 +172,7 @@ function parseSourceInfo(raw: string | null | undefined): SourceInfo | undefined
   if (typeof obj.source_uploader === 'string') out.uploader = obj.source_uploader
   if (typeof obj.source_duration_s === 'number') out.durationS = obj.source_duration_s
   if (typeof obj.source_kind === 'string') out.kind = obj.source_kind
+  if (typeof obj.thumbnail_url === 'string' && obj.thumbnail_url.trim()) out.thumbnailUrl = obj.thumbnail_url.trim()
   return out
 }
 
