@@ -12,10 +12,15 @@ export function CursorWaitOnNav() {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      const link = (e.target as HTMLElement).closest('a[href]')
-      if (!link) return
-      const href = link.getAttribute('href')
-      if (href?.startsWith('/') && !href.startsWith('//')) {
+      const el = e.target as HTMLElement
+      const link = el.closest('a[href]')
+      const roleLink = el.closest('[role="link"]')
+      if (link) {
+        const href = link.getAttribute('href')
+        if (href?.startsWith('/') && !href.startsWith('//')) {
+          document.documentElement.classList.add('cursor-wait')
+        }
+      } else if (roleLink) {
         document.documentElement.classList.add('cursor-wait')
       }
     }

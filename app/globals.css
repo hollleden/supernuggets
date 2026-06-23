@@ -112,11 +112,11 @@
   button, button *,
   [role="link"], [role="link"] *,
   [role="button"], [role="button"] *,
-  select, label, summary,
+  select, select *, label, summary,
   .pill-btn, .pill-btn *,
   .pill-btn-icon, .pill-btn-icon *,
   .nugget-card, .nugget-card * {
-    cursor: url('/cursor-pointer.svg') 6 0, pointer;
+    cursor: url('/cursor-pointer.svg') 4 0, pointer;
   }
   input[type="text"], input[type="search"], input[type="email"],
   input[type="password"], input[type="url"], input[type="tel"],
