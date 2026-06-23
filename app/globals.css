@@ -101,8 +101,18 @@
 }
 
 @layer base {
+  html {
+    font-size: 95%;
+    cursor: url('/cursor.svg') 4 1, auto;
+  }
   body {
     @apply bg-background text-foreground font-mono antialiased;
+  }
+  a, button, [role="link"], input, select, textarea, label {
+    cursor: url('/cursor.svg') 4 1, pointer;
+  }
+  .cursor-wait, .cursor-wait * {
+    cursor: url('/cursor-wait.svg') 9 12, wait !important;
   }
 }
 
@@ -143,16 +153,11 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Scrolling marquee */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-.marquee-content {
-  display: flex;
+/* Static top bar (was marquee) */
+.top-bar-text {
   white-space: nowrap;
-  width: max-content;
-  animation: marquee 35s linear infinite;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Nugget card: per-folder CSS variable hover system */

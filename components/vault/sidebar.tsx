@@ -66,15 +66,8 @@ function SidebarInner({
         {/* Primary nav */}
         <div className={cn('flex flex-col gap-1', !isCollapsed && 'mb-4')}>
           <PillNavItem
-            icon="🎛️"
-            label="BROWSE"
-            href={homeHref}
-            isActive={isHome}
-            isCollapsed={isCollapsed}
-          />
-          <PillNavItem
             icon="✨"
-            label="RESURFACE"
+            label="RANDOM NUGGET"
             isActive={false}
             isCollapsed={isCollapsed}
             onClick={onResurface}
@@ -95,9 +88,9 @@ function SidebarInner({
               // FOLDERS
             </div>
             <div className="flex flex-col gap-1">
-              {FOLDERS.map((folder) => {
+              {FOLDERS.filter(f => f !== 'all').map((folder) => {
                 const isActive = folder === activeFolder
-                const count = folder === 'all' ? folderCounts.all : (folderCounts[folder] ?? 0)
+                const count = folderCounts[folder] ?? 0
                 const color = FOLDER_COLOR_HEX[folder]
                 return (
                   <button
