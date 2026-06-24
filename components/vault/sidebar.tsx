@@ -9,9 +9,9 @@ import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 import { useVaultStats } from '@/lib/vault-stats-context'
 
 const FOLDER_LABELS: Record<FolderType, string> = {
-  all: 'ALL', Grow: 'GROW', Leisure: 'LEISURE', Health: 'HEALTH',
-  Creativity: 'CREATIVITY', Money: 'MONEY', Work: 'WORK', Curation: 'CURATION',
-  Personal: 'PERSONAL', Beauty: 'BEAUTY', Food: 'FOOD', Travel: 'TRAVEL', Sport: 'SPORT',
+  all: 'ALL', skin: 'SKIN', make: 'MAKE', food: 'FOOD',
+  body: 'BODY', learn: 'LEARN', work: 'WORK', fun: 'FUN',
+  go: 'GO', mind: 'MIND', other: 'OTHER',
 }
 
 interface SidebarProps {
@@ -97,12 +97,10 @@ function SidebarInner({
                     style={isActive ? {} : { '--pill-accent': color } as React.CSSProperties}
                   >
                     <span className="flex items-center gap-2">
-                      {folder !== 'all' && (
-                        <span
-                          className="w-2 h-2 rounded-full shrink-0"
-                          style={{ backgroundColor: isActive ? 'currentColor' : color }}
-                        />
-                      )}
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ backgroundColor: isActive ? 'currentColor' : color }}
+                      />
                       {FOLDER_LABELS[folder]}
                     </span>
                     {count > 0 && (

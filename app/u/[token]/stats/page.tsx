@@ -36,7 +36,7 @@ async function loadStats(userId: number): Promise<Stats> {
 
   const counts: Record<string, number> = {}
   for (const row of rows) {
-    const f = row.folder || 'Personal'
+    const f = row.folder || 'other'
     counts[f] = (counts[f] || 0) + 1
   }
 
@@ -50,12 +50,12 @@ async function loadStats(userId: number): Promise<Stats> {
     .sort((a, b) => b.count - a.count)
 
   const newest = rows[0]
-  const lastAddedFolder = (newest?.folder ?? 'Personal') as FolderType
+  const lastAddedFolder = (newest?.folder ?? 'other') as FolderType
   const lastAdded = newest ? {
     id: newest.id,
     title: newest.title || 'Untitled',
     dateCompact: newest.created_at.slice(0, 10).replace(/-/g, '.'),
-    folder: newest.folder ?? 'Personal',
+    folder: newest.folder ?? 'other',
     folderColor: FOLDER_COLOR_HEX[lastAddedFolder] ?? FOLDER_COLOR_HEX.all,
   } : undefined
 

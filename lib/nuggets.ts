@@ -45,51 +45,43 @@ export interface Nugget {
 
 export type FolderType =
   | 'all'
-  | 'Grow'
-  | 'Leisure'
-  | 'Health'
-  | 'Creativity'
-  | 'Money'
-  | 'Work'
-  | 'Curation'
-  | 'Personal'
-  | 'Beauty'
-  | 'Food'
-  | 'Travel'
-  | 'Sport'
+  | 'skin'
+  | 'make'
+  | 'food'
+  | 'body'
+  | 'learn'
+  | 'work'
+  | 'fun'
+  | 'go'
+  | 'mind'
+  | 'other'
 
 export const FOLDERS: FolderType[] = [
   'all',
-  'Grow',
-  'Leisure',
-  'Health',
-  'Creativity',
-  'Money',
-  'Work',
-  'Curation',
-  'Personal',
-  'Beauty',
-  'Food',
-  'Travel',
-  'Sport',
+  'skin',
+  'make',
+  'food',
+  'body',
+  'learn',
+  'work',
+  'fun',
+  'go',
+  'mind',
+  'other',
 ]
 
-// BRAND.md §5 — Hemeon-tinted folder palette. Used inline as
-// `borderTopColor` for card accent stripes and as the folder-name label color.
 export const FOLDER_COLOR_HEX: Record<FolderType, string> = {
-  all:        '#1A1A1A',
-  Grow:       '#5DA17F',
-  Leisure:    '#B83A8C',
-  Health:     '#4D8C5D',
-  Creativity: '#E89890',
-  Money:      '#F5D940',
-  Work:       '#2A4FCC',
-  Curation:   '#847E6E',
-  Personal:   '#6B4A8C',
-  Beauty:     '#D43A6A',
-  Food:       '#E04A2A',
-  Travel:     '#7AAFD4',
-  Sport:      '#B0CA3D',
+  all:    '#1A1A1A',
+  skin:   '#D43A6A',
+  make:   '#E89890',
+  food:   '#E04A2A',
+  body:   '#4D8C5D',
+  learn:  '#5DA17F',
+  work:   '#2A4FCC',
+  fun:    '#B83A8C',
+  go:     '#7AAFD4',
+  mind:   '#6B4A8C',
+  other:  '#847E6E',
 }
 
 // Raw Supabase `entries` row. `summary` is JSON-stringified array; `tags` may be
@@ -269,7 +261,7 @@ export function mapRowToNugget(row: EntryRow): Nugget {
     title,
     summary: summaryBullets[0] || '',
     summaryBullets,
-    folder: row.folder || 'Personal',
+    folder: row.folder || 'other',
     date: row.created_at,
     dateCompact: formatDateCompact(row.created_at),
     tags: parseTags(row.tags),
