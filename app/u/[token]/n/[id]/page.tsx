@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
@@ -136,26 +135,21 @@ export default async function NuggetPage({
           {/* ── Main content ── */}
           <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white border border-gray-200 rounded-2xl p-6 md:p-8`}>
 
-            {/* Metadata bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/u/${token}`}
-                  className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase px-2.5 py-1 border border-gray-300 hover:border-black transition-colors"
-                >
-                  <span>←</span>
-                  <span>BACK</span>
-                </Link>
-                <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
-                <span className="text-gray-400 text-[11px]">{nugget.dateCompact}</span>
-              </div>
-              <DeleteButton nuggetId={nugget.id} token={token} />
+            {/* Folder */}
+            <div className="mb-3">
+              <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
             </div>
 
             {/* Title */}
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-black uppercase leading-[1.2] mb-6">
+            <h1 className="text-xl md:text-2xl font-black tracking-tight text-black uppercase leading-[1.2] mb-3">
               {nugget.title}
             </h1>
+
+            {/* Date + Delete */}
+            <div className="flex items-center justify-between mb-6">
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">CREATED: {nugget.dateCompact}</span>
+              <DeleteButton nuggetId={nugget.id} token={token} />
+            </div>
 
             {/* 1. SUMMARY */}
             {nugget.summaryBullets.length > 0 && (
