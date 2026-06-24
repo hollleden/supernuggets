@@ -19,7 +19,8 @@ function viaLine(nugget: Nugget): string | null {
   const info = nugget.sourceInfo
   if (!info) return null
   const parts: string[] = []
-  if (info.uploader) parts.push(info.uploader.startsWith('@') ? info.uploader : '@' + info.uploader)
+  if (info.uploader) parts.push(`via ${info.uploader.startsWith('@') ? info.uploader : '@' + info.uploader}`)
+  else parts.push('via')
   if (info.platform) parts.push(info.platform.toLowerCase())
   return parts.join(' · ')
 }
@@ -46,78 +47,67 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className="nugget-card group flex flex-col overflow-hidden cursor-pointer"
-      style={{
-        '--card-accent': folderColor,
-        '--card-accent-bg': folderColor + '08',
-      } as React.CSSProperties}
+      className="nugget-card flex flex-row gap-4 h-40 p-4 relative overflow-hidden cursor-pointer"
     >
-      {/* Visual zone: thumbnail or bold folder-color block */}
-      <div className="relative overflow-hidden aspect-[16/10] border-b-2 border-[#121110] dark:border-[oklch(0.35_0_0)]">
-        {hasThumbnail ? (
-          <>
-            <ThumbnailImage
-              src={nugget.sourceInfo!.thumbnailUrl!}
-              alt={nugget.title}
-              className="w-full h-full object-cover"
-            />
-            {duration && (
-              <span className="absolute top-2 right-2 bg-black/80 text-white font-mono font-bold px-1.5 py-0.5 text-[8px] tracking-tight uppercase">
-                {duration}
-              </span>
-            )}
-          </>
-        ) : (
-          <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ backgroundColor: folderColor }}
-          >
-            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/30">
-              {label}
-            </span>
+      {/* Left zone: thumbnail or type label */}
+      {hasThumbnail ? (
+        <div className="h-full aspect-[9/16] bg-stone-100 border border-gray-200 rounded-xl overflow-hidden relative shrink-0">
+          <ThumbnailImage
+            src={nugget.sourceInfo!.thumbnailUrl!}
+            alt={nugget.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-1.5 left-1.5 bg-black/80 text-white font-mono font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tight uppercase">
+            {label}{duration ? ` ${duration}` : ''}
           </div>
-        )}
-      </div>
-
-      {/* Content zone */}
-      <div className="flex flex-col gap-1.5 p-3 flex-1">
-        {!hideFolder && (
+        </div>
+      ) : (
+        <div
+          className="h-full w-5 shrink-0 flex items-center justify-center rounded-lg"
+          style={{ backgroundColor: folderColor + '14' }}
+        >
           <span
-            className="font-mono text-[9px] font-extrabold uppercase tracking-[0.1em] self-start px-1.5 py-0.5 border"
-            style={{ color: folderColor, borderColor: folderColor }}
+            className="font-mono text-[9px] font-bold uppercase tracking-widest"
+            style={{ color: folderColor + '80', writingMode: 'vertical-rl', textOrientation: 'mixed' }}
           >
-            {nugget.folder}
+            {label}
           </span>
-        )}
+        </div>
+      )}
 
-        <h3 className="font-mono text-[12px] font-extrabold uppercase tracking-tight leading-snug text-foreground line-clamp-2">
-          {nugget.title}
-        </h3>
-
-        {/* Hover-reveal metadata */}
-        <div className="flex flex-col gap-1 max-h-0 opacity-0 overflow-hidden transition-all duration-200 ease-out group-hover:max-h-16 group-hover:opacity-100">
-          <div className="flex items-center justify-between gap-2">
-            {via && (
-              <span className="font-mono text-[9px] text-muted-foreground truncate">
-                {via}
+      {/* Right zone: text content */}
+      <div className="flex-1 flex flex-col justify-between min-w-0">
+        <div>
+          <div className="flex items-center justify-between w-full mb-1">
+            {!hideFolder ? (
+              <span
+                className="font-mono text-[11px] font-bold uppercase"
+                style={{ color: folderColor }}
+              >
+                {nugget.folder}
               </span>
-            )}
-            <time className="font-mono text-[9px] text-muted-foreground shrink-0 ml-auto">
+            ) : <span />}
+            <time className="font-mono text-[11px] text-muted-foreground">
               {nugget.dateCompact}
             </time>
           </div>
+
+          <h3 className="font-mono text-[13px] font-extrabold uppercase tracking-tight leading-snug text-foreground line-clamp-2">
+            {nugget.title}
+          </h3>
+        </div>
+
+        <div className="space-y-0.5 mt-auto">
+          {via && (
+            <div className="font-mono text-[11px] text-muted-foreground truncate">
+              {via}
+            </div>
+          )}
+
           {nugget.tags.length > 0 && (
-            <div className="flex gap-1 flex-wrap">
-              {nugget.tags.slice(0, 2).map(tag => (
-                <span key={tag} className="font-mono text-[8px] text-muted-foreground bg-muted px-1.5 py-0.5">
-                  #{tag}
-                </span>
-              ))}
-              {nugget.tags.length > 2 && (
-                <span className="font-mono text-[8px] text-muted-foreground">
-                  +{nugget.tags.length - 2}
-                </span>
-              )}
+            <div className="font-mono text-[11px] text-muted-foreground truncate">
+              {nugget.tags.slice(0, 2).map(tag => `#${tag}`).join(' ')}
+              {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
             </div>
           )}
         </div>
