@@ -14,8 +14,9 @@ export const metadata: Metadata = {
   description: 'High-performance pocket database for everything worth keeping.',
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/nugget-logo.png', type: 'image/png' },
     ],
+    apple: '/nugget-logo.png',
   },
 }
 
