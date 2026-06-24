@@ -11,6 +11,25 @@ import {
   type FolderType,
 } from '@/lib/nuggets'
 import { ThumbnailImage } from '@/components/vault/thumbnail-image'
+
+const TRANSITION_RE = /^(Now,?|So,?|But |And |However|Notice|The other|The easiest|The key|The thing|Of course|In the|For example|Here'?s|That'?s|What I|One thing|Another|First|Second|Third|Finally|Instead|Meanwhile|On the|At the|After|Before|When I|When you|Let me|I'?m going|I want|I'?ll|If you|Think about|Remember|Look,?|See,?|Okay|Alright|Anyway)/i
+
+function formatTranscript(text: string): string {
+  const sentences = text.split(/(?<=[.!?])\s+/)
+  if (sentences.length <= 3) return text
+  const paragraphs: string[][] = [[]]
+  for (const s of sentences) {
+    const current = paragraphs[paragraphs.length - 1]
+    if (current.length >= 3 && TRANSITION_RE.test(s)) {
+      paragraphs.push([s])
+    } else if (current.length >= 5) {
+      paragraphs.push([s])
+    } else {
+      current.push(s)
+    }
+  }
+  return paragraphs.map(p => p.join(' ')).join('\n\n')
+}
 import { CopyButton } from '@/components/vault/copy-button'
 import { FolderEditor } from '@/components/vault/folder-editor'
 import { TagEditor } from '@/components/vault/tag-editor'
@@ -254,7 +273,7 @@ export default async function NuggetPage({
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">TRANSCRIPT</span>
                         <CopyButton text={body} label="COPY" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{body.replace(/([.!?])\s+/g, '$1\n\n')}</pre>
+                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{formatTranscript(body)}</pre>
                     </>
                   )}
                 </>
