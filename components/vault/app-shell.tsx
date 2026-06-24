@@ -202,11 +202,11 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         <div
           className={cn(
             'flex items-center justify-between px-3 border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200',
-            isSidebarCollapsed ? 'md:w-[64px]' : 'md:w-[220px]'
+            isSidebarCollapsed ? 'md:w-[72px]' : 'md:w-[220px]'
           )}
         >
-          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-sm font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
-            <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
+            <img src="/nugget-logo.png" alt="Supernuggets" className="w-14 h-14 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
             {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>}
             <span className="md:hidden tracking-tight">SUPERNUGGETS</span>
           </Link>
