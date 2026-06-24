@@ -1,13 +1,12 @@
 'use client'
 
-import { Suspense, useState, useMemo } from 'react'
+import { Suspense, useMemo } from 'react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 import { useVaultStats } from '@/lib/vault-stats-context'
 
-const INITIAL_TAG_COUNT = 10
 const ANCHOR_THRESHOLD = 3
 
 const FOLDER_LABELS: Record<FolderType, string> = {
@@ -31,7 +30,6 @@ function SidebarInner({
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
   const { folderCounts, tagCounts } = useVaultStats()
-  const [showAllTags, setShowAllTags] = useState(false)
 
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
   const activeTag = searchParams.get('tag')?.toLowerCase() ?? ''
@@ -109,7 +107,7 @@ function SidebarInner({
             {/* Tags — plain text, no header */}
             {anchorTags.length > 0 && (
               <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
-                {(showAllTags ? anchorTags : anchorTags.slice(0, INITIAL_TAG_COUNT)).map(([tag, count]) => (
+                {anchorTags.map(([tag, count]) => (
                   <button
                     key={tag}
                     onClick={() => handleTagClick(tag)}
@@ -124,22 +122,6 @@ function SidebarInner({
                     <span className="text-[9px] opacity-40 tabular-nums">{count}</span>
                   </button>
                 ))}
-                {!showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
-                  <button
-                    onClick={() => setShowAllTags(true)}
-                    className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground hover:text-foreground transition-colors text-left"
-                  >
-                    +{anchorTags.length - INITIAL_TAG_COUNT} more
-                  </button>
-                )}
-                {showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
-                  <button
-                    onClick={() => setShowAllTags(false)}
-                    className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground hover:text-foreground transition-colors text-left"
-                  >
-                    show less
-                  </button>
-                )}
               </div>
             )}
           </>

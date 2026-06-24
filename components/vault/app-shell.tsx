@@ -197,20 +197,29 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex items-center min-h-[48px] px-3 gap-3">
-        {/* Logo + name */}
-        <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity shrink-0">
-          <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
-          <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>
-        </Link>
+      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex items-center min-h-[48px]">
+        {/* Logo — matches sidebar width */}
+        <div
+          className={cn(
+            'flex items-center px-3 shrink-0 transition-all duration-200 border-r border-black/20 dark:border-white/10 self-stretch',
+            isSidebarCollapsed ? 'md:w-[72px]' : 'md:w-[220px]'
+          )}
+        >
+          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
+            <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+            {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>}
+          </Link>
+        </div>
 
-        {/* Search — oval */}
-        <div className="flex-1 max-w-md">
-          <HeaderSearch />
+        {/* Search — oval, aligned with main content */}
+        <div className="flex-1 px-3">
+          <div className="max-w-md">
+            <HeaderSearch />
+          </div>
         </div>
 
         {/* Action buttons */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-1 px-3">
           <button
             onClick={handleResurface}
             className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
