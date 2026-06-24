@@ -30,6 +30,17 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
     return counts
   }, [initialNuggets])
 
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const n of initialNuggets) {
+      for (const t of n.tags) {
+        const tag = t.toLowerCase()
+        counts[tag] = (counts[tag] ?? 0) + 1
+      }
+    }
+    return counts
+  }, [initialNuggets])
+
   const filteredNuggets = useMemo(() => {
     const q = urlQuery.toLowerCase().trim()
     const tag = urlTag.toLowerCase()
@@ -49,8 +60,8 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
 
   // Publish live counts to context — header and sidebar consume these
   useEffect(() => {
-    setVaultStats(initialNuggets.length, filteredNuggets.length, folderCounts)
-  }, [initialNuggets.length, filteredNuggets.length, folderCounts, setVaultStats])
+    setVaultStats(initialNuggets.length, filteredNuggets.length, folderCounts, tagCounts)
+  }, [initialNuggets.length, filteredNuggets.length, folderCounts, tagCounts, setVaultStats])
 
   const handleClearTag = () => {
     const sp = new URLSearchParams(searchParams.toString())
