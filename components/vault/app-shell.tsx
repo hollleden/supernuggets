@@ -174,6 +174,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [userToggled, setUserToggled] = useState(false)
   const { totalNuggets, filteredNuggets } = useVaultStats()
 
   useEffect(() => {
@@ -184,8 +185,10 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mounted) return
     document.documentElement.classList.toggle('dark', isDarkMode)
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light')
-  }, [isDarkMode, mounted])
+    if (userToggled) {
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light')
+    }
+  }, [isDarkMode, mounted, userToggled])
 
   useEffect(() => {
     const onResize = () => { if (window.innerWidth < 768) setIsSidebarCollapsed(true) }
@@ -272,7 +275,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       <div className="flex">
         <Sidebar
           isDarkMode={isDarkMode}
-          onToggleDarkMode={() => setIsDarkMode(v => !v)}
+          onToggleDarkMode={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(v => !v)}
           onResurface={handleResurface}
@@ -286,7 +289,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       {isMobileMenuOpen && (
         <MobileMenu
           isDarkMode={isDarkMode}
-          onToggleDarkMode={() => setIsDarkMode(v => !v)}
+          onToggleDarkMode={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
           onResurface={handleResurface}
           onClose={() => setIsMobileMenuOpen(false)}
         />
