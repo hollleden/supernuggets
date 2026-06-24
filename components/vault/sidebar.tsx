@@ -1,12 +1,15 @@
 'use client'
 
-import { Suspense } from 'react'
+import { Suspense, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname, useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 import { useVaultStats } from '@/lib/vault-stats-context'
+
+const INITIAL_TAG_COUNT = 10
+const ANCHOR_THRESHOLD = 3
 
 const FOLDER_LABELS: Record<FolderType, string> = {
   all: 'ALL', skin: 'SKIN', make: 'MAKE', food: 'FOOD',
@@ -39,9 +42,41 @@ function SidebarInner({
   const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
   const isHome = pathname === homeHref
   const isStats = pathname === statsHref
-  const { folderCounts } = useVaultStats()
+  const { folderCounts, tagCounts } = useVaultStats()
+  const [tagsExpanded, setTagsExpanded] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem('sn-tags-expanded') === '1'
+  })
+  const [showAllTags, setShowAllTags] = useState(false)
+
+  const toggleTagsExpanded = () => {
+    setTagsExpanded(v => {
+      const next = !v
+      localStorage.setItem('sn-tags-expanded', next ? '1' : '0')
+      return next
+    })
+  }
 
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
+  const activeTag = searchParams.get('tag')?.toLowerCase() ?? ''
+
+  const anchorTags = useMemo(() => {
+    return Object.entries(tagCounts)
+      .filter(([, count]) => count >= ANCHOR_THRESHOLD)
+      .sort((a, b) => b[1] - a[1])
+  }, [tagCounts])
+
+  const handleTagClick = (tag: string) => {
+    const sp = new URLSearchParams(searchParams.toString())
+    if (activeTag === tag) {
+      sp.delete('tag')
+    } else {
+      sp.set('tag', tag)
+    }
+    sp.delete('folder')
+    const qs = sp.toString()
+    router.replace(qs ? `${homeHref}?${qs}` : homeHref)
+  }
 
   const handleFolderClick = (folder: FolderType) => {
     const sp = new URLSearchParams(searchParams.toString())
@@ -112,6 +147,54 @@ function SidebarInner({
                 )
               })}
             </div>
+
+            {/* Tags section */}
+            {anchorTags.length > 0 && (
+              <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10">
+                <button
+                  onClick={toggleTagsExpanded}
+                  className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <span>// TAGS</span>
+                  <span className="text-[9px]">{tagsExpanded ? '▾' : '▸'}</span>
+                </button>
+                {tagsExpanded && (
+                  <div className="flex flex-wrap gap-1 px-1 pt-1">
+                    {(showAllTags ? anchorTags : anchorTags.slice(0, INITIAL_TAG_COUNT)).map(([tag, count]) => (
+                      <button
+                        key={tag}
+                        onClick={() => handleTagClick(tag)}
+                        className={cn(
+                          'font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm border transition-colors',
+                          activeTag === tag
+                            ? 'bg-foreground text-background border-foreground'
+                            : 'border-black/15 dark:border-white/15 hover:border-foreground/40 text-muted-foreground hover:text-foreground'
+                        )}
+                      >
+                        #{tag}
+                        <span className="ml-0.5 opacity-50">{count}</span>
+                      </button>
+                    ))}
+                    {!showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
+                      <button
+                        onClick={() => setShowAllTags(true)}
+                        className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        +{anchorTags.length - INITIAL_TAG_COUNT} more
+                      </button>
+                    )}
+                    {showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
+                      <button
+                        onClick={() => setShowAllTags(false)}
+                        className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        show less
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
 
