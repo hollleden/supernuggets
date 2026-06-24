@@ -56,7 +56,8 @@ async function loadRelated(folder: string, excludeId: number, userId: number): P
 
 function mediaLabel(mediaType?: string): string {
   if (!mediaType) return 'TEXT'
-  if (mediaType.startsWith('image')) return 'IMAGE'
+  if (mediaType === 'image_group' || mediaType === 'image_url') return 'GALLERY'
+  if (mediaType === 'image') return 'IMAGE'
   if (mediaType.startsWith('video')) return 'VIDEO'
   if (mediaType === 'voice') return 'VOICE'
   if (mediaType === 'article') return 'ARTICLE'
