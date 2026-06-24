@@ -98,10 +98,10 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-card pt-14 overflow-y-auto md:hidden">
+    <div className="fixed inset-0 z-30 bg-card pt-14 overflow-y-auto md:hidden">
       <div className="p-4 space-y-4">
         <div>
-          <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">// NAVIGATION</div>
+          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2">// NAVIGATION</div>
           <div className="flex flex-col gap-1.5">
             <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> RANDOM NUGGET</button>
             <a href={statsHref} onClick={onClose} className={cn('pill-btn justify-start', isStats && 'active')}><span>📈</span> STATS</a>
@@ -109,7 +109,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         </div>
 
         <div className="border-t border-black/10 pt-4">
-          <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">// FOLDERS</div>
+          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2">// FOLDERS</div>
           <div className="grid grid-cols-2 gap-1.5">
             {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
@@ -121,7 +121,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
                   className={cn('pill-btn justify-between', isActive && 'active')}
                 >
                   <span>{folder.toUpperCase()}</span>
-                  {count > 0 && <span className="text-[9px] font-normal opacity-50">{count}</span>}
+                  {count > 0 && <span className="text-[11px] font-normal opacity-50">{count}</span>}
                 </button>
               )
             })}
@@ -215,7 +215,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(v => !v)}
-              className="font-mono text-lg leading-none p-1"
+              className="font-mono text-2xl leading-none p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? '✕' : '☰'}

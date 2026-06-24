@@ -63,15 +63,12 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         </div>
       ) : (
         <div
-          className="h-full w-5 shrink-0 flex items-center justify-center rounded-lg"
-          style={{ backgroundColor: folderColor + '14' }}
+          className="h-full aspect-[9/16] shrink-0 relative rounded-xl"
+          style={{ backgroundColor: folderColor + '14', border: `0.5px solid ${folderColor}26` }}
         >
-          <span
-            className="font-mono text-[9px] font-bold uppercase tracking-widest"
-            style={{ color: folderColor + '80', writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-          >
-            {label}
-          </span>
+          <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 bg-black/80 text-white font-mono font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tight uppercase whitespace-nowrap">
+            {label}{duration ? ` ${duration}` : ''}
+          </div>
         </div>
       )}
 
