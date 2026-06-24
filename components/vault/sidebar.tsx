@@ -84,9 +84,6 @@ function SidebarInner({
         {/* Folder list — desktop expanded only */}
         {!isCollapsed && (
           <>
-            <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground px-1 mb-1 mt-1">
-              // FOLDERS
-            </div>
             <div className="flex flex-col gap-0.5">
               {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
