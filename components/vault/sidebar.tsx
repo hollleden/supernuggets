@@ -1,8 +1,7 @@
 'use client'
 
 import { Suspense, useState, useMemo } from 'react'
-import Link from 'next/link'
-import { usePathname, useParams, useSearchParams, useRouter } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
@@ -18,44 +17,21 @@ const FOLDER_LABELS: Record<FolderType, string> = {
 }
 
 interface SidebarProps {
-  isDarkMode: boolean
-  onToggleDarkMode: () => void
   isCollapsed: boolean
   onToggleCollapse: () => void
-  onResurface: () => void
-  isResurfaceActive?: boolean
 }
 
 function SidebarInner({
-  isDarkMode,
-  onToggleDarkMode,
   isCollapsed,
   onToggleCollapse,
-  onResurface,
 }: SidebarProps) {
-  const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
   const params = useParams<{ token?: string }>()
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
-  const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
-  const isHome = pathname === homeHref
-  const isStats = pathname === statsHref
   const { folderCounts, tagCounts } = useVaultStats()
-  const [tagsExpanded, setTagsExpanded] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return localStorage.getItem('sn-tags-expanded') === '1'
-  })
   const [showAllTags, setShowAllTags] = useState(false)
-
-  const toggleTagsExpanded = () => {
-    setTagsExpanded(v => {
-      const next = !v
-      localStorage.setItem('sn-tags-expanded', next ? '1' : '0')
-      return next
-    })
-  }
 
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
   const activeTag = searchParams.get('tag')?.toLowerCase() ?? ''
@@ -96,25 +72,7 @@ function SidebarInner({
       )}
     >
       {/* Scrollable inner */}
-      <div className="flex flex-col overflow-y-auto p-2 gap-0.5 no-scrollbar">
-
-        {/* Primary nav */}
-        <div className={cn('flex flex-col gap-0.5', !isCollapsed && 'mb-1 pb-2 border-b border-black/10 dark:border-white/10')}>
-          <PillNavItem
-            icon="✨"
-            label="RANDOM NUGGET"
-            isActive={false}
-            isCollapsed={isCollapsed}
-            onClick={onResurface}
-          />
-          <PillNavItem
-            icon="📈"
-            label="STATS"
-            href={statsHref}
-            isActive={isStats}
-            isCollapsed={isCollapsed}
-          />
-        </div>
+      <div className="flex flex-col overflow-y-auto p-2 gap-0.5 no-scrollbar flex-1">
 
         {/* Folder list — desktop expanded only */}
         {!isCollapsed && (
@@ -148,50 +106,39 @@ function SidebarInner({
               })}
             </div>
 
-            {/* Tags section */}
+            {/* Tags — plain text, no header */}
             {anchorTags.length > 0 && (
-              <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10">
-                <button
-                  onClick={toggleTagsExpanded}
-                  className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <span>// TAGS</span>
-                  <span className="text-[9px]">{tagsExpanded ? '▾' : '▸'}</span>
-                </button>
-                {tagsExpanded && (
-                  <div className="flex flex-wrap gap-1 px-1 pt-1">
-                    {(showAllTags ? anchorTags : anchorTags.slice(0, INITIAL_TAG_COUNT)).map(([tag, count]) => (
-                      <button
-                        key={tag}
-                        onClick={() => handleTagClick(tag)}
-                        className={cn(
-                          'font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded-sm border transition-colors',
-                          activeTag === tag
-                            ? 'bg-foreground text-background border-foreground'
-                            : 'border-black/15 dark:border-white/15 hover:border-foreground/40 text-muted-foreground hover:text-foreground'
-                        )}
-                      >
-                        #{tag}
-                        <span className="ml-0.5 opacity-50">{count}</span>
-                      </button>
-                    ))}
-                    {!showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
-                      <button
-                        onClick={() => setShowAllTags(true)}
-                        className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        +{anchorTags.length - INITIAL_TAG_COUNT} more
-                      </button>
+              <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
+                {(showAllTags ? anchorTags : anchorTags.slice(0, INITIAL_TAG_COUNT)).map(([tag, count]) => (
+                  <button
+                    key={tag}
+                    onClick={() => handleTagClick(tag)}
+                    className={cn(
+                      'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      activeTag === tag
+                        ? 'text-foreground font-bold'
+                        : 'text-muted-foreground hover:text-foreground'
                     )}
-                    {showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
-                      <button
-                        onClick={() => setShowAllTags(false)}
-                        className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        show less
-                      </button>
-                    )}
-                  </div>
+                  >
+                    <span>#{tag}</span>
+                    <span className="text-[9px] opacity-40 tabular-nums">{count}</span>
+                  </button>
+                ))}
+                {!showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
+                  <button
+                    onClick={() => setShowAllTags(true)}
+                    className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground hover:text-foreground transition-colors text-left"
+                  >
+                    +{anchorTags.length - INITIAL_TAG_COUNT} more
+                  </button>
+                )}
+                {showAllTags && anchorTags.length > INITIAL_TAG_COUNT && (
+                  <button
+                    onClick={() => setShowAllTags(false)}
+                    className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground hover:text-foreground transition-colors text-left"
+                  >
+                    show less
+                  </button>
                 )}
               </div>
             )}
@@ -228,74 +175,20 @@ function SidebarInner({
         )}
       </div>
 
-      {/* Footer */}
-      <div className="p-2 pt-3 mt-1 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
-        <PillNavItem
-          icon="⬈"
-          label="OPEN BOT"
-          href="https://t.me/supernuggetss_bot"
-          isActive={false}
-          isCollapsed={isCollapsed}
-          external
-          subtle
-        />
-        <PillNavItem
-          icon={isDarkMode ? '☀️' : '🌙'}
-          label={isDarkMode ? 'LIGHT MODE' : 'DARK MODE'}
-          isActive={false}
-          isCollapsed={isCollapsed}
-          onClick={onToggleDarkMode}
-          subtle
-        />
+      {/* Collapse toggle */}
+      <div className="p-2 pt-1 border-t border-black/10 dark:border-white/10">
         <button
           onClick={onToggleCollapse}
           className={cn(
-            'pill-btn mt-1 border-dashed opacity-40 hover:opacity-70',
+            'pill-btn border-dashed opacity-40 hover:opacity-70',
             isCollapsed && 'pill-btn-icon mx-auto'
           )}
         >
-          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">COLLAPSE PANEL</span></>}
+          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">COLLAPSE</span></>}
         </button>
       </div>
     </aside>
   )
-}
-
-interface PillNavItemProps {
-  icon: React.ReactNode | string
-  label: string
-  isActive: boolean
-  isCollapsed: boolean
-  onClick?: () => void
-  href?: string
-  external?: boolean
-  subtle?: boolean
-}
-
-function PillNavItem({ icon, label, isActive, isCollapsed, onClick, href, external, subtle }: PillNavItemProps) {
-  const className = cn(isCollapsed ? 'pill-btn-icon mx-auto' : 'pill-btn', isActive && 'active', subtle && 'opacity-50 hover:opacity-80')
-  const inner = isCollapsed ? icon : <>{icon}<span>{label}</span></>
-
-  const node = href ? (
-    external
-      ? <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{inner}</a>
-      : <Link href={href} className={className}>{inner}</Link>
-  ) : (
-    <button onClick={onClick} className={className}>{inner}</button>
-  )
-
-  if (isCollapsed) {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{node}</TooltipTrigger>
-        <TooltipContent side="right" className="font-mono text-[10px] font-bold uppercase tracking-wider rounded-none">
-          {label}
-        </TooltipContent>
-      </Tooltip>
-    )
-  }
-
-  return node
 }
 
 export function Sidebar(props: SidebarProps) {

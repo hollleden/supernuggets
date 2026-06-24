@@ -39,14 +39,14 @@ function HeaderSearchInner() {
   }, [query])
 
   return (
-    <div className="flex items-center gap-2 px-4 flex-1">
-      <span className="text-neutral-400 shrink-0 pointer-events-none text-base">🔍</span>
+    <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-black/15 dark:border-white/15 w-full">
+      <span className="text-neutral-400 shrink-0 pointer-events-none text-sm">🔍</span>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder=""
-        className="w-full bg-transparent font-mono text-[11px] font-bold uppercase focus:outline-none placeholder:text-neutral-400 tracking-wider py-1 text-foreground"
+        placeholder="SEARCH..."
+        className="w-full bg-transparent font-mono text-[11px] font-bold uppercase focus:outline-none placeholder:text-neutral-400 tracking-wider py-0.5 text-foreground"
       />
     </div>
   )
@@ -197,45 +197,65 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex min-h-[48px]">
-        {/* Logo — mirrors sidebar width */}
-        <div
-          className={cn(
-            'flex items-center justify-between px-3 border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200',
-            isSidebarCollapsed ? 'md:w-[72px]' : 'md:w-[220px]'
-          )}
-        >
-          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
-            <img src="/nugget-logo.png" alt="Supernuggets" className="w-14 h-14 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
-            {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>}
-            <span className="md:hidden tracking-tight">SUPERNUGGETS</span>
-          </Link>
+      <header className="sticky top-0 z-40 bg-card border-b border-black/20 dark:border-white/10 flex items-center min-h-[48px] px-3 gap-3">
+        {/* Logo + name */}
+        <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity shrink-0">
+          <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+          <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>
+        </Link>
 
-          {/* Mobile right: burger */}
-          <div className="flex items-center gap-2 md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(v => !v)}
-              className="font-mono text-2xl leading-none p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? '✕' : '☰'}
-            </button>
-          </div>
+        {/* Search — oval */}
+        <div className="flex-1 max-w-md">
+          <HeaderSearch />
         </div>
 
-        {/* Search */}
-        <HeaderSearch />
+        {/* Action buttons */}
+        <div className="hidden md:flex items-center gap-1">
+          <button
+            onClick={handleResurface}
+            className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
+          >
+            RANDOM
+          </button>
+          <Link
+            href={token ? `/u/${token}/stats` : '/stats'}
+            className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
+          >
+            STATS
+          </Link>
+          <a
+            href="https://t.me/supernuggetss_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-lg px-2 py-1 hover:opacity-70 transition-opacity"
+            title="Open Bot"
+          >
+            ✈️
+          </a>
+          <button
+            onClick={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
+            className="text-lg px-2 py-1 hover:opacity-70 transition-opacity"
+            title={isDarkMode ? 'Light mode' : 'Dark mode'}
+          >
+            {isDarkMode ? '☀️' : '🌙'}
+          </button>
+        </div>
 
+        {/* Mobile burger */}
+        <button
+          onClick={() => setIsMobileMenuOpen(v => !v)}
+          className="md:hidden font-mono text-2xl leading-none p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? '✕' : '☰'}
+        </button>
       </header>
 
       {/* Sidebar + main */}
       <div className="flex">
         <Sidebar
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(v => !v)}
-          onResurface={handleResurface}
         />
         <main className="flex-1 min-w-0">
           {children}
