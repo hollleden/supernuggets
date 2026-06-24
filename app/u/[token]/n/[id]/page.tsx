@@ -71,12 +71,12 @@ function MediaCapture({ nugget }: { nugget: Nugget }) {
     ? `via ${info.uploader.startsWith('@') ? info.uploader : '@' + info.uploader}`
     : null
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-4 space-y-4">
       <a
         href={info.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full aspect-[9/16] bg-stone-100 rounded-xl overflow-hidden relative border border-gray-200"
+        className="block w-full aspect-[9/16] bg-stone-100 dark:bg-neutral-800 rounded-xl overflow-hidden relative border border-gray-200 dark:border-neutral-700"
       >
         <ThumbnailImage
           src={info.thumbnailUrl!}
@@ -88,13 +88,13 @@ function MediaCapture({ nugget }: { nugget: Nugget }) {
         </div>
       </a>
 
-      <div className="space-y-1.5 text-[12px] font-mono text-gray-500">
+      <div className="space-y-1.5 text-[12px] font-mono text-gray-500 dark:text-gray-400">
         {via && <div>{via} · {(info.platform || '').toLowerCase()}</div>}
         <a
           href={info.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-400 hover:text-black underline truncate block transition-colors text-[11px]"
+          className="text-gray-400 hover:text-black dark:hover:text-white underline truncate block transition-colors text-[11px]"
         >
           {info.url}
         </a>
@@ -134,7 +134,7 @@ export default async function NuggetPage({
           )}
 
           {/* ── Main content ── */}
-          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white border border-gray-200 rounded-2xl p-6 md:p-8`}>
+          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-6 md:p-8`}>
 
             {/* Folder */}
             <div className="mb-3">
@@ -142,7 +142,7 @@ export default async function NuggetPage({
             </div>
 
             {/* Title */}
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-black uppercase leading-[1.2] mb-3">
+            <h1 className="text-xl md:text-2xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.2] mb-3">
               {nugget.title}
             </h1>
 
@@ -155,10 +155,10 @@ export default async function NuggetPage({
             {/* 1. SUMMARY */}
             {nugget.summaryBullets.length > 0 && (
               <>
-                <hr className="border-t border-gray-200 my-4" />
+                <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">SUMMARY</div>
                 {nugget.summaryBullets.map((bullet, i) => (
-                  <div key={i} className="flex gap-1.5 text-[13px] leading-relaxed text-gray-800 mb-2">
+                  <div key={i} className="flex gap-1.5 text-[13px] leading-relaxed text-gray-800 dark:text-gray-200 mb-2">
                     <span className="shrink-0 font-bold" style={{ color: folderColor }}>▪</span>
                     <span>{bullet}</span>
                   </div>
@@ -169,11 +169,11 @@ export default async function NuggetPage({
             {/* 2. FACT-CHECK */}
             {nugget.factChecks.length > 0 && (
               <>
-                <hr className="border-t border-gray-200 my-4" />
+                <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">FACT-CHECK</div>
                 {nugget.factChecks.map((fc, i) => (
                   <div key={i} className="mb-2">
-                    <div className="text-xs font-bold text-gray-900 flex items-center gap-1.5 uppercase tracking-tight">
+                    <div className="text-xs font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 uppercase tracking-tight">
                       <span className="text-emerald-600 font-black">✓</span>
                       {fc.searchQuery ? (
                         <a
@@ -201,7 +201,7 @@ export default async function NuggetPage({
             {/* 3. MENTIONED */}
             {nugget.mentioned.length > 0 && (
               <>
-                <hr className="border-t border-gray-200 my-4" />
+                <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">MENTIONED</div>
                 <div className="flex flex-wrap gap-1.5">
                   {nugget.mentioned.map((m, i) => (
@@ -210,7 +210,7 @@ export default async function NuggetPage({
                       href={m.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] px-3 py-1 border border-gray-300 text-gray-800 hover:border-black transition-colors"
+                      className="text-[11px] px-3 py-1 border border-gray-300 dark:border-neutral-600 text-gray-800 dark:text-gray-200 hover:border-black dark:hover:border-white transition-colors"
                     >
                       {m.label}
                     </a>
@@ -238,22 +238,22 @@ export default async function NuggetPage({
                 <>
                   {description && (
                     <>
-                      <hr className="border-t border-gray-200 my-4" />
+                      <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">DESCRIPTION</span>
                         <CopyButton text={description} label="COPY" />
                       </div>
-                      <pre className="text-[12px] leading-relaxed text-gray-600 whitespace-pre-wrap break-words bg-gray-50 p-3 rounded">{description}</pre>
+                      <pre className="text-[12px] leading-relaxed text-gray-600 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{description}</pre>
                     </>
                   )}
                   {body && (
                     <>
-                      <hr className="border-t border-gray-200 my-4" />
+                      <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">TRANSCRIPT</span>
                         <CopyButton text={body} label="COPY" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 whitespace-pre-wrap break-words bg-gray-50 p-3 rounded">{body}</pre>
+                      <pre className="text-[11px] leading-relaxed text-gray-500 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{body}</pre>
                     </>
                   )}
                 </>
@@ -261,14 +261,14 @@ export default async function NuggetPage({
             })()}
 
             {/* 6. TAGS */}
-            <hr className="border-t border-gray-200 my-4" />
+            <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
             <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">TAGS</div>
             <TagEditor nuggetId={nugget.id} initialTags={nugget.tags} token={token} />
 
             {/* 7. SOURCE */}
             {nugget.sourceInfo && (
               <>
-                <hr className="border-t border-gray-200 my-4" />
+                <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">SOURCE</div>
                 <div className="text-[11px] text-gray-600">
                   <span>↗ </span>
@@ -276,7 +276,7 @@ export default async function NuggetPage({
                     href={nugget.sourceInfo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-black"
+                    className="hover:text-black dark:hover:text-white"
                   >
                     {sourceHeaderLine(nugget.sourceInfo) || 'OPEN ORIGINAL'}
                   </a>
@@ -295,7 +295,7 @@ export default async function NuggetPage({
             {/* Links */}
             {nugget.extractedLinks.length > 0 && (
               <>
-                <hr className="border-t border-gray-200 my-4" />
+                <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">LINKS</div>
                 {nugget.extractedLinks.map(url => (
                   <div key={url} className="flex gap-2 text-xs mb-1">
@@ -304,7 +304,7 @@ export default async function NuggetPage({
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-700 hover:text-black break-all underline underline-offset-2 decoration-1"
+                      className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white break-all underline underline-offset-2 decoration-1"
                     >
                       {url}
                     </a>
@@ -339,11 +339,11 @@ export default async function NuggetPage({
 function Divider({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex py-1 items-center">
-      <div className="flex-grow border-t border-gray-100" />
+      <div className="flex-grow border-t border-gray-100 dark:border-neutral-700" />
       <span className="flex-shrink mx-4 text-[9px] text-gray-400 tracking-[0.2em] uppercase font-bold">
         {children}
       </span>
-      <div className="flex-grow border-t border-gray-100" />
+      <div className="flex-grow border-t border-gray-100 dark:border-neutral-700" />
     </div>
   )
 }
@@ -353,7 +353,7 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="group block bg-white border border-gray-200 rounded-2xl p-4 hover:border-black transition-all min-h-[90px] shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col justify-between"
+      className="group block bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-4 hover:border-black dark:hover:border-white transition-all min-h-[90px] flex flex-col justify-between"
     >
       <div className="flex justify-between items-center w-full">
         <span
@@ -365,7 +365,7 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
         <span className="text-[11px] text-gray-400">{nugget.dateCompact}</span>
       </div>
       <div
-        className="font-bold text-black text-xs uppercase tracking-tight line-clamp-2 group-hover:transition-colors mt-2"
+        className="font-bold text-black dark:text-white text-xs uppercase tracking-tight line-clamp-2 group-hover:transition-colors mt-2"
         style={{ ['--hover-color' as string]: folderColor }}
       >
         {nugget.title}
