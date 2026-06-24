@@ -40,12 +40,12 @@ function HeaderSearchInner() {
 
   return (
     <div className="flex items-center gap-2 px-4 flex-1">
-      <span className="text-neutral-400 shrink-0 pointer-events-none text-sm">🔍</span>
+      <span className="text-neutral-400 shrink-0 pointer-events-none text-base">🔍</span>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="SEARCH NUGGETS, TAGS, FOLDERS..."
+        placeholder=""
         className="w-full bg-transparent font-mono text-[11px] font-bold uppercase focus:outline-none placeholder:text-neutral-400 tracking-wider py-1 text-foreground"
       />
     </div>
@@ -62,21 +62,6 @@ function HeaderSearch() {
     }>
       <HeaderSearchInner />
     </Suspense>
-  )
-}
-
-// ─── Nugget count badge from context ─────────────────────────────────────────
-
-function NuggetCount() {
-  const { totalNuggets, filteredNuggets } = useVaultStats()
-  if (!totalNuggets) return null
-  const label = filteredNuggets === totalNuggets
-    ? `${totalNuggets} NUGGETS`
-    : `${filteredNuggets}/${totalNuggets}`
-  return (
-    <span className="font-mono text-[10px] font-black uppercase tracking-wider whitespace-nowrap">
-      {label}
-    </span>
   )
 }
 
@@ -175,8 +160,6 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [userToggled, setUserToggled] = useState(false)
-  const { totalNuggets, filteredNuggets } = useVaultStats()
-
   useEffect(() => {
     setIsDarkMode(document.documentElement.classList.contains('dark'))
     setMounted(true)
@@ -203,12 +186,6 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     if (id != null) router.push(`/u/${token}/n/${id}`)
   }
 
-  const nuggetCountLabel = !totalNuggets
-    ? null
-    : filteredNuggets === totalNuggets
-      ? `${totalNuggets} NUGGETS`
-      : `${filteredNuggets}/${totalNuggets}`
-
   return (
     <div className="min-h-screen bg-background">
 
@@ -228,8 +205,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             isSidebarCollapsed ? 'md:w-[56px]' : 'md:w-[220px]'
           )}
         >
-          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-xs font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-10 h-10 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}>
+          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-sm font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}>
               <g fill="#D97706"><rect x="6" y="5" width="10" height="12"/><rect x="4" y="8" width="2" height="8"/><rect x="16" y="7" width="4" height="8"/><rect x="3" y="10" width="1" height="4"/><rect x="5" y="17" width="3" height="1"/></g>
               <g fill="#B45309"><rect x="5" y="16" width="3" height="3"/><rect x="8" y="17" width="9" height="2"/><rect x="17" y="14" width="3" height="3"/><rect x="19" y="10" width="2" height="4"/></g>
               <g fill="#FBBF24"><rect x="6" y="6" width="2" height="1"/><rect x="5" y="8" width="1" height="2"/><rect x="15" y="8" width="1" height="3"/></g>
@@ -245,13 +222,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             <span className="md:hidden tracking-tight">SUPERNUGGETS</span>
           </Link>
 
-          {/* Mobile right: count + burger */}
+          {/* Mobile right: burger */}
           <div className="flex items-center gap-2 md:hidden">
-            {nuggetCountLabel && (
-              <span className="font-mono text-[9px] font-bold uppercase tracking-wider border border-foreground/40 px-2 py-0.5 rounded-full">
-                {nuggetCountLabel}
-              </span>
-            )}
             <button
               onClick={() => setIsMobileMenuOpen(v => !v)}
               className="font-mono text-lg leading-none p-1"
@@ -265,10 +237,6 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         {/* Search */}
         <HeaderSearch />
 
-        {/* Nugget count — desktop */}
-        <div className="hidden md:flex items-center px-4 border-l border-black/20 dark:border-white/10 bg-background/60 shrink-0">
-          <NuggetCount />
-        </div>
       </header>
 
       {/* Sidebar + main */}
