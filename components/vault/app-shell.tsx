@@ -210,8 +210,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background">
 
       {/* Static top bar */}
-      <div className="w-full bg-[#FAFF00] border-b border-black py-1.5 select-none">
-        <div className="top-bar-text font-mono text-[10px] font-black uppercase tracking-wider text-black text-center px-4">
+      <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none">
+        <div className="top-bar-text font-mono text-[10px] font-black uppercase tracking-wider text-black dark:text-neutral-400 text-center px-4">
           SUPERNUGGETS — DIGITAL VAULT // BRAIN DUMP ENGINE — STOP CLUTTERING YOUR CAMERA ROLL — RECLAIM YOUR CREATIVE CHAOS — CAPTURED TODAY, REMEMBERED FOREVER
         </div>
       </div>
