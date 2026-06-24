@@ -254,7 +254,7 @@ export default async function NuggetPage({
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">TRANSCRIPT</span>
                         <CopyButton text={body} label="COPY" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{body}</pre>
+                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{body}</pre>
                     </>
                   )}
                 </>
