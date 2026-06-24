@@ -64,7 +64,7 @@ function SidebarInner({
       <div className="flex flex-col overflow-y-auto p-2 gap-0.5 no-scrollbar">
 
         {/* Primary nav */}
-        <div className={cn('flex flex-col gap-0.5', !isCollapsed && 'mb-2')}>
+        <div className={cn('flex flex-col gap-0.5', !isCollapsed && 'mb-1 pb-2 border-b border-black/10 dark:border-white/10')}>
           <PillNavItem
             icon="✨"
             label="RANDOM NUGGET"
