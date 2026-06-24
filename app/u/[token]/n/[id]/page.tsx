@@ -368,27 +368,64 @@ function Divider({ children }: { children: React.ReactNode }) {
   )
 }
 
+function relatedMediaLabel(mediaType?: string): string {
+  if (!mediaType) return 'TEXT'
+  if (mediaType === 'image_group' || mediaType === 'image_url') return 'GALLERY'
+  if (mediaType === 'image') return 'IMAGE'
+  if (mediaType.startsWith('video')) return 'VIDEO'
+  if (mediaType === 'voice') return 'VOICE'
+  if (mediaType === 'article') return 'ARTICLE'
+  return 'TEXT'
+}
+
 function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   const folderColor = FOLDER_COLOR_HEX[nugget.folder as FolderType] ?? FOLDER_COLOR_HEX.all
+  const hasThumbnail = !!nugget.sourceInfo?.thumbnailUrl
+  const label = relatedMediaLabel(nugget.mediaType)
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="group block bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-4 hover:border-black dark:hover:border-white transition-all min-h-[90px] flex flex-col justify-between"
+      className="group flex flex-row gap-3 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-3 hover:border-black dark:hover:border-white transition-all h-24 overflow-hidden"
     >
-      <div className="flex justify-between items-center w-full">
-        <span
-          className="text-[10px] font-bold uppercase tracking-wider"
-          style={{ color: folderColor }}
+      {hasThumbnail ? (
+        <div className="h-full aspect-[9/16] bg-stone-100 rounded-lg overflow-hidden relative shrink-0">
+          <ThumbnailImage
+            src={nugget.sourceInfo!.thumbnailUrl!}
+            alt={nugget.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-1 left-1 bg-black/80 text-white font-mono font-bold px-1 py-0.5 rounded text-[7px] tracking-tight uppercase">
+            {label}
+          </div>
+        </div>
+      ) : (
+        <div
+          className="h-full w-4 shrink-0 flex items-center justify-center rounded-md"
+          style={{ backgroundColor: folderColor + '14' }}
         >
-          {nugget.folder.toUpperCase()}
-        </span>
-        <span className="text-[11px] text-gray-400">{nugget.dateCompact}</span>
-      </div>
-      <div
-        className="font-bold text-black dark:text-white text-xs uppercase tracking-tight line-clamp-2 group-hover:transition-colors mt-2"
-        style={{ ['--hover-color' as string]: folderColor }}
-      >
-        {nugget.title}
+          <span
+            className="font-mono text-[7px] font-bold uppercase tracking-widest"
+            style={{ color: folderColor + '80', writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          >
+            {label}
+          </span>
+        </div>
+      )}
+      <div className="flex-1 flex flex-col justify-between min-w-0">
+        <div>
+          <div className="flex justify-between items-center w-full">
+            <span
+              className="text-[9px] font-bold uppercase tracking-wider"
+              style={{ color: folderColor }}
+            >
+              {nugget.folder.toUpperCase()}
+            </span>
+            <span className="text-[9px] text-gray-400">{nugget.dateCompact}</span>
+          </div>
+          <div className="font-bold text-black dark:text-white text-[11px] uppercase tracking-tight line-clamp-2 mt-1">
+            {nugget.title}
+          </div>
+        </div>
       </div>
     </Link>
   )
