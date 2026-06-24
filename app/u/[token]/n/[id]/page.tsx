@@ -244,7 +244,7 @@ export default async function NuggetPage({
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">DESCRIPTION</span>
                         <CopyButton text={description} label="COPY" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{description}</pre>
+                      <p className="text-[12px] leading-relaxed text-gray-600 dark:text-gray-300 italic bg-gray-50 dark:bg-neutral-800 p-4 rounded border-l-2 border-gray-300 dark:border-neutral-600">{description}</p>
                     </>
                   )}
                   {body && (
