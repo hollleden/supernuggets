@@ -130,7 +130,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
 
         <div className="border-t border-black/10 pt-4 flex flex-col gap-1.5">
           <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start opacity-50 hover:opacity-80" onClick={onClose}>
-            <span>🤖</span> OPEN BOT
+            <span>⬈</span> OPEN BOT
           </a>
           <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start opacity-50 hover:opacity-80">
             <span>{isDarkMode ? '☀️' : '🌙'}</span> {isDarkMode ? 'LIGHT MODE' : 'DARK MODE'}

@@ -153,7 +153,7 @@ function SidebarInner({
       {/* Footer */}
       <div className="p-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-1">
         <PillNavItem
-          icon="🤖"
+          icon="⬈"
           label="OPEN BOT"
           href="https://t.me/supernuggetss_bot"
           isActive={false}
