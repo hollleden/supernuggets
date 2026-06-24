@@ -61,7 +61,7 @@ function SidebarInner({
       )}
     >
       {/* Scrollable inner */}
-      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-0.5 no-scrollbar">
+      <div className="flex flex-col overflow-y-auto p-2 gap-0.5 no-scrollbar">
 
         {/* Primary nav */}
         <div className={cn('flex flex-col gap-0.5', !isCollapsed && 'mb-2')}>
@@ -148,7 +148,7 @@ function SidebarInner({
       </div>
 
       {/* Footer */}
-      <div className="p-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
+      <div className="p-2 flex flex-col gap-0.5">
         <PillNavItem
           icon="⬈"
           label="OPEN BOT"
