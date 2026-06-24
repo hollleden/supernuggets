@@ -35,19 +35,18 @@ Old broken bot at `~/Desktop/listo/` (reference only — do NOT extend). Other s
 
 ---
 
-## Folder taxonomy (12 folders, single source of truth)
+## Folder taxonomy (10 folders, single source of truth)
 
 ```
-Grow 🌱  ·  Leisure 🎉  ·  Health 💚  ·  Creativity 🎨
-Money 💰  ·  Work 💼  ·  Curation 🗂  ·  Personal 💫
-Beauty 💄  ·  Food 🍽  ·  Travel ✈️  ·  Sport 🏃
+skin · make · food · body · learn
+work · fun · go · mind · other
 ```
 
-Enforced at the **bot** (Claude system prompt constrains to this enum). Frontend tolerates unknowns gracefully (renders with muted fallback color, no filter tab). DB column is a free `text` — no enum, no migration pain when adding folders.
+All lowercase, one word per folder. Enforced at the **bot** (Claude system prompt constrains to this enum). Frontend tolerates unknowns gracefully (renders with muted fallback color, no filter tab). DB column is a free `text` — no enum, no migration pain when adding folders.
 
 Defined in two places, must stay in sync:
-- Frontend: `lib/listo-data.ts` (`FolderType`, `FOLDERS`, `FOLDER_ICONS`, `FOLDER_COLORS`)
-- Bot: `pipeline.py` (`FOLDER_EMOJI`, `FOLDERS`)
+- Frontend: `lib/nuggets.ts` (`FolderType`, `FOLDERS`, `FOLDER_COLOR_HEX`)
+- Bot: `pipeline.py` (`FOLDERS`)
 
 ---
 

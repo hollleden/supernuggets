@@ -19,18 +19,16 @@ interface SearchHeaderProps {
 
 const FOLDER_LABELS: Record<FolderType, string> = {
   all: 'ALL',
-  Grow: 'GROW',
-  Leisure: 'LEISURE',
-  Health: 'HEALTH',
-  Creativity: 'CREATIVITY',
-  Money: 'MONEY',
-  Work: 'WORK',
-  Curation: 'CURATION',
-  Personal: 'PERSONAL',
-  Beauty: 'BEAUTY',
-  Food: 'FOOD',
-  Travel: 'TRAVEL',
-  Sport: 'SPORT',
+  skin: 'SKIN',
+  make: 'MAKE',
+  food: 'FOOD',
+  body: 'BODY',
+  learn: 'LEARN',
+  work: 'WORK',
+  fun: 'FUN',
+  go: 'GO',
+  mind: 'MIND',
+  other: 'OTHER',
 }
 
 export function SearchHeader({
