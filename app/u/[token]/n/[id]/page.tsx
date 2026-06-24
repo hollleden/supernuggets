@@ -136,20 +136,20 @@ export default async function NuggetPage({
           {/* ── Main content ── */}
           <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-6 md:p-8`}>
 
-            {/* Folder */}
-            <div className="mb-3">
+            {/* Folder + Delete */}
+            <div className="flex items-center justify-between mb-6">
               <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
+              <DeleteButton nuggetId={nugget.id} token={token} />
             </div>
 
             {/* Title */}
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.2] mb-3">
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.15] mb-2">
               {nugget.title}
             </h1>
 
-            {/* Date + Delete */}
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">CREATED: {nugget.dateCompact}</span>
-              <DeleteButton nuggetId={nugget.id} token={token} />
+            {/* Date */}
+            <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6">
+              CREATED: {nugget.dateCompact}
             </div>
 
             {/* 1. SUMMARY */}
