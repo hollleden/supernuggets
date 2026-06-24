@@ -65,11 +65,6 @@ export function SearchHeader({
             </div>
           )}
 
-          <div className="hidden sm:flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground border border-foreground px-3 py-2 bg-card ml-auto shrink-0">
-            {filteredNuggets === totalNuggets
-              ? `${totalNuggets} NUGGETS`
-              : `${filteredNuggets}/${totalNuggets} FILTERED`}
-          </div>
         </div>
       </div>
 
