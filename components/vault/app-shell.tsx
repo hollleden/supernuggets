@@ -202,7 +202,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         <div
           className={cn(
             'flex items-center justify-between px-3 border-r border-black/20 dark:border-white/10 shrink-0 transition-all duration-200',
-            isSidebarCollapsed ? 'md:w-[56px]' : 'md:w-[220px]'
+            isSidebarCollapsed ? 'md:w-[64px]' : 'md:w-[220px]'
           )}
         >
           <Link href={token ? `/u/${token}` : '/'} className="font-mono text-sm font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 hover:opacity-70 transition-opacity">
@@ -218,7 +218,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
               <g fill="#00F0FF"><rect x="21" y="3" width="1" height="3"/><rect x="20" y="4" width="3" height="1"/><rect x="21" y="4" width="1" height="1" fill="#FFF"/></g>
               <g fill="#FBBF24"><rect x="2" y="7" width="1" height="2"/><rect x="1" y="8" width="3" height="1"/><rect x="2" y="8" width="1" height="1" fill="#FFF"/></g>
             </svg>
-            <span className="hidden md:inline tracking-tight">{isSidebarCollapsed ? 'SN' : 'SUPERNUGGETS'}</span>
+            {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">SUPERNUGGETS</span>}
             <span className="md:hidden tracking-tight">SUPERNUGGETS</span>
           </Link>
 
