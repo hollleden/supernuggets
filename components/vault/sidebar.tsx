@@ -61,10 +61,10 @@ function SidebarInner({
       )}
     >
       {/* Scrollable inner */}
-      <div className="flex flex-col flex-1 overflow-y-auto p-3 gap-1 no-scrollbar">
+      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-0.5 no-scrollbar">
 
         {/* Primary nav */}
-        <div className={cn('flex flex-col gap-1', !isCollapsed && 'mb-4')}>
+        <div className={cn('flex flex-col gap-0.5', !isCollapsed && 'mb-2')}>
           <PillNavItem
             icon="✨"
             label="RANDOM NUGGET"
@@ -87,7 +87,7 @@ function SidebarInner({
             <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground px-1 mb-1 mt-1">
               // FOLDERS
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0.5">
               {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
                 const count = folderCounts[folder] ?? 0
@@ -122,7 +122,7 @@ function SidebarInner({
 
         {/* Folder dots — collapsed view */}
         {isCollapsed && (
-          <div className="flex flex-col gap-1 mt-2">
+          <div className="flex flex-col gap-0.5 mt-2">
             {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
               const color = FOLDER_COLOR_HEX[folder]
@@ -151,7 +151,7 @@ function SidebarInner({
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-black/10 dark:border-white/10 flex flex-col gap-1">
+      <div className="p-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
         <PillNavItem
           icon="⬈"
           label="OPEN BOT"
