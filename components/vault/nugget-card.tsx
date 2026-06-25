@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import type { Nugget, FolderType } from '@/lib/nuggets'
 import { FOLDER_COLOR_HEX, formatDuration } from '@/lib/nuggets'
@@ -119,7 +120,31 @@ interface MasonryGridProps {
   onClearFilters?: () => void
 }
 
+const BATCH_SIZE = 40
+
 export function MasonryGrid({ nuggets, hideFolder, onClearFilters }: MasonryGridProps) {
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setVisibleCount(BATCH_SIZE)
+  }, [nuggets])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount(v => Math.min(v + BATCH_SIZE, nuggets.length))
+        }
+      },
+      { rootMargin: '400px' }
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [nuggets.length])
+
   if (nuggets.length === 0) {
     return (
       <div className="py-24 flex flex-col items-center justify-center">
@@ -142,11 +167,18 @@ TO INDEX AGAIN.`}
     )
   }
 
+  const visible = nuggets.slice(0, visibleCount)
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-      {nuggets.map(nugget => (
-        <NuggetCard key={nugget.id} nugget={nugget} hideFolder={hideFolder} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {visible.map(nugget => (
+          <NuggetCard key={nugget.id} nugget={nugget} hideFolder={hideFolder} />
+        ))}
+      </div>
+      {visibleCount < nuggets.length && (
+        <div ref={sentinelRef} className="h-1" />
+      )}
+    </>
   )
 }
