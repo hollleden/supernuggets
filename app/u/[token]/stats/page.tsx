@@ -53,7 +53,7 @@ async function loadStats(userId: number): Promise<Stats> {
   const lastAddedFolder = (newest?.folder ?? 'other') as FolderType
   const lastAdded = newest ? {
     id: newest.id,
-    title: newest.title || 'Untitled',
+    title: newest.title || 'untitled nugget',
     dateCompact: newest.created_at.slice(0, 10).replace(/-/g, '.'),
     folder: newest.folder ?? 'other',
     folderColor: FOLDER_COLOR_HEX[lastAddedFolder] ?? FOLDER_COLOR_HEX.all,
@@ -100,7 +100,7 @@ export default async function StatsPage({
           href={`/u/${token}`}
           className="inline-flex font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-foreground hover:text-background px-3 py-1.5 border border-black/20 rounded-full transition-colors"
         >
-          ← BACK
+          ← back
         </Link>
       </div>
 
@@ -109,11 +109,11 @@ export default async function StatsPage({
         {/* Counter card */}
         <div className="bg-card border border-black/20 rounded-xl p-6 relative">
           <span className="absolute top-4 left-5 font-mono text-[9px] text-muted-foreground border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
-            [ COUNTER ]
+            [ counter ]
           </span>
           <div className="mt-5">
             <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
-              TOTAL NUGGETS IN VAULT
+              total nuggets in vault
             </div>
             <div className="font-mono text-6xl md:text-8xl font-extrabold leading-none text-foreground">
               {stats.total.toLocaleString()}
@@ -124,16 +124,16 @@ export default async function StatsPage({
         {/* KPI grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <KpiTile
-            badge="STREAK"
-            label="DAILY STREAK"
+            badge="streak"
+            label="daily streak"
             value={`${stats.streak}d`}
-            sub={stats.streak === 0 ? 'no nugget yet today' : 'consecutive days'}
+            sub={stats.streak === 0 ? 'no nuggets locked in yet today' : 'consecutive days'}
           />
           <KpiTile
-            badge="ACTIVITY"
-            label="LAST 30 DAYS"
+            badge="activity"
+            label="last 30 days"
             value={stats.last30Days.toLocaleString()}
-            sub="nuggets added"
+            sub="nuggets saved"
           />
           {stats.lastAdded ? (
             <Link
@@ -143,11 +143,11 @@ export default async function StatsPage({
             >
               <span className="absolute top-4 left-5 font-mono text-[9px] border border-black/10 px-2 py-0.5 rounded-full uppercase tracking-wider"
                 style={{ color: stats.lastAdded.folderColor }}>
-                [ RECENT ]
+                [ recent ]
               </span>
               <div className="mt-5">
                 <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
-                  LAST ADDED · {stats.lastAdded.dateCompact}
+                  last added · {stats.lastAdded.dateCompact}
                 </div>
                 <div className="font-mono text-xs font-extrabold uppercase leading-tight text-foreground line-clamp-3">
                   {stats.lastAdded.title}
@@ -155,14 +155,14 @@ export default async function StatsPage({
               </div>
             </Link>
           ) : (
-            <KpiTile badge="RECENT" label="LAST ADDED" value="—" sub="vault is empty" />
+            <KpiTile badge="recent" label="last added" value="—" sub="vault is empty — send something to the bot to get started" />
           )}
         </div>
 
         {/* Folder breakdown card */}
         <div className="bg-card border border-black/20 rounded-xl p-6">
           <div className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-5 text-center">
-            FOLDER BREAKDOWN
+            folder breakdown
           </div>
           <div className="space-y-3 max-w-2xl mx-auto">
             {stats.perFolder.map(({ folder, count, color }) => {

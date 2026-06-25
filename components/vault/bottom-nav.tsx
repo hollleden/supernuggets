@@ -29,23 +29,23 @@ export function BottomNav({ isDarkMode, onToggleDarkMode, onResurface }: BottomN
       <BottomItem
         href={homeHref}
         icon={<Grid3X3 className="w-4 h-4" />}
-        label="BROWSE"
+        label="browse"
         isActive={isHome}
       />
       <BottomItem
         icon={<Sparkles className="w-4 h-4" />}
-        label="RESURFACE"
+        label="resurface"
         onClick={onResurface}
       />
       <BottomItem
         href={statsHref}
         icon={<Activity className="w-4 h-4" />}
-        label="STATS"
+        label="stats"
         isActive={isStats}
       />
       <BottomItem
         icon={isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-        label={isDarkMode ? 'LIGHT' : 'DARK'}
+        label={isDarkMode ? 'light' : 'dark'}
         onClick={onToggleDarkMode}
       />
     </nav>

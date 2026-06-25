@@ -10,9 +10,9 @@ import { useVaultStats } from '@/lib/vault-stats-context'
 const ANCHOR_THRESHOLD = 3
 
 const FOLDER_LABELS: Record<FolderType, string> = {
-  all: 'ALL', skin: 'SKIN', make: 'MAKE', food: 'FOOD',
-  body: 'BODY', learn: 'LEARN', work: 'WORK', fun: 'FUN',
-  go: 'GO', mind: 'MIND', other: 'OTHER',
+  all: 'all', skin: 'skin', make: 'make', food: 'food',
+  body: 'body', learn: 'learn', work: 'work', fun: 'fun',
+  go: 'go', mind: 'mind', other: 'other',
 }
 
 interface SidebarProps {
@@ -171,7 +171,7 @@ function SidebarInner({
             isCollapsed && 'pill-btn-icon mx-auto'
           )}
         >
-          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">COLLAPSE</span></>}
+          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">collapse</span></>}
         </button>
       </div>
     </aside>

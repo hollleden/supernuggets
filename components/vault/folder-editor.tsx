@@ -31,7 +31,7 @@ export function FolderEditor({ nuggetId, initialFolder, token }: FolderEditorPro
     const result = await updateNuggetFolder(token, nuggetId, next)
     setSaving(false)
     if (!result.ok) {
-      alert(`[FAIL] DB_WRITE_REJECTED: ${result.error}`)
+      alert(`save failed — ${result.error}`)
       setFolder(previous)
       return
     }

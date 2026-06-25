@@ -7,13 +7,13 @@ import { FOLDER_COLOR_HEX, formatDuration } from '@/lib/nuggets'
 import { ThumbnailImage } from '@/components/vault/thumbnail-image'
 
 function mediaLabel(mediaType?: string): string {
-  if (!mediaType) return 'TEXT'
-  if (mediaType === 'image_group' || mediaType === 'image_url') return 'GALLERY'
-  if (mediaType === 'image') return 'IMAGE'
-  if (mediaType.startsWith('video')) return 'VIDEO'
-  if (mediaType === 'voice') return 'VOICE'
-  if (mediaType === 'article') return 'ARTICLE'
-  return 'TEXT'
+  if (!mediaType) return 'text'
+  if (mediaType === 'image_group' || mediaType === 'image_url') return 'gallery'
+  if (mediaType === 'image') return 'image'
+  if (mediaType.startsWith('video')) return 'video'
+  if (mediaType === 'voice') return 'voice'
+  if (mediaType === 'article') return 'article'
+  return 'text'
 }
 
 function viaLine(nugget: Nugget): string | null {
@@ -149,18 +149,17 @@ export function MasonryGrid({ nuggets, hideFolder, onClearFilters }: MasonryGrid
     return (
       <div className="py-24 flex flex-col items-center justify-center">
         <pre className="font-mono text-xs text-foreground text-center leading-relaxed mb-4">
-{`VAULT REGISTRY INDEX // EMPTY
+{`vault registry index // empty
 ----------------------------------
-0 NUGGETS FOUND MATCHING YOUR FILTERS.
-ADJUST PARAMETERS OR STRUCTURAL FOLDERS
-TO INDEX AGAIN.`}
+nothing matched those filters.
+try clearing a tag or switching folders.`}
         </pre>
         {onClearFilters && (
           <button
             onClick={onClearFilters}
             className="font-mono text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
           >
-            [ CLEAR ALL FILTERS ]
+            [ clear all filters ]
           </button>
         )}
       </div>

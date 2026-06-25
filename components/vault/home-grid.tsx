@@ -90,7 +90,7 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
           </div>
           {filteredNuggets.length !== initialNuggets.length && (
             <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-              {filteredNuggets.length} OF {initialNuggets.length}
+              {filteredNuggets.length} of {initialNuggets.length}
             </span>
           )}
         </div>
@@ -111,7 +111,7 @@ export function HomeGrid({ initialNuggets }: HomeGridProps) {
   return (
     <Suspense fallback={
       <div className="p-6 font-mono text-xs text-muted-foreground uppercase tracking-wider">
-        LOADING VAULT...
+        opening the vault...
       </div>
     }>
       <HomeGridInner initialNuggets={initialNuggets} />

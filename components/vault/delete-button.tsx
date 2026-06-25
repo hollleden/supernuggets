@@ -18,14 +18,14 @@ export function DeleteButton({ nuggetId, token, className }: DeleteButtonProps) 
 
   const handleClick = async () => {
     const confirmed = window.confirm(
-      '[CONFIRM] ERASE THIS NUGGET FROM THE VAULT?\n\nThis action cannot be undone.'
+      'Delete this nugget? Once it\'s gone from the vault, it can\'t come back.'
     )
     if (!confirmed) return
     setPending(true)
     const result = await deleteNugget(token, nuggetId)
     if (!result.ok) {
       setPending(false)
-      alert(`[FAIL] DB_DELETE_REJECTED: ${result.error}`)
+      alert(`deletion failed — ${result.error}`)
       return
     }
     router.push(`/u/${token}`)
@@ -41,7 +41,7 @@ export function DeleteButton({ nuggetId, token, className }: DeleteButtonProps) 
         'font-mono text-[10px] font-bold uppercase tracking-wider px-2 py-1 border border-destructive text-destructive hover:bg-destructive hover:text-white transition-colors disabled:opacity-50'
       }
     >
-      [ ⌫ {pending ? 'ERASING…' : 'DELETE'} ]
+      [ ⌫ {pending ? 'removing…' : 'delete nugget'} ]
     </button>
   )
 }

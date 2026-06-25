@@ -23,7 +23,7 @@ export function TagEditor({ nuggetId, initialTags, token }: TagEditorProps) {
   const persist = async (next: string[]) => {
     const result = await updateNuggetTags(token, nuggetId, next)
     if (!result.ok) {
-      alert(`[FAIL] DB_WRITE_REJECTED: ${result.error}`)
+      alert(`save failed — ${result.error}`)
       return false
     }
     startTransition(() => router.refresh())
@@ -81,7 +81,7 @@ export function TagEditor({ nuggetId, initialTags, token }: TagEditorProps) {
           type="text"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="+TAG"
+          placeholder="+tag"
           className="font-mono text-xs uppercase tracking-wide bg-transparent border-b border-dashed border-muted-foreground focus:border-foreground outline-none w-20 px-1 placeholder:text-muted-foreground/60"
         />
       </form>

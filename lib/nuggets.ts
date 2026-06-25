@@ -245,7 +245,7 @@ export function mapRowToNugget(row: EntryRow): Nugget {
   const title =
     row.title?.trim() ||
     summaryBullets[0]?.slice(0, 80) ||
-    'Untitled'
+    'untitled nugget'
 
   // Links: dedupe and exclude URLs already represented in `mentioned` (those
   // are surfaced separately so they don't double-up in the LINKS section).
