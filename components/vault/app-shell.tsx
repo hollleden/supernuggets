@@ -91,7 +91,6 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
     const sp = new URLSearchParams(searchParams.toString())
     if (folder === 'all') sp.delete('folder')
     else sp.set('folder', folder)
-    sp.delete('tag')
     const qs = sp.toString()
     router.replace(qs ? `${homeHref}?${qs}` : homeHref)
     onClose()

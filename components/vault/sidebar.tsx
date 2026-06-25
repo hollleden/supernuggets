@@ -42,12 +42,8 @@ function SidebarInner({
 
   const handleTagClick = (tag: string) => {
     const sp = new URLSearchParams(searchParams.toString())
-    if (activeTag === tag) {
-      sp.delete('tag')
-    } else {
-      sp.set('tag', tag)
-    }
-    sp.delete('folder')
+    if (activeTag === tag) sp.delete('tag')
+    else sp.set('tag', tag)
     const qs = sp.toString()
     router.replace(qs ? `${homeHref}?${qs}` : homeHref)
   }
@@ -56,7 +52,6 @@ function SidebarInner({
     const sp = new URLSearchParams(searchParams.toString())
     if (folder === 'all') sp.delete('folder')
     else sp.set('folder', folder)
-    sp.delete('tag')
     const qs = sp.toString()
     router.replace(qs ? `${homeHref}?${qs}` : homeHref)
   }
@@ -75,7 +70,7 @@ function SidebarInner({
         {/* Folder list — desktop expanded only */}
         {!isCollapsed && (
           <>
-            <div className="flex flex-col gap-0.5">
+            <div className="flex flex-col">
               {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
                 const count = folderCounts[folder] ?? 0
