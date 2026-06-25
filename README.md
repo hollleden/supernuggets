@@ -38,19 +38,19 @@ Type or paste anything: a thought you want to remember, a quote, a name, a list,
 
 Send a single photo or an album of up to ten. The bot reads any text in the image (labels, screenshots, recipe cards, handwritten notes, slide decks), identifies what is shown, and writes a summary covering the whole batch. Images are downscaled and stripped of metadata before analysis.
 
-> *Example:* you take photos of three skincare products on a shelf at Sephora. The bot extracts every visible word — brand, product name, claims, ingredients — and files the lot under **Beauty** with tags like `#retinol`, `#sensitive_skin`.
+> *Example:* you take photos of three skincare products on a shelf at Sephora. The bot extracts every visible word — brand, product name, claims, ingredients — and files the lot under **skin** with tags like `#retinol`, `#sensitive_skin`.
 
 #### Voice notes
 
 Hold the microphone and talk. The bot transcribes the audio and treats the transcript as a text message — same folder, summary, and tag pipeline.
 
-> *Example:* mid-walk, you remember three things you need to tell your dentist. You record a voice note. The transcript lands in **Health** with a clean bullet summary, and the original voice message stays in your chat history.
+> *Example:* mid-walk, you remember three things you need to tell your dentist. You record a voice note. The transcript lands in **body** with a clean bullet summary, and the original voice message stays in your chat history.
 
 #### Video clips
 
 Send a video file up to 20 MB. The bot transcribes the audio, then summarizes and files based on what was said. If the clip arrived from a link, the bot also re-uploads the downloaded video to chat so you can re-watch without revisiting the original.
 
-> *Example:* a friend films their espresso-machine setup and the steps they use. You forward the clip. The bot transcribes the explanation, files it under **Food**, and you can pull it up the next time you are buying coffee.
+> *Example:* a friend films their espresso-machine setup and the steps they use. You forward the clip. The bot transcribes the explanation, files it under **food**, and you can pull it up the next time you are buying coffee.
 
 #### Social media links
 
@@ -58,8 +58,8 @@ Paste a link from any of these platforms and the bot will download and process i
 
 | Platform | What it handles |
 |---|---|
-| TikTok | Video posts (photo carousels not yet supported) |
-| Instagram | Reels (public photo posts and login-required posts return a clear rejection message) |
+| TikTok | Video posts and photo carousels |
+| Instagram | Reels and photo posts (requires session cookies) |
 | YouTube | Shorts only (longer videos are out of scope) |
 | Twitter / X | Video posts |
 | Pinterest | Video pins |
@@ -68,13 +68,13 @@ Paste a link from any of these platforms and the bot will download and process i
 
 For video links, the bot downloads the clip, transcribes it, and files the resulting nugget with a link back to the original. Per-platform duration caps keep ingest times short and costs bounded; clips longer than the cap return a rejection message rather than processing.
 
-> *Example:* you see a TikTok on training a dog to ring a bell for outside. You drop the link into the chat. The bot transcribes the demo, summarizes the three steps, files it under **Personal** with `#dog_training`, and gives you a one-tap link back to the original video.
+> *Example:* you see a TikTok on training a dog to ring a bell for outside. You drop the link into the chat. The bot transcribes the demo, summarizes the three steps, files it under **mind** with `#dog_training`, and gives you a one-tap link back to the original video.
 
 #### Article links
 
 Paste any other web link — a Substack post, a news article, a long blog post — and the bot extracts the main text (skipping nav bars, comments, ads), summarizes it, and files it. Paywalled articles return only the public preview; the bot never bypasses paywalls.
 
-> *Example:* you skim a 4,000-word essay you do not have time to finish. You send the link. The bot files it under **Grow** with a three-bullet summary, the full extracted body preserved on the detail page for later reading, and tags so you can find it again by topic.
+> *Example:* you skim a 4,000-word essay you do not have time to finish. You send the link. The bot files it under **learn** with a three-bullet summary, the full extracted body preserved on the detail page for later reading, and tags so you can find it again by topic.
 
 You can also send text *together* with a link — the prose becomes a personal note attached to the nugget.
 
@@ -128,18 +128,20 @@ The home view is a responsive masonry grid of card previews, denser than a typic
 
 ### Folders
 
-Twelve fixed folders, each with its own accent color:
+Ten fixed folders, each with its own accent color:
 
 ```
-Grow · Leisure · Health · Creativity · Money · Work
-Curation · Personal · Beauty · Food · Travel · Sport
+skin · make · food · body · learn
+work · fun · go · mind · other
 ```
 
-The folder bar at the top of the grid shows the count of nuggets in each folder (`GROW · 12`). Clicking a folder filters the grid; clicking `ALL` clears the filter.
+The sidebar shows all folders with nugget counts. Clicking a folder filters the grid; clicking the active folder clears the filter. Folders are sorted alphabetically.
 
 ### Tags
 
 Every nugget carries three to five hashtags. Tags are clickable everywhere they appear — on cards in the grid and on the detail view — and clicking one filters the grid to that exact tag. The active tag is shown as a removable chip at the top of the grid.
+
+The sidebar shows anchor tags (those appearing 3+ times across your vault) below the folder list. A sort toggle lets you switch between frequency order (default, `↓ #`) and alphabetical (`↓ A-Z`). The AI always tags the primary tool, product, or framework discussed — so filtering by `#claude_code` or `#remotion` surfaces everything about that tool.
 
 ### Search
 
@@ -179,7 +181,17 @@ A `DARK` / `LIGHT` toggle in the sidebar switches the whole app between a warm c
 
 ### Sidebar and mobile nav
 
-The left sidebar holds the primary nav (`BROWSE`, `RESURFACE`, `STATS`), a quick link to the Telegram bot (`BOT`), and the theme toggle. It can be collapsed to a slim icon rail by clicking the chevron at the bottom. On mobile, the sidebar is replaced by a compact bottom navigation bar.
+The left sidebar shows folders (with counts), anchor tags (sortable by frequency or A-Z), and a collapse toggle. It can be collapsed to a slim icon rail showing only folder color dots. On mobile, navigation is handled by a hamburger menu.
+
+### Digests
+
+The bot sends AI-generated digests summarizing your saved nuggets:
+
+- **Weekly digest** — clusters the week's saves by topic, highlights top folders, includes an AI-written analytical insight paragraph
+- **Monthly digest** — same structure with month-over-month metrics comparison and top semantic clusters
+- **Year in review** — full-year wrapped with season-by-season summaries, yearly metrics, and a retrospective
+
+Admin commands: `/digest_week`, `/digest_month`, `/digest_year`. Automated scheduling is in the backlog.
 
 ---
 
@@ -198,10 +210,18 @@ The left sidebar holds the primary nav (`BROWSE`, `RESURFACE`, `STATS`), a quick
 
 ## Changelog
 
+### 2026-06-25 — Tag consistency overhaul
+
+Rewrote the tagging system to produce consistent, filterable tags. The AI now always includes the primary tool, product, or framework being discussed as a tag (e.g. `#claude_code`, `#remotion`, `#figma`). All 173 existing entries were re-tagged via migration. Added a sort toggle in the sidebar to switch tag order between frequency (`↓ #`) and alphabetical (`↓ A-Z`).
+
+### 2026-06-24 — Folder rename + Instagram photos + cleanup
+
+Consolidated folders from 12 → 10 lowercase names: `skin`, `make`, `food`, `body`, `learn`, `work`, `fun`, `go`, `mind`, `other`. Added Instagram photo post ingestion (GraphQL scraper with session cookies). Updated favicon. Various UI cleanup.
+
+### 2026-06-19–22 — Digests, TikTok photos, description capture
+
+Shipped the full digest system (weekly/monthly/year-in-review) with AI-generated summaries, semantic clustering, and BMO-style digital hygiene notes. Added TikTok photo carousel ingestion. Added post description capture for TikTok, Instagram, and YouTube Shorts videos. Overhauled receipt and digest formatting.
+
 ### 2026-06-10 — On-screen URL capture for listicle videos
 
-The bot now picks up websites that videos only show on screen. For TikToks in the "free websites you should know", "secret sites", "no one tells you about these tools" style — where the voice-over never names the website but the browser address bar appears for a split second — the bot extracts frames from the video, reads the URL with vision AI, and surfaces it in the receipt's **MENTIONED** section as a direct clickable link.
-
-Previously, these videos produced accurate-sounding receipts with no actual way to return to the recommended website. Now the link sits one tap away.
-
-Works on both directly-pasted TikTok URLs and videos forwarded via helper bots (e.g. `@SaveAsBot`). Non-listicle videos are unaffected — the new code path only fires when the transcript matches a curated set of cue phrases.
+The bot now picks up websites that videos only show on screen. For TikToks in the "free websites you should know" style — where the voice-over never names the website but the browser address bar appears for a split second — the bot extracts frames from the video, reads the URL with vision AI, and surfaces it in the receipt's **MENTIONED** section as a direct clickable link.

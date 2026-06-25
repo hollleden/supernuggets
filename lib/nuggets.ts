@@ -1,5 +1,5 @@
 // Core Nugget types + data mapping. Single source of truth for the
-// 12-folder taxonomy and the Hemeon-tinted folder palette.
+// 10-folder taxonomy and the Hemeon-tinted folder palette.
 
 export interface Mentioned {
   label: string
