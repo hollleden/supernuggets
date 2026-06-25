@@ -63,7 +63,7 @@ interface BottomItemProps {
 function BottomItem({ icon, label, isActive, onClick, href }: BottomItemProps) {
   const className = cn(
     'flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-colors',
-    'font-mono text-[9px] font-bold uppercase tracking-widest',
+    'font-mono text-[9px] font-bold tracking-widest',
     'border-r border-foreground last:border-r-0',
     isActive
       ? 'bg-foreground text-background'

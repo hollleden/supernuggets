@@ -157,7 +157,7 @@ try clearing a tag or switching folders.`}
         {onClearFilters && (
           <button
             onClick={onClearFilters}
-            className="font-mono text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
+            className="font-mono text-[10px] font-bold tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
           >
             [ clear all filters ]
           </button>

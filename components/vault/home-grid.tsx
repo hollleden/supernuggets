@@ -78,7 +78,7 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
     <>
       {urlTag && (
         <div className="px-4 pt-3 flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] uppercase tracking-wider px-2 py-1.5 rounded-full">
+          <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] tracking-wider px-2 py-1.5 rounded-full">
             <span>#{urlTag}</span>
             <button
               onClick={handleClearTag}
@@ -89,7 +89,7 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
             </button>
           </div>
           {filteredNuggets.length !== initialNuggets.length && (
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+            <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
               {filteredNuggets.length} of {initialNuggets.length}
             </span>
           )}
@@ -110,7 +110,7 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
 export function HomeGrid({ initialNuggets }: HomeGridProps) {
   return (
     <Suspense fallback={
-      <div className="p-6 font-mono text-xs text-muted-foreground uppercase tracking-wider">
+      <div className="p-6 font-mono text-xs text-muted-foreground tracking-wider">
         opening the vault...
       </div>
     }>

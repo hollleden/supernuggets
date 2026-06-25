@@ -108,7 +108,7 @@ function SidebarInner({
               <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
                 <button
                   onClick={() => setTagSortAZ(prev => !prev)}
-                  className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground/50 hover:text-muted-foreground transition-colors text-right"
+                  className="font-mono text-[9px] tracking-wider px-2 py-0.5 text-muted-foreground/50 hover:text-muted-foreground transition-colors text-right"
                 >
                   {tagSortAZ ? '↓ A-Z' : '↓ #'}
                 </button>
@@ -117,7 +117,7 @@ function SidebarInner({
                     key={tag}
                     onClick={() => handleTagClick(tag)}
                     className={cn(
-                      'font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      'font-mono text-[10px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
                       activeTag === tag
                         ? 'text-foreground font-bold'
                         : 'text-muted-foreground hover:text-foreground'
@@ -152,7 +152,7 @@ function SidebarInner({
                       />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="font-mono text-[10px] font-bold uppercase tracking-wider rounded-none">
+                  <TooltipContent side="right" className="font-mono text-[10px] font-bold tracking-wider rounded-none">
                     {FOLDER_LABELS[folder]}
                   </TooltipContent>
                 </Tooltip>

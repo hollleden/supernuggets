@@ -46,7 +46,7 @@ function HeaderSearchInner() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Find a nugget..."
-        className="w-full bg-transparent font-mono text-[11px] font-bold uppercase focus:outline-none placeholder:text-neutral-400 tracking-wider py-0.5 text-foreground"
+        className="w-full bg-transparent font-mono text-[11px] font-bold focus:outline-none placeholder:text-neutral-400 tracking-wider py-0.5 text-foreground"
       />
     </div>
   )
@@ -57,7 +57,7 @@ function HeaderSearch() {
     <Suspense fallback={
       <div className="flex-1 px-4 flex items-center gap-2">
         <span className="text-neutral-400 shrink-0 text-sm">🔍</span>
-        <span className="font-mono text-[11px] text-neutral-400 uppercase tracking-wider">Find a nugget...</span>
+        <span className="font-mono text-[11px] text-neutral-400 tracking-wider">Find a nugget...</span>
       </div>
     }>
       <HeaderSearchInner />
@@ -100,7 +100,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
     <div className="fixed inset-0 z-30 bg-card pt-14 overflow-y-auto md:hidden">
       <div className="p-4 space-y-4">
         <div>
-          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2">// navigation</div>
+          <div className="text-[11px] font-black tracking-widest text-muted-foreground mb-2">// navigation</div>
           <div className="flex flex-col gap-1.5">
             <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> random nugget</button>
             <a href={statsHref} onClick={onClose} className={cn('pill-btn justify-start', isStats && 'active')}><span>📈</span> stats</a>
@@ -108,7 +108,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         </div>
 
         <div className="border-t border-black/10 pt-4">
-          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2">// folders</div>
+          <div className="text-[11px] font-black tracking-widest text-muted-foreground mb-2">// folders</div>
           <div className="grid grid-cols-2 gap-1.5">
             {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
@@ -190,7 +190,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Static top bar */}
       <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none">
-        <div className="top-bar-text font-mono text-[10px] font-black uppercase tracking-wider text-black dark:text-neutral-400 text-center px-4">
+        <div className="top-bar-text font-mono text-[10px] font-black tracking-wider text-black dark:text-neutral-400 text-center px-4">
           supernuggets — digital vault // brain dump engine — stop cluttering your camera roll — reclaim your creative chaos — captured today, remembered forever
         </div>
       </div>
@@ -204,7 +204,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             isSidebarCollapsed ? 'md:w-[72px]' : 'md:w-[220px]'
           )}
         >
-          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black uppercase tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
+          <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
             <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
             {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">supernuggets</span>}
           </Link>
@@ -221,13 +221,13 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         <div className="hidden md:flex items-center gap-1 px-3">
           <button
             onClick={handleResurface}
-            className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
+            className="font-mono text-[10px] font-bold tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
           >
             random
           </button>
           <Link
             href={token ? `/u/${token}/stats` : '/stats'}
-            className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
+            className="font-mono text-[10px] font-bold tracking-wider px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 hover:bg-foreground hover:text-background transition-colors"
           >
             stats
           </Link>
