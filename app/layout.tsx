@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
+import { Sometype_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const jetbrainsMono = JetBrains_Mono({
+const sometypeMono = Sometype_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '700', '800'],
+  weight: ['400', '500', '700'],
   variable: '--font-mono',
 })
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={jetbrainsMono.variable}>
+    <html lang="en" suppressHydrationWarning className={sometypeMono.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
       </head>
