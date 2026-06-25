@@ -74,7 +74,7 @@ function SidebarInner({
         {/* Folder list — desktop expanded only */}
         {!isCollapsed && (
           <>
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-0.5">
               {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
                 const count = folderCounts[folder] ?? 0
@@ -83,18 +83,22 @@ function SidebarInner({
                   <button
                     key={folder}
                     onClick={() => handleFolderClick(folder)}
-                    className={cn('pill-btn justify-between', isActive && 'active')}
-                    style={isActive ? {} : { '--pill-accent': color } as React.CSSProperties}
+                    className={cn(
+                      'font-mono text-[10px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      isActive
+                        ? 'text-foreground font-bold'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
                   >
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center gap-1.5">
                       <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ backgroundColor: isActive ? 'currentColor' : color }}
+                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ backgroundColor: color }}
                       />
                       {FOLDER_LABELS[folder]}
                     </span>
                     {count > 0 && (
-                      <span className="text-[9px] font-normal opacity-50 tabular-nums">
+                      <span className="text-[9px] opacity-40 tabular-nums">
                         {count}
                       </span>
                     )}
