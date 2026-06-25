@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useMemo } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -34,11 +34,15 @@ function SidebarInner({
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
   const activeTag = searchParams.get('tag')?.toLowerCase() ?? ''
 
+  const [tagSortAZ, setTagSortAZ] = useState(false)
+
   const anchorTags = useMemo(() => {
-    return Object.entries(tagCounts)
+    const filtered = Object.entries(tagCounts)
       .filter(([, count]) => count >= ANCHOR_THRESHOLD)
-      .sort((a, b) => b[1] - a[1])
-  }, [tagCounts])
+    return tagSortAZ
+      ? filtered.sort((a, b) => a[0].localeCompare(b[0]))
+      : filtered.sort((a, b) => b[1] - a[1])
+  }, [tagCounts, tagSortAZ])
 
   const handleTagClick = (tag: string) => {
     const sp = new URLSearchParams(searchParams.toString())
@@ -99,9 +103,15 @@ function SidebarInner({
               })}
             </div>
 
-            {/* Tags — plain text, no header */}
+            {/* Tags */}
             {anchorTags.length > 0 && (
               <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
+                <button
+                  onClick={() => setTagSortAZ(prev => !prev)}
+                  className="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 text-muted-foreground/50 hover:text-muted-foreground transition-colors text-right"
+                >
+                  {tagSortAZ ? '↓ A-Z' : '↓ #'}
+                </button>
                 {anchorTags.map(([tag, count]) => (
                   <button
                     key={tag}
