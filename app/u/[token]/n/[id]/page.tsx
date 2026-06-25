@@ -74,13 +74,13 @@ async function loadRelated(folder: string, excludeId: number, userId: number): P
 }
 
 function mediaLabel(mediaType?: string): string {
-  if (!mediaType) return 'TEXT'
-  if (mediaType === 'image_group' || mediaType === 'image_url') return 'GALLERY'
-  if (mediaType === 'image') return 'IMAGE'
-  if (mediaType.startsWith('video')) return 'VIDEO'
-  if (mediaType === 'voice') return 'VOICE'
-  if (mediaType === 'article') return 'ARTICLE'
-  return 'TEXT'
+  if (!mediaType) return 'text'
+  if (mediaType === 'image_group' || mediaType === 'image_url') return 'gallery'
+  if (mediaType === 'image') return 'image'
+  if (mediaType.startsWith('video')) return 'video'
+  if (mediaType === 'voice') return 'voice'
+  if (mediaType === 'article') return 'article'
+  return 'text'
 }
 
 function MediaCapture({ nugget }: { nugget: Nugget }) {
@@ -169,14 +169,14 @@ export default async function NuggetPage({
 
             {/* Date */}
             <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6">
-              CREATED: {nugget.dateCompact}
+              created: {nugget.dateCompact}
             </div>
 
             {/* 1. SUMMARY */}
             {nugget.summaryBullets.length > 0 && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">SUMMARY</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">summary</div>
                 {nugget.summaryBullets.map((bullet, i) => (
                   <div key={i} className="flex gap-1.5 text-[13px] leading-relaxed text-gray-800 dark:text-gray-200 mb-2">
                     <span className="shrink-0 font-bold" style={{ color: folderColor }}>▪</span>
@@ -190,7 +190,7 @@ export default async function NuggetPage({
             {nugget.factChecks.length > 0 && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">FACT-CHECK</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">fact-check</div>
                 {nugget.factChecks.map((fc, i) => (
                   <div key={i} className="mb-2">
                     <div className="text-xs font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 uppercase tracking-tight">
@@ -222,7 +222,7 @@ export default async function NuggetPage({
             {nugget.mentioned.length > 0 && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">MENTIONED</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">mentioned</div>
                 <div className="flex flex-wrap gap-1.5">
                   {nugget.mentioned.map((m, i) => (
                     <a
@@ -260,8 +260,8 @@ export default async function NuggetPage({
                     <>
                       <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">DESCRIPTION</span>
-                        <CopyButton text={description} label="COPY" />
+                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">description</span>
+                        <CopyButton text={description} label="copy" />
                       </div>
                       <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{description}</pre>
                     </>
@@ -270,8 +270,8 @@ export default async function NuggetPage({
                     <>
                       <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">TRANSCRIPT</span>
-                        <CopyButton text={body} label="COPY" />
+                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">transcript</span>
+                        <CopyButton text={body} label="copy" />
                       </div>
                       <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{formatTranscript(body)}</pre>
                     </>
@@ -282,14 +282,14 @@ export default async function NuggetPage({
 
             {/* 6. TAGS */}
             <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-            <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">TAGS</div>
+            <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">tags</div>
             <TagEditor nuggetId={nugget.id} initialTags={nugget.tags} token={token} />
 
             {/* 7. SOURCE */}
             {nugget.sourceInfo && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">SOURCE</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">source</div>
                 <div className="text-[11px] text-gray-600">
                   <span>↗ </span>
                   <a
@@ -298,7 +298,7 @@ export default async function NuggetPage({
                     rel="noopener noreferrer"
                     className="hover:text-black dark:hover:text-white"
                   >
-                    {sourceHeaderLine(nugget.sourceInfo) || 'OPEN ORIGINAL'}
+                    {sourceHeaderLine(nugget.sourceInfo) || 'open original source'}
                   </a>
                 </div>
                 <a
@@ -316,7 +316,7 @@ export default async function NuggetPage({
             {nugget.extractedLinks.length > 0 && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">LINKS</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">links</div>
                 {nugget.extractedLinks.map(url => (
                   <div key={url} className="flex gap-2 text-xs mb-1">
                     <span className="text-gray-400 shrink-0">⬈</span>
@@ -337,11 +337,11 @@ export default async function NuggetPage({
           {/* ── Related sidebar ── */}
           <aside className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-3' : 'lg:col-span-4'} space-y-3`}>
             <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest px-1 mb-1">
-              RELATED IN {nugget.folder.toUpperCase()}
+              related in {nugget.folder.toUpperCase()}
             </div>
             {related.length === 0 ? (
               <p className="font-mono text-xs text-gray-400 px-1">
-                NO OTHER NUGGETS IN THIS FOLDER YET.
+                no other nuggets in this folder yet
               </p>
             ) : (
               related.map(r => (
@@ -369,13 +369,13 @@ function Divider({ children }: { children: React.ReactNode }) {
 }
 
 function relatedMediaLabel(mediaType?: string): string {
-  if (!mediaType) return 'TEXT'
-  if (mediaType === 'image_group' || mediaType === 'image_url') return 'GALLERY'
-  if (mediaType === 'image') return 'IMAGE'
-  if (mediaType.startsWith('video')) return 'VIDEO'
-  if (mediaType === 'voice') return 'VOICE'
-  if (mediaType === 'article') return 'ARTICLE'
-  return 'TEXT'
+  if (!mediaType) return 'text'
+  if (mediaType === 'image_group' || mediaType === 'image_url') return 'gallery'
+  if (mediaType === 'image') return 'image'
+  if (mediaType.startsWith('video')) return 'video'
+  if (mediaType === 'voice') return 'voice'
+  if (mediaType === 'article') return 'article'
+  return 'text'
 }
 
 function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {

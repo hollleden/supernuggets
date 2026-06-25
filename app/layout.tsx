@@ -10,8 +10,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'SUPERNUGGETS // VAULT DASHBOARD',
-  description: 'High-performance pocket database for everything worth keeping.',
+  title: 'supernuggets // vault dashboard',
+  description: 'A clean, fast pocket vault for everything worth keeping.',
   icons: {
     icon: [
       { url: '/nugget-logo.png', type: 'image/png' },

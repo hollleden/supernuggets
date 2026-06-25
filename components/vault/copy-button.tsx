@@ -13,7 +13,7 @@ type Status = 'idle' | 'copied' | 'failed'
 
 // Clipboard-copy island with textarea fallback for non-secure contexts /
 // older browsers / focus-failure. Always shows visible feedback (never silent).
-export function CopyButton({ text, label = 'COPY', className }: CopyButtonProps) {
+export function CopyButton({ text, label = 'copy', className }: CopyButtonProps) {
   const [status, setStatus] = useState<Status>('idle')
 
   const handleClick = async () => {
@@ -25,7 +25,7 @@ export function CopyButton({ text, label = 'COPY', className }: CopyButtonProps)
   return (
     <button
       onClick={handleClick}
-      title={status === 'copied' ? 'Copied!' : status === 'failed' ? 'Failed' : label}
+      title={status === 'copied' ? 'Copied to clipboard!' : status === 'failed' ? 'Failed' : label}
       className={cn(
         'transition-colors p-1',
         status === 'copied' ? 'text-emerald-500'
