@@ -8,8 +8,8 @@ The user is **non-technical**. Explain in plain language before running anything
 
 ## Two components
 
-1. **Web frontend** — `~/supernuggets`. Next.js 16 app. Reads from Supabase. ✅ Wired to real data. 🚧 Visual rewrite to BRAND.md spec is the next focus.
-2. **Telegram bot** — `~/supernuggets-bot`. Python (aiogram v3). ✅ Text + image handlers ship end-to-end. Video/URL handlers pending.
+1. **Web frontend** — `~/supernuggets`. Next.js 16 app. Reads from Supabase. ✅ Wired to real data. ✅ BRAND.md visual spec applied. ✅ Thumbnail previews on cards.
+2. **Telegram bot** — `~/supernuggets-bot`. Python (aiogram v3). ✅ All content types ship end-to-end (text, image, video, URL, article, voice). ✅ Thumbnail upload to Supabase Storage.
 
 > **Brand & design spec:** see [BRAND.md](BRAND.md) — visual identity, nomenclature, locked bot copy spec, future web component templates. Conform all new UI, copy, and design decisions to it.
 
@@ -25,8 +25,9 @@ Old broken bot at `~/Desktop/listo/` (reference only — do NOT extend). Other s
 | Database | Supabase | ✅ shared between bot + web |
 | Bot framework | aiogram v3 (Python) | ✅ scaffolded |
 | Image processing | Pillow (resize to 1568px + JPEG re-encode) | ✅ |
-| Media downloader | yt-dlp | ⏳ not added yet |
-| Transcription (audio/video) | OpenAI Whisper API | ⏳ not added yet |
+| Media downloader | yt-dlp | ✅ |
+| Transcription (audio/video) | OpenAI Whisper API | ✅ |
+| Thumbnail storage | Supabase Storage (`thumbnails` bucket, public) | ✅ shipped 2026-06-26 |
 | AI brain — text mode | Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) via tool use | ✅ |
 | AI brain — vision mode | Claude Haiku 4.5 (same model) via tool use — switched from Sonnet 4.6 on 2026-05-26 after A/B test confirmed quality holds; ~70% cheaper | ✅ |
 | Prompt caching | ephemeral, on system + tools | ✅ ~90% input discount after first call |
@@ -139,8 +140,10 @@ Bot status replies use bracketed text tags, never emojis:
 - `source_duration_s` — only for videos
 - `source_kind` — `"video"`, `"images"`, or `"article"`
 
+**Thumbnail storage (shipped 2026-06-26).** When saving image entries (direct photos, URL galleries), the bot generates a 400px-max JPEG thumbnail via `pipeline.make_thumbnail()` and uploads it to Supabase Storage (`thumbnails` bucket, public) via `database.upload_thumbnail()`. The public URL is stored as `thumbnail_url` in the `enrichment` JSON. For URL galleries, this replaces expiring CDN URLs (Instagram/TikTok signed URLs). For direct photos, this is the only way to get a preview (no source URL exists). Existing entries (~175) have no thumbnails — backfill pending.
+
 Frontend (`lib/nuggets.ts`):
-- `parseSourceInfo(enrichmentJson)` builds a `SourceInfo` object
+- `parseSourceInfo(enrichmentJson)` builds a `SourceInfo` object — returns a result when `thumbnail_url` is present even without `source_url`
 - `sourceHeaderLine(info)` formats `"TikTok · @insiderforce · 1:19"` for both card + detail
 - Card shows the header line above tags; detail page renders a full SOURCE section between title and SUMMARY
 
@@ -312,7 +315,7 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 | Low | **Dark mode** (full) | BRAND.md §7 spec: Hemeon-orange-on-sepia. Effort: audit every component. Do after core features. |
 | Low | **Full-text search** | Supabase FTS (`to_tsvector` + `to_tsquery`). Fine under ~500 entries with client-side; add when needed. |
 | Low | **Bulk web operations** | Select + batch delete / move-to-folder. Real work — select mode, state management. After vault hits 500+ entries. |
-| Medium | **Source media preview on cards + detail page** | Show a thumbnail/embed preview of the source content (TikTok video, Instagram post, article OG image) on both the main grid cards and the single nugget page. Needs: (a) persist `og_image_url` or `thumbnail_url` in `enrichment` JSON during bot ingestion (yt-dlp provides `thumbnail`), (b) frontend `<img>` or embed component, (c) consider proxy/caching for external images. |
+| ✅ Done | **Source media preview on cards** | Shipped 2026-06-26 — thumbnails uploaded to Supabase Storage `thumbnails` bucket (public). `pipeline.make_thumbnail()` + `database.upload_thumbnail()`. Wired into direct photos + URL galleries. Frontend `parseSourceInfo` handles thumbnail-only entries. Remaining: backfill ~175 existing entries (backlog item), detail page preview. |
 | Low | Add `media_count` column + persist Telegram `file_id`s | Web grid thumbnails. Schema migration. |
 | Low | Local OCR via Tesseract | Cuts vision cost 70-90% on screenshots. New dep. |
 | Low | `delete_entry` returns True on 0 rows — multi-user gap | `database.py` |
@@ -474,3 +477,5 @@ Diagnostic checklist when `TelegramConflictError` appears:
 - **Railway's `nixpacks.toml` silently ignores `aptPkgs` and `nixPkgs` for some Python deployments** — burned 3 deploys trying to install ffmpeg via every variant (`aptPkgs`, `nixPkgs = ["...", "ffmpeg"]`, `nixPkgs = ["...", "ffmpeg-full"]`) and the binary never landed on `$PATH`. The Railway-side build evaluates the file but doesn't actually run apt/nix install for the additional packages. **Switch to a `Dockerfile` instead** — Railway auto-detects `Dockerfile` over `Procfile`/nixpacks and gives you full control. The bot's Dockerfile is at `~/supernuggets-bot/Dockerfile`: `python:3.12-slim` base + `apt-get install ffmpeg` + `pip install -r requirements.txt` + `CMD ["python", "bot.py"]`. Reliable.
 - **Telegram's `video.duration` is sometimes 0 for SaveAsBot-forwarded videos** — `pipeline.extract_video_frames` short-circuits to `[]` when duration is missing or 0, killing the listicle frame-OCR path. Mitigation: `pipeline._probe_duration_seconds(mp4_path)` runs `ffprobe` on the saved mp4 as fallback. Both ffmpeg and ffprobe ship with the same apt package so they're installed together via the Dockerfile.
 - **Wire new video-pipeline features into BOTH `_ingest_url_video` AND `on_video` in bot.py** — they're parallel code paths. `_ingest_url_video` handles directly-pasted URLs (has yt-dlp `info` + source dict). `on_video` handles Telegram-native video file forwards (no URL, no source dict — `@SaveAsBot` is the dominant user workflow). New features that only land in `_ingest_url_video` will silently fail for the SaveAsBot-forwarded video case. The listicle frame-OCR work shipped 2026-06-10 had this exact gotcha — first user test used SaveAsBot and showed no URL until we wired `on_video` too.
+- **Supabase Storage `thumbnails` bucket is public** — created automatically by `database._ensure_thumb_bucket()` on first upload. If it already exists, the 409 is silently absorbed. Path convention: `{user_id}/{uuid}.jpg`. Public URL: `{SUPABASE_URL}/storage/v1/object/public/thumbnails/{path}`. Thumbnails are ~5-20KB JPEGs. No cleanup/expiry policy yet.
+- **Vercel requires manual redeploy after env var change** — saving a new value in Settings → Environment Variables does NOT take effect until you redeploy. Go to Deployments → ⋯ → Redeploy. This bit us during the 2026-06-26 Supabase key rotation (site showed 404 on vault pages until redeploy).
