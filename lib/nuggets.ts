@@ -158,13 +158,14 @@ function parseSourceInfo(raw: string | null | undefined): SourceInfo | undefined
   if (!parsed || typeof parsed !== 'object') return undefined
   const obj = parsed as Record<string, unknown>
   const url = typeof obj.source_url === 'string' ? obj.source_url.trim() : ''
-  if (!url) return undefined
+  const thumbUrl = typeof obj.thumbnail_url === 'string' ? obj.thumbnail_url.trim() : ''
+  if (!url && !thumbUrl) return undefined
   const out: SourceInfo = { url }
   if (typeof obj.source_platform === 'string') out.platform = obj.source_platform
   if (typeof obj.source_uploader === 'string') out.uploader = obj.source_uploader
   if (typeof obj.source_duration_s === 'number') out.durationS = obj.source_duration_s
   if (typeof obj.source_kind === 'string') out.kind = obj.source_kind
-  if (typeof obj.thumbnail_url === 'string' && obj.thumbnail_url.trim()) out.thumbnailUrl = obj.thumbnail_url.trim()
+  if (thumbUrl) out.thumbnailUrl = thumbUrl
   return out
 }
 
