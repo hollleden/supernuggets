@@ -203,11 +203,12 @@ message_id (bigint, nullable)
 - **Auto-deploy**: every `git push` → Vercel rebuilds automatically
 - UI rebuilt to BRAND.md "tactical neo-retro blueprint" spec: cream bg, black borders, monospaced type, 12-folder accent strips, dithered empty state
 - `lib/supabaseAdmin.ts` reads from `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SECRET_KEY` (server-only, all reads + writes). **No anon client — `lib/supabaseClient.ts` was deleted 2026-06-09.**
-- `app/page.tsx` — minimal terminal-style landing card (one CTA to `@supernuggetss_bot`). Does NOT use AppShell.
+- `app/page.tsx` — 🎯 **in progress (2026-06-28), not yet deployed.** Editorial grid layout (Safsafu-inspired): yellow top bar + vault-style header, then a 2x2 info grid (hero headline left-spanning two rows; inbound formats, AI engine, CTA, vault features as four cells right) below the fold a real vault screenshot (`public/vault-preview.png`) with a bottom gradient fade. One CTA only → `@supernuggetss_bot`, labeled "Open Supernuggets". No TelegramLogin widget (removed — showed "Bot domain invalid" because the bot's configured domain doesn't match; widget code still exists at `app/telegram-login.tsx` but is unused). Does NOT use AppShell. **Uncommitted as of this entry — diff touches `app/page.tsx`, `app/globals.css` (added `.animate-marquee` keyframes, currently unused), `components/vault/nugget-card.tsx`.**
 - `app/u/[token]/*` — all vault routes scoped by user_id resolved from the magic-URL token. `layout.tsx` validates token → `notFound()` on invalid → wraps in AppShell.
 - `lib/users.ts` — `userIdFromToken(token)` using `supabaseAdmin`.
 - `app/actions/nuggets.ts` — token-scoped server actions (`updateNuggetFolder`, `updateNuggetTags`, `deleteNugget`, `pickRandomNuggetId`), all using `supabaseAdmin`, all refuse to touch rows that don't belong to the token's user_id.
 - `lib/nuggets.ts` — `mapRowToNugget()` handles inconsistent tag shapes from old data
+- `components/vault/nugget-card.tsx` — 🎯 **in progress (2026-06-28), uncommitted.** Removed the media-type badge (`ARTICLE`/`GALLERY`/`TEXT`/`IMAGE`) from card thumbnails — now shows only video duration when present, plain colored placeholder otherwise. Title + via line + tags remain the only card text.
 - Run locally: `cd ~/supernuggets && npm run dev` → http://localhost:3000
 
 **Known frontend bugs:** ✅ both prior items shipped — edit/delete persists via `supabaseAdmin` server actions; multi-user leak closed via per-user token scoping + RLS.
@@ -296,17 +297,19 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 
 | Priority | Item | Notes |
 |---|---|---|
-| **HIGH** | **Weekly / monthly digest** | APScheduler → DM summary of last 7/30 days. Port from old `digest.py`. Highest-ROI re-engagement feature. **Next session's primary task.** |
+| **HIGH** | **Automated digest scheduling** | `digest.py` is shipped — `/digest_week`, `/digest_month`, `/digest_year` work today as manual admin-only commands. What's still missing is automation: no APScheduler (or equivalent) wired up anywhere in the codebase, so digests never send on their own. This item is just the scheduler, not the digest logic itself. |
 | **HIGH** | **Recipe-video receipt format** (added 2026-06-10) | Recipe / cooking TikToks should get a domain-specific receipt: structured INGREDIENTS list + numbered STEPS section instead of the generic SUMMARY bullets. Likely needs (a) a detector (cue words: "first you'll need", "add the", "mix in", "preheat", measurements like "1 cup" / "2 tbsp"), (b) a new tool schema variant or optional `recipe` field on `save_nugget` with ingredients[] + steps[], (c) a renderer branch in `pipeline.render` that outputs the recipe block in place of SUMMARY when populated. Owner explicitly flagged 2026-06-10 — start by collecting 3-5 real recipe TikToks to design against. |
 | **HIGH** | **Native TikTok photo carousel support** | yt-dlp can't extract (JS-rendered). Options: (a) Playwright (slow, fingerprinted), (b) paid API ($10-50/mo, recommended), (c) TikTok mobile API (breaks often), (d) programmatic SaveAsBot. Start with Playwright for dev experience, switch to paid API for reliability. |
 | Medium | **Duplicate detection** | Bot checks URL / image hash before processing. `[WARN] DUPLICATE_DETECTED` with existing entry id + date. Needs `content_hash` column + URL-normalized lookup. Saves Claude + Whisper tokens. |
 | Medium | **Author hashtags from URL source** | Parse hashtags from yt-dlp description, pass to Claude as "optional author tags — include only if topically specific, ignore #fyp/#viral/#trending." Do NOT append raw (spam risk). |
 | Medium | **Pin / favorite nuggets** | `pinned` boolean column. Pinned cards float to top. Simple schema + sort change. |
 | Medium | **Share specific nugget** | Public `/n/[id]` permalink (no login). Bundle with Phase C magic URL. |
+| Medium | **Web-only URL ingestion** (added 2026-06-28) | Let users paste a URL on the web dashboard without Telegram. Reuse the bot's pipeline via HTTP endpoint or port to Next.js API route. |
 | Medium | **Note-taking on saved nuggets** | Add user annotation after the fact. `user_notes` text column. Edit UI on detail page. |
 | Medium | **Audio files** (`F.audio`) | Same Whisper pipeline as voice. May have title/performer/caption metadata worth prepending. |
 | Medium | `AsyncAnthropic` + `httpx.AsyncClient` instead of `asyncio.to_thread` | Proper async throughout — removes the thread pool overhead. |
 | Medium | Resize/compress originals saved in DB | Web grid shows nothing for image entries. Needs schema change. |
+| Low | **Research mymind.com feature gap** (added 2026-06-28) | Audit what https://mymind.com/ can do that supernuggets can't — e.g. browser extension save, visual similarity search, automatic color/mood tagging, "spaces" organization, AI-powered rediscovery. Identify features worth porting to the bot or web dashboard. |
 | Low | **Onboarding flow** | `/start` multi-step walkthrough — reduces first-day drop-off if bot is ever shared. 3 messages: "send a TikTok URL", "send a screenshot", "send a voice note". |
 | Low | **Resurface enhancement** — "On This Day" | Same-date last year. Adds a memory/nostalgia dimension to the existing random resurface. |
 | Low | **Animated GIFs** (`F.animation`) | Telegram delivers as silent mp4. Mostly silent → Whisper returns nothing. Pair with future vision-on-first-frame. |
@@ -317,6 +320,7 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 | Low | **Bulk web operations** | Select + batch delete / move-to-folder. Real work — select mode, state management. After vault hits 500+ entries. |
 | ✅ Done | **Source media preview on cards** | Shipped 2026-06-26 — thumbnails uploaded to Supabase Storage `thumbnails` bucket (public). `pipeline.make_thumbnail()` + `database.upload_thumbnail()`. Wired into direct photos + URL galleries. Frontend `parseSourceInfo` handles thumbnail-only entries. Remaining: backfill ~175 existing entries (backlog item), detail page preview. |
 | Low | Add `media_count` column + persist Telegram `file_id`s | Web grid thumbnails. Schema migration. |
+| Low | **Landing page footer tweaks** (added 2026-06-30) | Add a GitHub link to the main page; replace the `⬈ contact` footer link with `⬈ created by` (pointing to the same Telegram contact). |
 | Low | Local OCR via Tesseract | Cuts vision cost 70-90% on screenshots. New dep. |
 | Low | `delete_entry` returns True on 0 rows — multi-user gap | `database.py` |
 | Low | `on_unsupported` matches service messages too | `bot.py` |
@@ -328,21 +332,20 @@ Location: `~/supernuggets-bot/` · venv at `.venv/`
 
 Frontend wired to Supabase. 12-folder taxonomy migrated. Anon key configured. Login screen removed. AI→Curation backfill for old data ran in Supabase SQL Editor.
 
-## Phase B — 🚧 In progress
+## Phase B — ✅ Done (deployed)
 
-**Done:**
 1. ✅ Scaffold + text handler (Telegram → Claude → Supabase → reply → frontend grid)
 2. ✅ Image handler (single + albums, image optimizer, tool use, Haiku/Sonnet split, no-emoji aesthetic)
 3. ✅ Brand & design spec locked — see [BRAND.md](BRAND.md)
 4. ✅ **Web UI redesign** — BRAND.md "tactical neo-retro blueprint" spec fully applied. Deployed to Vercel.
 5. ✅ **Video handler** — Whisper transcription, caption support, 20MB Telegram size cap, silent-clip handling.
 6. ✅ **URL handler** — yt-dlp for media (TikTok video, IG Reel/photo, YT Shorts, Twitter, Pinterest, Reddit, Threads) + trafilatura fallback for articles. Per-platform duration caps, source URL stored in `enrichment` JSON, ↗ SOURCE button + footer in receipts, web UI displays source on cards + detail page.
+7. ✅ **Deploy to Railway** — live since 2026-05-27, auto-deploys from `main`.
+8. ✅ **Digest commands** — `/digest_week`, `/digest_month`, `/digest_year` (`digest.py`), admin-only manual triggers. Automated scheduling is NOT done — see TIER 2 backlog.
 
-**Next, in order:**
-1. **Apply BRAND.md bot copy to `bot.py`** — replace current bot strings with the mainframe-style copy from BRAND.md §3. Small follow-up.
-2. **Menus** — `/recent`, `/today`, `/folder <name>`, `/search <q>` inline keyboards (TeleForge patterns: https://github.com/zerox9dev/TeleForge)
-3. **Scheduler** — APScheduler for weekly/quarterly digests (port from old `digest.py`)
-4. **Deploy to Railway**
+**Not done, not currently planned:**
+- **Apply BRAND.md bot copy to `bot.py`** — bot strings haven't been rewritten to match BRAND.md §3 mainframe-style copy.
+- **Menus** — `/recent`, `/today`, `/folder <name>`, `/search <q>` inline keyboards (TeleForge patterns: https://github.com/zerox9dev/TeleForge) — not started.
 
 ## Phase C — Magic URL + multi-user (✅ SHIPPED end-to-end)
 
@@ -353,7 +356,7 @@ All Phase C items deployed to production. Summary:
 - **Token-aware components** via `useParams()` — every internal Link, router.push, nav item respects the current token prefix.
 - **Server-action ownership checks** — every mutation takes `token` as first arg, refuses to touch rows that don't match.
 - **Legacy `/n/[id]` and `/stats`** routes redirect to `/` so pre-Phase-C OPEN buttons land sensibly.
-- **Landing page** (`/`) is a minimal terminal-style card; no AppShell.
+- **Landing page** (`/`) is being redesigned 2026-06-28 (editorial grid layout, see "Current state — Web frontend" above); no AppShell.
 - **RLS** enabled, anon scrape locked out (see "RLS / multi-user" above).
 - **Bot `WEB_URL`** = `https://www.supernuggets.app` (no apex hop).
 - **Visual tokens** use a safe alphabet (no visually ambiguous chars).
