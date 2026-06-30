@@ -205,7 +205,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           )}
         >
           <Link href={token ? `/u/${token}` : '/'} className="font-mono text-base font-black tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity">
-            <img src="/nugget-logo.png" alt="Supernuggets" className="w-12 h-12 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+            <img src="/nugget-logo-pixel.png" alt="Supernuggets" width={32} height={34} className="w-12 h-auto shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
             {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">supernuggets</span>}
           </Link>
         </div>

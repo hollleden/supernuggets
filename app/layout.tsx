@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Sometype_Mono } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const sometypeMono = Sometype_Mono({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--font-mono',
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   description: 'A clean, fast pocket vault for everything worth keeping.',
   icons: {
     icon: [
-      { url: '/nugget-logo.png', type: 'image/png' },
+      { url: '/favicon-pixel.png', type: 'image/png' },
     ],
-    apple: '/nugget-logo.png',
+    apple: '/favicon-pixel.png',
   },
 }
 
@@ -35,7 +35,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={sometypeMono.variable}>
+    <html lang="en" suppressHydrationWarning className={jetbrainsMono.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
       </head>
