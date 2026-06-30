@@ -102,7 +102,7 @@ export default function LandingPage() {
           {/* WHY */}
           <div className="bg-card p-8 md:p-10">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50">
-              02. why
+              why
             </span>
             <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-3">
               My &quot;saved&quot; folder is a digital graveyard
