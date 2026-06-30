@@ -195,36 +195,44 @@ html.cursor-wait, html.cursor-wait * {
   cursor: pointer;
 }
 .nugget-avatar {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.15s ease-in-out;
 }
 .nugget-container:hover .nugget-avatar {
-  transform: scale(1.05) skewX(-2deg);
+  transform: scale(1.05);
 }
 
-.magic-star {
+.pixel-star {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   opacity: 0;
-  transform: scale(0);
   pointer-events: none;
-  overflow: visible; /* Ensures the black stroke doesn't get cut off */
+  image-rendering: pixelated;
 }
-.star-1 { top: 12px; left: 14px; }
-.star-2 { top: 22px; right: 16px; }
-.star-3 { bottom: 14px; left: 20px; }
+.star-1 { top: -5px; left: 25px; }
+.star-2 { top: 20px; right: 20px; }
+.star-3 { bottom: -5px; left: 30px; }
 
-.nugget-container:hover .magic-star {
-  animation: shimmer-twinkle 0.8s ease-in-out infinite alternate;
+.nugget-container:hover .pixel-star {
+  animation: pixel-blink 0.5s steps(2, start) infinite;
 }
 .nugget-container:hover .star-1 { animation-delay: 0s; }
 .nugget-container:hover .star-2 { animation-delay: 0.15s; }
 .nugget-container:hover .star-3 { animation-delay: 0.3s; }
 
-@keyframes shimmer-twinkle {
-  0% { opacity: 0; transform: scale(0.3) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.2) rotate(45deg); }
-  100% { opacity: 0.7; transform: scale(0.8) rotate(90deg); }
+@keyframes pixel-blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Brutalist CTA button */
+.cta-brutal-btn {
+  box-shadow: 4px 4px 0px 0px #FAFF00;
+  transition: box-shadow 0.1s ease, transform 0.1s ease;
+}
+.cta-brutal-btn:hover {
+  box-shadow: 2px 2px 0px 0px #FAFF00;
+  transform: translate(2px, 2px);
 }
 
 /* Nugget card: per-folder CSS variable hover system */

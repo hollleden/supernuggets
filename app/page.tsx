@@ -38,40 +38,24 @@ export default function LandingPage() {
               <div className="nugget-container relative inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/nugget-logo.png"
+                  src="/nugget-logo-pixel.png"
                   alt="supernuggets"
-                  className="nugget-avatar w-36 h-36 shrink-0"
+                  width={32}
+                  height={34}
+                  className="nugget-avatar w-32 h-auto shrink-0"
                   style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
                 />
-                <svg
-                  className="magic-star star-1"
-                  viewBox="0 0 24 24"
-                  stroke="#000"
-                  strokeWidth="2.5"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                <svg className="pixel-star star-1" viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                  <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                  <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
                 </svg>
-                <svg
-                  className="magic-star star-2"
-                  viewBox="0 0 24 24"
-                  stroke="#000"
-                  strokeWidth="2.5"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                <svg className="pixel-star star-2" viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                  <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                  <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
                 </svg>
-                <svg
-                  className="magic-star star-3"
-                  viewBox="0 0 24 24"
-                  stroke="#000"
-                  strokeWidth="2.5"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                <svg className="pixel-star star-3" viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                  <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                  <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
                 </svg>
               </div>
               <span>supernuggets</span>
@@ -82,8 +66,9 @@ export default function LandingPage() {
               Find everything.
             </h1>
             <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed mt-4">
-              Drop your heavy, bloated links into the bot. It instantly crisps them down
-              into bite-sized, delicious nuggets of pure insight.
+              Think of the bot as your personal AI chef. You dump in your raw, chaotic
+              digital clutter—voice notes, links, articles, or galleries—and it instantly
+              deep-fries everything into crispy, perfect little info nuggets.
             </p>
           </div>
 
@@ -93,9 +78,8 @@ export default function LandingPage() {
               1. You send it to the bot
             </h3>
             <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
-              Text, photo, voice notes, or that TikTok you&apos;re unhealthily obsessed
-              with. Drop any link from YouTube, articles, or Twitter threads into the
-              bot — it handles it flawlessly.
+              TikToks, articles, voice notes, images and galleries or just random
+              thoughts. Whatever it is, just dump it directly into the Telegram bot.
             </p>
           </div>
 
@@ -121,23 +105,16 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: CTA — unified card background; button stays a true
-               black (not the theme-flipping foreground token) so it's always
-               high-contrast regardless of light/dark mode. ── */}
+          {/* ── COL 3, ROW 2: CTA — full-cell brutalist button ── */}
           <Link
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-colors hover:bg-white"
+            className="group cta-brutal-btn flex items-center justify-center min-h-[140px] rounded-[12px] border-2 border-black bg-black text-center"
           >
-            <div className="border-2 border-black rounded-[12px] bg-black px-6 py-4 text-center shadow-[4px_4px_0px_0px_#FAFF00] transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-white">
-                ⬈ Launch
-              </p>
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-white">
-                In Telegram
-              </p>
-            </div>
+            <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
+              LAUNCH IN TELEGRAM&nbsp;↗
+            </span>
           </Link>
         </div>
       </section>
@@ -226,14 +203,26 @@ export default function LandingPage() {
           >
             ⬈ github
           </Link>
-          <Link
-            href="https://t.me/holeden"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-foreground transition-colors"
-          >
-            ⬈ created by
-          </Link>
+          <span className="relative inline-block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/nugget-pile-pixel.png"
+              alt=""
+              aria-hidden="true"
+              width={64}
+              height={38}
+              className="absolute left-1/2 -translate-x-1/2 pointer-events-none select-none"
+              style={{ bottom: '5px', width: '84px', height: 'auto', imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
+            />
+            <Link
+              href="https://t.me/holeden"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-foreground transition-colors"
+            >
+              ⬈ created by
+            </Link>
+          </span>
         </div>
       </footer>
     </main>

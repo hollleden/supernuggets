@@ -30,7 +30,7 @@ The bot accepts six input types. Each one is handled by a different pipeline, bu
 
 #### Text messages
 
-Type or paste anything: a thought you want to remember, a quote, a name, a list, a phone number, an idea. The bot classifies it into one of twelve folders, writes a short summary, and assigns tags.
+Type or paste anything: a thought you want to remember, a quote, a name, a list, a phone number, an idea. The bot classifies it into one of ten folders, writes a short summary, and assigns tags.
 
 > *Example:* you message the bot "the wine bar near St. Mark's that does the natural orange wine and the squid ink rice." Later, you search for "natural wine" or filter by the **Food** folder and it surfaces.
 
@@ -59,7 +59,7 @@ Paste a link from any of these platforms and the bot will download and process i
 | Platform | What it handles |
 |---|---|
 | TikTok | Video posts and photo carousels |
-| Instagram | Reels and photo posts (requires session cookies) |
+| Instagram | Reels work out of the box; photo posts require a logged-in session (`INSTAGRAM_COOKIES`) — without it, the bot rejects photo posts and tells you to save the image and send it directly instead |
 | YouTube | Shorts only (longer videos are out of scope) |
 | Twitter / X | Video posts |
 | Pinterest | Video pins |
