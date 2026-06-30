@@ -32,16 +32,16 @@ export default function LandingPage() {
 
       {/* ── GRID HERO ── */}
       <section className="p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
 
-          {/* ── LEFT: Logo + Headline ── */}
+          {/* ── COL 1: Logo + Headline (spans both rows) ── */}
           <div className="bg-card border border-foreground/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2">
             <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[44px] font-extrabold uppercase tracking-tight leading-[1.05]">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05]">
               Save anything.
               <br />
               Find everything.
@@ -52,7 +52,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── RIGHT TOP-LEFT: What it accepts ── */}
+          {/* ── COL 2, ROW 1: Step 1 ── */}
           <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               1. You send it to the bot
@@ -64,7 +64,24 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── RIGHT TOP-RIGHT: AI processing ── */}
+          {/* ── COL 3, ROW 1: CTA ── */}
+          <Link
+            href="https://t.me/supernuggetss_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] hover:brightness-95 transition-all group"
+          >
+            <div className="border-2 border-foreground rounded-[12px] bg-card px-6 py-4 text-center shadow-none transition-shadow group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
+                ⬈ Open
+              </p>
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
+                Supernuggets
+              </p>
+            </div>
+          </Link>
+
+          {/* ── COL 2, ROW 2: Step 2 ── */}
           <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               2. The AI does the actual work
@@ -75,24 +92,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── RIGHT BOTTOM-LEFT: CTA ── */}
-          <Link
-            href="https://t.me/supernuggetss_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] hover:brightness-95 transition-all group"
-          >
-            <div className="border-2 border-foreground rounded-[12px] bg-card px-8 py-5 text-center shadow-none transition-shadow group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
-                ⬈ Open
-              </p>
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
-                Supernuggets
-              </p>
-            </div>
-          </Link>
-
-          {/* ── RIGHT BOTTOM-RIGHT: Vault features ── */}
+          {/* ── COL 3, ROW 2: Step 3 ── */}
           <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               3. And then you can actually find it again
