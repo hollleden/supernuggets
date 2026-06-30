@@ -10,15 +10,15 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── TOP BAR ── */}
-      <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none overflow-hidden">
+      <div className="w-full bg-[#F5F3EF] border-b border-black py-1.5 select-none overflow-hidden">
         <div className="flex w-max animate-marquee whitespace-nowrap">
-          <span className="font-mono text-[12px] font-black tracking-wider text-black dark:text-neutral-400 px-4">
+          <span className="font-mono text-[12px] font-black tracking-wider text-black px-4">
             × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
             ACCURATELY AND AUTOMATICALLY INDEXED INTO PERFECT DIRECTORIES ✦ ALL YOUR
             BEST NUGGETS DISCOVERABLE AT ANY TIME × CAPTURED TODAY, REMEMBERED FOREVER ×
           </span>
           <span
-            className="font-mono text-[12px] font-black tracking-wider text-black dark:text-neutral-400 px-4"
+            className="font-mono text-[12px] font-black tracking-wider text-black px-4"
             aria-hidden="true"
           >
             × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
@@ -32,8 +32,8 @@ export default function LandingPage() {
       <section className="p-4 md:p-6">
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-3">
 
-          {/* ── COL 1: Logo + Headline — "action" group, contrast color ── */}
-          <div className="group bg-[#9BA885] border border-black/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-[#FDFBF9]">
+          {/* ── COL 1: Logo + Headline ── */}
+          <div className="group bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-white">
             <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A]">
               <div className="nugget-container relative inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -66,20 +66,20 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 2, ROW 1: Step 1 — lightest paper tone, progression starts here ── */}
-          <div className="bg-[#FDFBF9] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
+          {/* ── COL 2, ROW 1: Step 1 ── */}
+          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               1. You send it to the bot
             </h3>
             <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
-              Text, photo, voice note, a TikTok you&apos;re obsessed with, whatever — not
-              every link works but most do, I promise, just throw it at the bot in
-              Telegram.
+              Text, photo, voice notes, or that TikTok you&apos;re unhealthily obsessed
+              with. Drop any link from YouTube, articles, or Twitter threads into the
+              bot — it handles it flawlessly.
             </p>
           </div>
 
-          {/* ── COL 3, ROW 1: Step 2 — soft base cream, mid-tone ── */}
-          <div className="bg-[#F4F1EA] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+          {/* ── COL 3, ROW 1: Step 2 ── */}
+          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               2. The AI does the actual work
             </h3>
@@ -89,8 +89,8 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 2, ROW 2: Step 3 — densest tone, vintage manila ── */}
-          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+          {/* ── COL 2, ROW 2: Step 3 ── */}
+          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               3. And then you can actually find it again
             </h3>
@@ -100,20 +100,21 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: CTA — "action" group, matches col 1's contrast color.
-               Yellow used only as the offset shadow. ── */}
+          {/* ── COL 3, ROW 2: CTA — unified card background; button stays a true
+               black (not the theme-flipping foreground token) so it's always
+               high-contrast regardless of light/dark mode. ── */}
           <Link
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-[#9BA885] border border-black/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-colors hover:bg-[#FDFBF9]"
+            className="group bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-colors hover:bg-white"
           >
-            <div className="border-2 border-foreground rounded-[12px] bg-foreground px-6 py-4 text-center shadow-[4px_4px_0px_0px_#FAFF00] transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-background">
-                ⬈ Open
+            <div className="border-2 border-black rounded-[12px] bg-black px-6 py-4 text-center shadow-[4px_4px_0px_0px_#FAFF00] transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-white">
+                ⬈ Launch
               </p>
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-background">
-                Supernuggets
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-white">
+                In Telegram
               </p>
             </div>
           </Link>
