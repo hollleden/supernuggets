@@ -35,13 +35,24 @@ export default function LandingPage() {
           {/* ── COL 1: Logo + Headline — "action" group, contrast color ── */}
           <div className="group bg-[#9BA885] border border-black/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-[#FDFBF9]">
             <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/nugget-logo.png"
-                alt=""
-                className="nugget-logo w-36 h-36 shrink-0"
-                style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
-              />
+              <div className="nugget-container relative inline-block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/nugget-logo.png"
+                  alt="supernuggets"
+                  className="nugget-avatar w-36 h-36 shrink-0"
+                  style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
+                />
+                <svg className="magic-star star-1" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                </svg>
+                <svg className="magic-star star-2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                </svg>
+                <svg className="magic-star star-3" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
+                </svg>
+              </div>
               <span>supernuggets</span>
             </div>
             <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-[#1A1A1A]">
@@ -50,13 +61,13 @@ export default function LandingPage() {
               Find everything.
             </h1>
             <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed mt-4">
-              So you send it to the bot, and then it just... shows up in the app.
-              That&apos;s genuinely the whole thing.
+              Drop your heavy, bloated links into the bot. It instantly crisps them down
+              into bite-sized, delicious nuggets of pure insight.
             </p>
           </div>
 
-          {/* ── COL 2, ROW 1: Step 1 — "content" group, all three identical ── */}
-          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+          {/* ── COL 2, ROW 1: Step 1 — lightest paper tone, progression starts here ── */}
+          <div className="bg-[#FDFBF9] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               1. You send it to the bot
             </h3>
@@ -67,8 +78,8 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 1: Step 2 ── */}
-          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+          {/* ── COL 3, ROW 1: Step 2 — soft base cream, mid-tone ── */}
+          <div className="bg-[#F4F1EA] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               2. The AI does the actual work
             </h3>
@@ -78,7 +89,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 2, ROW 2: Step 3 ── */}
+          {/* ── COL 2, ROW 2: Step 3 — densest tone, vintage manila ── */}
           <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               3. And then you can actually find it again
