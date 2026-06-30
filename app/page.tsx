@@ -32,7 +32,7 @@ export default function LandingPage() {
 
       {/* ── GRID HERO ── */}
       <section className="p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-3">
 
           {/* ── COL 1: Logo + Headline (spans both rows) ── */}
           <div className="bg-card border border-foreground/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2">
@@ -41,7 +41,7 @@ export default function LandingPage() {
               <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05]">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05]">
               Save anything.
               <br />
               Find everything.
@@ -64,24 +64,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 1: CTA ── */}
-          <Link
-            href="https://t.me/supernuggetss_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] hover:brightness-95 transition-all group"
-          >
-            <div className="border-2 border-foreground rounded-[12px] bg-card px-6 py-4 text-center shadow-none transition-shadow group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
-                ⬈ Open
-              </p>
-              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
-                Supernuggets
-              </p>
-            </div>
-          </Link>
-
-          {/* ── COL 2, ROW 2: Step 2 ── */}
+          {/* ── COL 3, ROW 1: Step 2 ── */}
           <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               2. The AI does the actual work
@@ -92,7 +75,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: Step 3 ── */}
+          {/* ── COL 2, ROW 2: Step 3 ── */}
           <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               3. And then you can actually find it again
@@ -102,6 +85,24 @@ export default function LandingPage() {
               into it at 2am like I do. It&apos;s just sitting there waiting for you.
             </p>
           </div>
+
+          {/* ── COL 3, ROW 2: CTA — yellow used only as the offset shadow now,
+               card uses the standard bg-card token (not an invented hex) ── */}
+          <Link
+            href="https://t.me/supernuggetss_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-card border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-all group"
+          >
+            <div className="border-2 border-foreground rounded-[12px] bg-foreground px-6 py-4 text-center shadow-[4px_4px_0px_0px_#FAFF00] transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-background">
+                ⬈ Open
+              </p>
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight text-background">
+                Supernuggets
+              </p>
+            </div>
+          </Link>
         </div>
       </section>
 
@@ -120,7 +121,7 @@ export default function LandingPage() {
 
             <div className="max-w-xl space-y-5">
               <div className="border-t border-foreground/10 pt-3">
-                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                <p className="font-mono text-[15px] text-muted-foreground leading-[1.8] tracking-[0.01em] mt-2">
                   So I&apos;m on TikTok like, unhealthily often, and I save
                   EVERYTHING — into folders, because I&apos;m that unhinged about
                   organizing — and it does NOTHING for me. I never open the folders.
@@ -134,7 +135,7 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                <p className="font-mono text-[15px] text-muted-foreground leading-[1.8] tracking-[0.01em] mt-2">
                   And okay, even when I do remember something and I go back to find it,
                   the creator said the name of the cafe for like half a second in tiny
                   white text at the bottom of the screen, and now I&apos;m pausing,
@@ -147,7 +148,7 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                <p className="font-mono text-[15px] text-muted-foreground leading-[1.8] tracking-[0.01em] mt-2">
                   So anyway, I got so fed up I built Supernuggets. It started small —
                   just a Telegram bot you could send a TikTok to, and it would grab the
                   important stuff out of it for you — and then I was like, wait, why am
@@ -161,7 +162,7 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                <p className="font-mono text-[15px] text-muted-foreground leading-[1.8] tracking-[0.01em] mt-2">
                   And I have proof Supernuggets actually works, okay. So a few weeks ago
                   I&apos;m in a store and I remember there was a TikTok about this face
                   serum everyone was losing their minds over, and obviously I have no
