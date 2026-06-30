@@ -188,7 +188,7 @@ html.cursor-wait, html.cursor-wait * {
   animation: marquee 25s linear infinite;
 }
 
-/* Pixel nugget hover squish + sparkle burst */
+/* Pixel nugget hover squish + stationary shimmer twinkle */
 .nugget-container {
   position: relative;
   display: inline-block;
@@ -198,34 +198,32 @@ html.cursor-wait, html.cursor-wait * {
   transition: transform 0.2s ease-in-out;
 }
 .nugget-container:hover .nugget-avatar {
-  transform: scale(1.1) skewX(-3deg);
+  transform: scale(1.05) skewX(-2deg);
 }
 
 .magic-star {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   opacity: 0;
   transform: scale(0);
-  transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
 }
-.star-1 { top: -10px; left: 10px; }
-.star-2 { top: 15px; right: -12px; }
-.star-3 { bottom: -8px; left: -5px; }
+.star-1 { top: 12px; left: 14px; }
+.star-2 { top: 22px; right: 16px; }
+.star-3 { bottom: 14px; left: 20px; }
 
 .nugget-container:hover .magic-star {
-  animation: sparkle-burst 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: shimmer-twinkle 0.8s ease-in-out infinite alternate;
 }
 .nugget-container:hover .star-1 { animation-delay: 0s; }
-.nugget-container:hover .star-2 { animation-delay: 0.1s; }
-.nugget-container:hover .star-3 { animation-delay: 0.05s; }
+.nugget-container:hover .star-2 { animation-delay: 0.15s; }
+.nugget-container:hover .star-3 { animation-delay: 0.3s; }
 
-@keyframes sparkle-burst {
-  0% { opacity: 0; transform: scale(0) rotate(0deg); }
-  30% { opacity: 1; transform: scale(1.3) rotate(45deg); }
-  70% { opacity: 1; transform: scale(1) rotate(90deg); }
-  100% { opacity: 0; transform: scale(0) rotate(135deg); }
+@keyframes shimmer-twinkle {
+  0% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(45deg); }
+  100% { opacity: 0.7; transform: scale(0.8) rotate(90deg); }
 }
 
 /* Nugget card: per-folder CSS variable hover system */
