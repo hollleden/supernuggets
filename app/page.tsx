@@ -32,30 +32,35 @@ export default function LandingPage() {
       <section className="p-4 md:p-6">
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-3">
 
-          {/* ── COL 1: Logo + Headline (spans both rows) ── */}
-          <div className="bg-card border border-foreground/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2">
-            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6">
+          {/* ── COL 1: Logo + Headline — "action" group, contrast color ── */}
+          <div className="group bg-[#9BA885] border border-black/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-[#FDFBF9]">
+            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+              <img
+                src="/nugget-logo.png"
+                alt=""
+                className="nugget-logo w-36 h-36 shrink-0"
+                style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
+              />
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05]">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-[#1A1A1A]">
               Save anything.
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-4">
+            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed mt-4">
               So you send it to the bot, and then it just... shows up in the app.
               That&apos;s genuinely the whole thing.
             </p>
           </div>
 
-          {/* ── COL 2, ROW 1: Step 1 ── */}
-          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+          {/* ── COL 2, ROW 1: Step 1 — "content" group, all three identical ── */}
+          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               1. You send it to the bot
             </h3>
-            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
               Text, photo, voice note, a TikTok you&apos;re obsessed with, whatever — not
               every link works but most do, I promise, just throw it at the bot in
               Telegram.
@@ -63,34 +68,34 @@ export default function LandingPage() {
           </div>
 
           {/* ── COL 3, ROW 1: Step 2 ── */}
-          <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               2. The AI does the actual work
             </h3>
-            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
               It downloads it, enriches it, and files it away neatly while you go do
               literally anything else.
             </p>
           </div>
 
           {/* ── COL 2, ROW 2: Step 3 ── */}
-          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+          <div className="bg-[#E2C999] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-[#FDFBF9]">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
               3. And then you can actually find it again
             </h3>
-            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
               It&apos;s your own little vault — browse it, search it, edit it, fall back
               into it at 2am like I do. It&apos;s just sitting there waiting for you.
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: CTA — yellow used only as the offset shadow now,
-               card uses the standard bg-card token (not an invented hex) ── */}
+          {/* ── COL 3, ROW 2: CTA — "action" group, matches col 1's contrast color.
+               Yellow used only as the offset shadow. ── */}
           <Link
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-card border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-all group"
+            className="group bg-[#9BA885] border border-black/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] transition-colors hover:bg-[#FDFBF9]"
           >
             <div className="border-2 border-foreground rounded-[12px] bg-foreground px-6 py-4 text-center shadow-[4px_4px_0px_0px_#FAFF00] transition-transform group-hover:-translate-y-0.5 group-hover:-translate-x-0.5">
               <p className="font-mono text-base font-extrabold uppercase tracking-tight text-background">

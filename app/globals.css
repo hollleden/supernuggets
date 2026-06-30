@@ -188,6 +188,16 @@ html.cursor-wait, html.cursor-wait * {
   animation: marquee 25s linear infinite;
 }
 
+/* Pixel nugget hover squish — triggered by hovering the hero headline card */
+@keyframes nugget-squish {
+  0%, 100% { transform: scale(1, 1); }
+  35% { transform: scale(1.1, 0.9); }
+  65% { transform: scale(0.94, 1.06); }
+}
+.group:hover .nugget-logo {
+  animation: nugget-squish 0.5s ease-in-out;
+}
+
 /* Nugget card: per-folder CSS variable hover system */
 .nugget-card {
   background-color: var(--card);
