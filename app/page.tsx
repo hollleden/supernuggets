@@ -35,7 +35,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
           {/* ── LEFT: Logo + Headline ── */}
-          <div className="bg-card border border-foreground/10 rounded-[12px] p-8 md:p-12 flex flex-col justify-center min-h-[350px] md:row-span-2">
+          <div className="bg-card border border-foreground/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2">
             <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
@@ -46,29 +46,33 @@ export default function LandingPage() {
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[30px] text-muted-foreground leading-snug mt-4">
-              You send it to the bot. You find it in the web app. That&apos;s genuinely
-              it.
+            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-4">
+              So you send it to the bot, and then it just... shows up in the app.
+              That&apos;s genuinely the whole thing.
             </p>
           </div>
 
           {/* ── RIGHT TOP-LEFT: What it accepts ── */}
-          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
+          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              1. Send it to the bot
+              1. You send it to the bot
             </h3>
             <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
-              Text, photo, voice note, a TikTok you&apos;re obsessed with, or a link —
-              not every link works, but most do — just throw it at the bot in Telegram.
+              Text, photo, voice note, a TikTok you&apos;re obsessed with, whatever — not
+              every link works but most do, I promise, just throw it at the bot in
+              Telegram.
             </p>
           </div>
 
           {/* ── RIGHT TOP-RIGHT: AI processing ── */}
-          <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
+          <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              2. Wait a couple of seconds for AI to download the content, enrich it,
-              and file it neatly in your vault
+              2. The AI does the actual work
             </h3>
+            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
+              It downloads it, enriches it, and files it away neatly while you go do
+              literally anything else.
+            </p>
           </div>
 
           {/* ── RIGHT BOTTOM-LEFT: CTA ── */}
@@ -76,7 +80,7 @@ export default function LandingPage() {
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all group"
+            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[140px] hover:brightness-95 transition-all group"
           >
             <div className="border-2 border-foreground rounded-[12px] bg-card px-8 py-5 text-center shadow-none transition-shadow group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <p className="font-mono text-base font-extrabold uppercase tracking-tight">
@@ -89,13 +93,13 @@ export default function LandingPage() {
           </Link>
 
           {/* ── RIGHT BOTTOM-RIGHT: Vault features ── */}
-          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
+          <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[140px]">
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              3. Find it again in seconds
+              3. And then you can actually find it again
             </h3>
             <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
-              It&apos;s your own personal vault — browse it, search it, edit it, fall
-              back into it at 2am, and it&apos;s all just sitting there waiting for you.
+              It&apos;s your own little vault — browse it, search it, edit it, fall back
+              into it at 2am like I do. It&apos;s just sitting there waiting for you.
             </p>
           </div>
         </div>
@@ -116,11 +120,8 @@ export default function LandingPage() {
 
             <div className="max-w-xl space-y-5">
               <div className="border-t border-foreground/10 pt-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
-                  [problem]
-                </span>
                 <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
-                  So you guys know I&apos;m on TikTok like, unhealthily often, and I save
+                  So I&apos;m on TikTok like, unhealthily often, and I save
                   EVERYTHING — into folders, because I&apos;m that unhinged about
                   organizing — and it does NOTHING for me. I never open the folders.
                   Never. Sometimes I don&apos;t even file it right, I just hit like and
@@ -133,9 +134,6 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
-                  [everywhere, not just tiktok]
-                </span>
                 <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
                   And okay, even when I do remember something and I go back to find it,
                   the creator said the name of the cafe for like half a second in tiny
@@ -149,9 +147,6 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
-                  [the fix]
-                </span>
                 <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
                   So anyway, I got so fed up I built Supernuggets. It started small —
                   just a Telegram bot you could send a TikTok to, and it would grab the
@@ -166,9 +161,6 @@ export default function LandingPage() {
               </div>
 
               <div className="border-t border-foreground/10 pt-3">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
-                  [proof]
-                </span>
                 <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
                   And I have proof Supernuggets actually works, okay. So a few weeks ago
                   I&apos;m in a store and I remember there was a TikTok about this face
