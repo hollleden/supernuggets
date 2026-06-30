@@ -33,7 +33,8 @@ export default function LandingPage() {
               Find everything.
             </h1>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed mt-4">
-              A private vault for everything you want to save.
+              You send it to the bot. You find it in the web app. That&apos;s genuinely
+              it.
             </p>
           </div>
 
@@ -43,10 +44,11 @@ export default function LandingPage() {
               01. inbound
             </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              Send anything to the bot
+              Just send it to the bot, okay?
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              Drop a link, text note, photo, or voice memo in Telegram.
+              Text, photo, voice note, a TikTok you&apos;re obsessed with, literally any
+              link — just throw it at the bot in Telegram.
             </p>
           </div>
 
@@ -56,10 +58,11 @@ export default function LandingPage() {
               02. ai engine
             </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              Zero manual organizing
+              I&apos;m not lifting a finger
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              Transcribed, summarized, fact-checked, and filed automatically.
+              It transcribes it, summarizes it, tags it, files it — and I didn&apos;t
+              have to do literally anything.
             </p>
           </div>
 
@@ -86,10 +89,11 @@ export default function LandingPage() {
               03. your vault
             </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
-              Browse and rediscover
+              And then I can actually find it again
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              Browse, search, and filter your vault on the web.
+              Browse it, search it, edit it, fall back into it at 2am — it&apos;s all
+              just sitting there waiting for me.
             </p>
           </div>
         </div>
@@ -105,15 +109,51 @@ export default function LandingPage() {
               why
             </span>
             <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-3">
-              My &quot;saved&quot; folder is a digital graveyard
+              Okay so my &quot;saved&quot; folder is genuinely a crime scene
             </h3>
-            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed max-w-xl">
-              I create folders for everything and never open them, or just hit
-              &quot;like&quot; and dump things into an infinite scroll where they vanish
-              forever. TikTok covers never show what&apos;s actually inside. Screenshots
-              pile up, links get lost — I&apos;m drowning in digital noise. Supernuggets
-              isn&apos;t about &quot;saving.&quot; It&apos;s about finding.
-            </p>
+            <div className="font-mono text-[13px] text-muted-foreground leading-relaxed max-w-xl space-y-3">
+              <p>
+                So you guys know I&apos;m on TikTok like, unhealthily often, and I save
+                EVERYTHING — into folders, because I&apos;m that unhinged about
+                organizing — and it does NOTHING for me. I never open the folders. Never.
+                Sometimes I don&apos;t even file it right, I just hit like and call it a
+                day, or — and this is the embarrassing part — I&apos;m too lazy to even
+                pick a folder so it just goes into the abyss that is my general saved
+                feed, gone, forever, never to be seen again, and can we talk about how
+                the TikTok cover image is NEVER what&apos;s actually in the video? Like
+                why. Why would you do that to me.
+              </p>
+              <p>
+                And okay, even when I do remember something and I go back to find it, the
+                creator said the name of the cafe for like half a second in tiny white
+                text at the bottom of the screen, and now I&apos;m pausing, I&apos;m
+                rewinding, I&apos;m squinting like I&apos;m reading ancient scripture,
+                and honestly? Sometimes they just say it out loud and I still don&apos;t
+                write it down because googling things is apparently above my pay grade.
+                And this isn&apos;t even just a TikTok thing, you guys, this is
+                everything, this is the whole internet doing this to me.
+              </p>
+              <p>
+                So anyway, I got so fed up I just built something. It started small — it
+                could just grab a TikTok and pull the important stuff out of it — and
+                then I was like, wait, why am I only doing this for TikToks? So I kept
+                adding stuff: screenshots, voice notes, random links, just text,
+                whatever. And eventually I built an actual web app on top of it, so now
+                everything — every post, every idea, every screenshot, every TikTok from
+                literally anywhere — lives in one place, and I can find it in like two
+                seconds and send it to a friend.
+              </p>
+              <p>
+                And I have proof it works, okay. So a few weeks ago I&apos;m in a store
+                and I remember there was a TikTok about this face serum everyone was
+                losing their minds over, and obviously I have no idea which TikTok, no
+                idea when I saved it, classic me — so I open my vault, I search the name
+                of the store, and boom, there&apos;s the post, there&apos;s the serum
+                name, thirty seconds, done. And that&apos;s the moment I was like, oh my
+                god, it actually works. My saves are no longer a graveyard. They&apos;re
+                alive.
+              </p>
+            </div>
           </div>
 
         </div>
