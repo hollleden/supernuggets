@@ -46,7 +46,7 @@ export default function LandingPage() {
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed mt-4">
+            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-4">
               You send it to the bot. You find it in the web app. That&apos;s genuinely
               it.
             </p>
@@ -54,13 +54,10 @@ export default function LandingPage() {
 
           {/* ── RIGHT TOP-LEFT: What it accepts ── */}
           <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
-            <span className="font-mono text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
-              01. inbound
-            </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               1. Send it to the bot
             </h3>
-            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
               Text, photo, voice note, a TikTok you&apos;re obsessed with, or a link —
               not every link works, but most do — just throw it at the bot in Telegram.
             </p>
@@ -68,9 +65,6 @@ export default function LandingPage() {
 
           {/* ── RIGHT TOP-RIGHT: AI processing ── */}
           <div className="bg-card border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
-            <span className="font-mono text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
-              02. ai engine
-            </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               2. Wait a couple of seconds for AI to download the content, enrich it,
               and file it neatly in your vault
@@ -96,15 +90,12 @@ export default function LandingPage() {
 
           {/* ── RIGHT BOTTOM-RIGHT: Vault features ── */}
           <div className="bg-background border border-foreground/10 rounded-[12px] p-6 flex flex-col min-h-[175px]">
-            <span className="font-mono text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
-              03. your vault
-            </span>
             <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
               3. Find it again in seconds
             </h3>
-            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              It&apos;s my own personal vault — I browse it, search it, edit it, fall
-              back into it at 2am, and it&apos;s all just sitting there waiting for me.
+            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed">
+              It&apos;s your own personal vault — browse it, search it, edit it, fall
+              back into it at 2am, and it&apos;s all just sitting there waiting for you.
             </p>
           </div>
         </div>
@@ -122,7 +113,7 @@ export default function LandingPage() {
             <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-3">
               My &quot;saved&quot; folder and I are no longer friends
             </h3>
-            <div className="font-mono text-[13px] text-muted-foreground leading-relaxed max-w-xl space-y-3">
+            <div className="font-mono text-[15px] text-muted-foreground leading-relaxed max-w-xl space-y-3">
               <p>
                 So you guys know I&apos;m on TikTok like, unhealthily often, and I save
                 EVERYTHING — into folders, because I&apos;m that unhinged about
