@@ -12,16 +12,16 @@ export default function LandingPage() {
       {/* ── TOP BAR ── */}
       <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none overflow-hidden">
         <div className="font-mono text-[10px] font-black tracking-wider text-black dark:text-neutral-400 text-center px-4 whitespace-nowrap overflow-hidden text-ellipsis">
-          supernuggets — digital vault // brain dump engine — stop cluttering your camera roll — reclaim your creative chaos — captured today, remembered forever
+          supernuggets — the vault where my saves actually work — dump your brain into it, I&apos;m not kidding — stop hoarding stuff in your camera roll like a raccoon — your chaos, but finally findable — captured today, found in two seconds flat
         </div>
       </div>
 
       {/* ── GRID HERO ── */}
       <section className="p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10 border border-foreground/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
           {/* ── LEFT: Logo + Headline ── */}
-          <div className="bg-card p-8 md:p-12 flex flex-col justify-center min-h-[350px] md:row-span-2">
+          <div className="bg-card border border-foreground/10 rounded-xl p-8 md:p-12 flex flex-col justify-center min-h-[350px] md:row-span-2">
             <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
@@ -39,7 +39,7 @@ export default function LandingPage() {
           </div>
 
           {/* ── RIGHT TOP-LEFT: What it accepts ── */}
-          <div className="bg-background p-6 flex flex-col min-h-[175px]">
+          <div className="bg-background border border-foreground/10 rounded-xl p-6 flex flex-col min-h-[175px]">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
               01. inbound
             </span>
@@ -47,13 +47,13 @@ export default function LandingPage() {
               Just send it to the bot, okay?
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              Text, photo, voice note, a TikTok you&apos;re obsessed with, literally any
-              link — just throw it at the bot in Telegram.
+              Text, photo, voice note, a TikTok you&apos;re obsessed with, or a link —
+              not every link works, but most do — just throw it at the bot in Telegram.
             </p>
           </div>
 
           {/* ── RIGHT TOP-RIGHT: AI processing ── */}
-          <div className="bg-card p-6 flex flex-col min-h-[175px]">
+          <div className="bg-card border border-foreground/10 rounded-xl p-6 flex flex-col min-h-[175px]">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
               02. ai engine
             </span>
@@ -61,8 +61,8 @@ export default function LandingPage() {
               I&apos;m not lifting a finger
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              It transcribes it, summarizes it, tags it, files it — and I didn&apos;t
-              have to do literally anything.
+              AI transcribes it, summarizes it, tags it, files it — and by the time I
+              check, it&apos;s already sitting there, organized.
             </p>
           </div>
 
@@ -71,7 +71,7 @@ export default function LandingPage() {
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#FAFF00] p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all"
+            className="bg-[#FAFF00] border border-foreground/10 rounded-xl p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all"
           >
             <div className="border-2 border-foreground rounded-xl bg-card px-8 py-5 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <p className="font-mono text-base font-extrabold uppercase tracking-tight">
@@ -84,7 +84,7 @@ export default function LandingPage() {
           </Link>
 
           {/* ── RIGHT BOTTOM-RIGHT: Vault features ── */}
-          <div className="bg-background p-6 flex flex-col min-h-[175px]">
+          <div className="bg-background border border-foreground/10 rounded-xl p-6 flex flex-col min-h-[175px]">
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
               03. your vault
             </span>
@@ -92,8 +92,8 @@ export default function LandingPage() {
               And then I can actually find it again
             </h3>
             <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
-              Browse it, search it, edit it, fall back into it at 2am — it&apos;s all
-              just sitting there waiting for me.
+              It&apos;s my own personal vault — I browse it, search it, edit it, fall
+              back into it at 2am, and it&apos;s all just sitting there waiting for me.
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function LandingPage() {
 
       {/* ── ABOUT: WHY ── */}
       <section className="px-4 md:px-6 pb-6">
-        <div className="border border-foreground/10">
+        <div className="border border-foreground/10 rounded-xl overflow-hidden">
 
           {/* WHY */}
           <div className="bg-card p-8 md:p-10">
