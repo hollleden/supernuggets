@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { TelegramLogin } from './telegram-login'
 
 export const metadata = {
   title: 'supernuggets · your personal vault',
@@ -7,231 +6,138 @@ export const metadata = {
     'Save anything from Telegram — TikToks, articles, voice notes, screenshots — and browse it all in one place.',
 }
 
-const FOLDERS = [
-  { name: 'skin', color: '#D43A6A' },
-  { name: 'make', color: '#E89890' },
-  { name: 'food', color: '#E04A2A' },
-  { name: 'body', color: '#4D8C5D' },
-  { name: 'learn', color: '#5DA17F' },
-  { name: 'work', color: '#2A4FCC' },
-  { name: 'fun', color: '#B83A8C' },
-  { name: 'go', color: '#7AAFD4' },
-  { name: 'mind', color: '#6B4A8C' },
-  { name: 'other', color: '#847E6E' },
-]
-
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-background">
-      {/* ── HERO ── */}
-      <section className="flex flex-col items-center justify-center px-4 pt-16 pb-12 md:pt-24 md:pb-16">
-        <h1 className="font-mono text-2xl md:text-4xl font-extrabold uppercase tracking-tight text-foreground text-center">
-          SUPERNUGGETS
-        </h1>
-        <p className="font-mono text-[10px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground mt-2">
-          personal vault system // v1.0
-        </p>
-
-        <div className="mt-8 max-w-md w-full border-2 border-foreground bg-card p-6 md:p-8">
-          <p className="font-mono text-xs md:text-sm text-foreground leading-relaxed">
-            Save anything you find online — TikToks, Instagram reels, articles,
-            voice notes, screenshots, recipes. The bot downloads, transcribes,
-            summarizes, fact-checks, and files everything into your private vault.
-          </p>
-          <p className="font-mono text-xs md:text-sm text-foreground leading-relaxed mt-4">
-            Browse, search, and rediscover it all here.
-          </p>
+    <main className="min-h-screen bg-background text-foreground">
+      {/* ── TOP BAR ── */}
+      <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none overflow-hidden">
+        <div className="font-mono text-[10px] font-black tracking-wider text-black dark:text-neutral-400 text-center px-4 whitespace-nowrap overflow-hidden text-ellipsis">
+          supernuggets — digital vault // brain dump engine — stop cluttering your camera roll — reclaim your creative chaos — captured today, remembered forever
         </div>
+      </div>
 
-        {/* ── LOGIN + CTA ── */}
-        <div className="mt-8 flex flex-col items-center gap-4">
-          <TelegramLogin />
+      {/* ── GRID HERO ── */}
+      <section className="p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10 border border-foreground/10">
 
+          {/* ── LEFT: Logo + Headline ── */}
+          <div className="bg-card p-8 md:p-12 flex flex-col justify-center min-h-[350px] md:row-span-2">
+            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
+              <span>supernuggets</span>
+            </div>
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[44px] font-extrabold tracking-tight leading-[1.05]">
+              Save anything.
+              <br />
+              Find everything.
+            </h1>
+            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed mt-4">
+              A private vault for everything you want to save.
+            </p>
+          </div>
+
+          {/* ── RIGHT TOP-LEFT: What it accepts ── */}
+          <div className="bg-background p-6 flex flex-col min-h-[175px]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
+              01. inbound
+            </span>
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+              Send anything to the bot
+            </h3>
+            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
+              Drop a link, text note, photo, or voice memo in Telegram.
+            </p>
+          </div>
+
+          {/* ── RIGHT TOP-RIGHT: AI processing ── */}
+          <div className="bg-card p-6 flex flex-col min-h-[175px]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
+              02. ai engine
+            </span>
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+              Zero manual organizing
+            </h3>
+            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
+              Transcribed, summarized, fact-checked, and filed automatically.
+            </p>
+          </div>
+
+          {/* ── RIGHT BOTTOM-LEFT: CTA ── */}
           <Link
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+            className="bg-[#FAFF00] p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all"
           >
-            new here? open bot in telegram
-          </Link>
-        </div>
-      </section>
-
-      {/* ── DIVIDER ── */}
-      <div className="flex justify-center">
-        <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
-          ────────────────────────────────────
-        </span>
-      </div>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="max-w-3xl mx-auto px-4 py-12 md:py-16">
-        <h2 className="font-mono text-sm md:text-base font-extrabold uppercase tracking-tight text-foreground mb-8 text-center">
-          HOW IT WORKS
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            {
-              step: '01',
-              title: 'SEND',
-              desc: 'Forward a TikTok, paste an article link, snap a screenshot, record a voice note — send anything to the bot on Telegram.',
-            },
-            {
-              step: '02',
-              title: 'PROCESS',
-              desc: 'The bot downloads media, transcribes audio, extracts text from images, summarizes, fact-checks, and auto-files into 10 folders.',
-            },
-            {
-              step: '03',
-              title: 'BROWSE',
-              desc: 'Open your vault here. Filter by folder or tag, search across everything, rediscover what you saved weeks ago.',
-            },
-          ].map((item) => (
-            <div
-              key={item.step}
-              className="border border-foreground bg-card p-5 transition-all duration-150 hover:border-2 hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
-            >
-              <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
-                STEP {item.step}
-              </span>
-              <h3 className="font-mono text-sm font-extrabold uppercase tracking-tight text-foreground mt-2">
-                {item.title}
-              </h3>
-              <p className="font-mono text-xs text-muted-foreground leading-relaxed mt-2">
-                {item.desc}
+            <div className="border-2 border-foreground rounded-xl bg-card px-8 py-5 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
+                ⬈ Open
+              </p>
+              <p className="font-mono text-base font-extrabold uppercase tracking-tight">
+                Supernuggets
               </p>
             </div>
-          ))}
-        </div>
-      </section>
+          </Link>
 
-      {/* ── DIVIDER ── */}
-      <div className="flex justify-center">
-        <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
-          ────────────────────────────────────
-        </span>
-      </div>
-
-      {/* ── WHAT IT HANDLES ── */}
-      <section className="max-w-3xl mx-auto px-4 py-12 md:py-16">
-        <h2 className="font-mono text-sm md:text-base font-extrabold uppercase tracking-tight text-foreground mb-8 text-center">
-          ACCEPTED INBOUND DATA
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            'TikTok videos',
-            'Instagram reels',
-            'YouTube Shorts',
-            'Twitter / X',
-            'Web articles',
-            'Voice notes',
-            'Screenshots',
-            'Photo albums',
-          ].map((item) => (
-            <div
-              key={item}
-              className="border border-foreground/20 bg-card px-3 py-2 text-center"
-            >
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-foreground">
-                {item}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── DIVIDER ── */}
-      <div className="flex justify-center">
-        <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
-          ────────────────────────────────────
-        </span>
-      </div>
-
-      {/* ── FOLDERS ── */}
-      <section className="max-w-3xl mx-auto px-4 py-12 md:py-16">
-        <h2 className="font-mono text-sm md:text-base font-extrabold uppercase tracking-tight text-foreground mb-2 text-center">
-          10-FOLDER TAXONOMY
-        </h2>
-        <p className="font-mono text-[10px] text-muted-foreground tracking-wider text-center mb-8">
-          AUTO-CLASSIFIED BY AI // NO MANUAL SORTING
-        </p>
-
-        <div className="flex flex-wrap justify-center gap-2">
-          {FOLDERS.map((f) => (
-            <span
-              key={f.name}
-              className="font-mono text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 border"
-              style={{ borderColor: f.color, color: f.color }}
-            >
-              {f.name}
+          {/* ── RIGHT BOTTOM-RIGHT: Vault features ── */}
+          <div className="bg-background p-6 flex flex-col min-h-[175px]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
+              03. your vault
             </span>
-          ))}
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3">
+              Browse and rediscover
+            </h3>
+            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed">
+              Browse, search, and filter your vault on the web.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ── DIVIDER ── */}
-      <div className="flex justify-center">
-        <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
-          ────────────────────────────────────
-        </span>
-      </div>
+      {/* ── ABOUT: WHY ── */}
+      <section className="px-4 md:px-6 pb-6">
+        <div className="border border-foreground/10">
 
-      {/* ── SAMPLE RECEIPT ── */}
-      <section className="max-w-3xl mx-auto px-4 py-12 md:py-16">
-        <h2 className="font-mono text-sm md:text-base font-extrabold uppercase tracking-tight text-foreground mb-8 text-center">
-          SAMPLE VAULT RECEIPT
-        </h2>
+          {/* WHY */}
+          <div className="bg-card p-8 md:p-10">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50">
+              02. why
+            </span>
+            <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-3">
+              My &quot;saved&quot; folder is a digital graveyard
+            </h3>
+            <p className="font-mono text-[13px] text-muted-foreground leading-relaxed max-w-xl">
+              I create folders for everything and never open them, or just hit
+              &quot;like&quot; and dump things into an infinite scroll where they vanish
+              forever. TikTok covers never show what&apos;s actually inside. Screenshots
+              pile up, links get lost — I&apos;m drowning in digital noise. Supernuggets
+              isn&apos;t about &quot;saving.&quot; It&apos;s about finding.
+            </p>
+          </div>
 
-        <div className="max-w-md mx-auto border-2 border-foreground bg-card p-5">
-          <pre className="font-mono text-[11px] text-foreground leading-relaxed whitespace-pre-wrap">
-{`[FOOD] FERMENTED GARLIC HONEY
---------------------
-SUMMARY
-• Black garlic honey takes 4-6 weeks
-• Natural fermentation preserves cloves
-• Use raw unfiltered honey for enzymes
-• Flip jar daily for first 2 weeks
---------------------
-MENTIONED
-• Sandor Katz — Wild Fermentation
---------------------
-FACT-CHECK
-✓ Botulism risk — garlic in honey is
-  safe above pH 4.6 if fermented
---------------------
-TAGS
-#food #fermentation #preservation`}
-          </pre>
         </div>
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-foreground/20 py-8 mt-4">
-        <div className="max-w-3xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
-            SUPERNUGGETS // VAULT SYSTEM
-          </span>
-          <div className="flex gap-6">
-            <Link
-              href="https://t.me/supernuggetss_bot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-            >
-              TELEGRAM BOT
-            </Link>
-            <Link
-              href="https://t.me/holeden"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-            >
-              CONTACT
-            </Link>
-          </div>
+      <footer className="max-w-5xl mx-auto px-6 py-5 border-t border-black/[0.06]">
+        <div className="flex items-center justify-end gap-5">
+          <Link
+            href="https://github.com/hollleden/supernuggets"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-foreground transition-colors"
+          >
+            ⬈ github
+          </Link>
+          <Link
+            href="https://t.me/holeden"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-foreground transition-colors"
+          >
+            ⬈ created by
+          </Link>
         </div>
       </footer>
     </main>
