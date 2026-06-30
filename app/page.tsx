@@ -13,19 +13,17 @@ export default function LandingPage() {
       <div className="w-full bg-[#FAFF00] dark:bg-neutral-800 border-b border-black dark:border-neutral-700 py-1.5 select-none overflow-hidden">
         <div className="flex w-max animate-marquee whitespace-nowrap">
           <span className="font-mono text-[12px] font-black tracking-wider text-black dark:text-neutral-400 px-4">
-            supernuggets — the vault where my saves actually work — dump your brain into
-            it, I&apos;m not kidding — stop hoarding stuff in your camera roll like a
-            raccoon — your chaos, but finally findable — captured today, found in two
-            seconds flat
+            × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
+            ACCURATELY AND AUTOMATICALLY INDEXED INTO PERFECT DIRECTORIES ✦ ALL YOUR
+            BEST NUGGETS DISCOVERABLE AT ANY TIME × CAPTURED TODAY, REMEMBERED FOREVER ×
           </span>
           <span
             className="font-mono text-[12px] font-black tracking-wider text-black dark:text-neutral-400 px-4"
             aria-hidden="true"
           >
-            supernuggets — the vault where my saves actually work — dump your brain into
-            it, I&apos;m not kidding — stop hoarding stuff in your camera roll like a
-            raccoon — your chaos, but finally findable — captured today, found in two
-            seconds flat
+            × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
+            ACCURATELY AND AUTOMATICALLY INDEXED INTO PERFECT DIRECTORIES ✦ ALL YOUR
+            BEST NUGGETS DISCOVERABLE AT ANY TIME × CAPTURED TODAY, REMEMBERED FOREVER ×
           </span>
         </div>
       </div>
