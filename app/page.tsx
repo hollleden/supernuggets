@@ -10,7 +10,7 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── TOP BAR ── */}
-      <div className="w-full bg-[#F5F3EF] border-b border-black py-1.5 select-none overflow-hidden">
+      <div className="w-full bg-[#FAFF00] border-b border-black py-1.5 select-none overflow-hidden">
         <div className="flex w-max animate-marquee whitespace-nowrap">
           <span className="font-mono text-[12px] font-black tracking-wider text-black px-4">
             × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
@@ -43,13 +43,34 @@ export default function LandingPage() {
                   className="nugget-avatar w-36 h-36 shrink-0"
                   style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
                 />
-                <svg className="magic-star star-1" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  className="magic-star star-1"
+                  viewBox="0 0 24 24"
+                  stroke="#000"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
                 </svg>
-                <svg className="magic-star star-2" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  className="magic-star star-2"
+                  viewBox="0 0 24 24"
+                  stroke="#000"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
                 </svg>
-                <svg className="magic-star star-3" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  className="magic-star star-3"
+                  viewBox="0 0 24 24"
+                  stroke="#000"
+                  strokeWidth="2.5"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="#FAFF00" />
                 </svg>
               </div>
