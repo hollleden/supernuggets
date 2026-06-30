@@ -41,12 +41,12 @@ export default function LandingPage() {
               <img src="/nugget-logo.png" alt="" className="w-36 h-36 shrink-0" style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }} />
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[44px] font-extrabold tracking-tight leading-[1.05]">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[44px] font-extrabold uppercase tracking-tight leading-[1.05]">
               Save anything.
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-4">
+            <p className="font-mono text-[30px] text-muted-foreground leading-snug mt-4">
               You send it to the bot. You find it in the web app. That&apos;s genuinely
               it.
             </p>
@@ -76,9 +76,9 @@ export default function LandingPage() {
             href="https://t.me/supernuggetss_bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all"
+            className="bg-[#FAFF00] border border-foreground/10 rounded-[12px] p-6 flex items-center justify-center min-h-[175px] hover:brightness-95 transition-all group"
           >
-            <div className="border-2 border-foreground rounded-[12px] bg-card px-8 py-5 text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <div className="border-2 border-foreground rounded-[12px] bg-card px-8 py-5 text-center shadow-none transition-shadow group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-focus-visible:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <p className="font-mono text-base font-extrabold uppercase tracking-tight">
                 ⬈ Open
               </p>
@@ -110,52 +110,76 @@ export default function LandingPage() {
             <span className="font-mono text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground/50">
               why
             </span>
-            <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-3">
+            <h3 className="font-mono text-lg font-extrabold uppercase tracking-tight mt-2 mb-6">
               My &quot;saved&quot; folder and I are no longer friends
             </h3>
-            <div className="font-mono text-[15px] text-muted-foreground leading-relaxed max-w-xl space-y-3">
-              <p>
-                So you guys know I&apos;m on TikTok like, unhealthily often, and I save
-                EVERYTHING — into folders, because I&apos;m that unhinged about
-                organizing — and it does NOTHING for me. I never open the folders. Never.
-                Sometimes I don&apos;t even file it right, I just hit like and call it a
-                day, or — and this is the embarrassing part — I&apos;m too lazy to even
-                pick a folder so it just goes into the abyss that is my general saved
-                feed, gone, forever, never to be seen again, and can we talk about how
-                the TikTok cover image is NEVER what&apos;s actually in the video? Like
-                why. Why would you do that to me.
-              </p>
-              <p>
-                And okay, even when I do remember something and I go back to find it, the
-                creator said the name of the cafe for like half a second in tiny white
-                text at the bottom of the screen, and now I&apos;m pausing, I&apos;m
-                rewinding, I&apos;m squinting like I&apos;m reading ancient scripture,
-                and honestly? Sometimes they just say it out loud and I still don&apos;t
-                write it down because googling things is apparently above my pay grade.
-                And this isn&apos;t even just a TikTok thing, you guys, this is
-                everything, this is the whole internet doing this to me.
-              </p>
-              <p>
-                So anyway, I got so fed up I built Supernuggets. It started small — just a
-                Telegram bot you could send a TikTok to, and it would grab the important
-                stuff out of it for you — and then I was like, wait, why am I only doing
-                this for TikToks? So I kept adding stuff: screenshots, voice notes, random
-                links, just text, whatever, all straight through Telegram. And eventually
-                I built an actual web app on top of it, so now everything — every post,
-                every idea, every screenshot, every TikTok from literally anywhere — lives
-                in Supernuggets, and I can find it in like two seconds and send it to a
-                friend.
-              </p>
-              <p>
-                And I have proof Supernuggets actually works, okay. So a few weeks ago
-                I&apos;m in a store and I remember there was a TikTok about this face
-                serum everyone was losing their minds over, and obviously I have no idea
-                which TikTok, no idea when I saved it, classic me — so I open my
-                Supernuggets vault, I search the name of the store, and boom, there&apos;s
-                the post, there&apos;s the serum name, thirty seconds, done. And
-                that&apos;s the moment I was like, oh my god, it actually works. My saves
-                are no longer a graveyard. They&apos;re alive.
-              </p>
+
+            <div className="max-w-xl space-y-5">
+              <div className="border-t border-foreground/10 pt-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
+                  [problem]
+                </span>
+                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                  So you guys know I&apos;m on TikTok like, unhealthily often, and I save
+                  EVERYTHING — into folders, because I&apos;m that unhinged about
+                  organizing — and it does NOTHING for me. I never open the folders.
+                  Never. Sometimes I don&apos;t even file it right, I just hit like and
+                  call it a day, or — and this is the embarrassing part — I&apos;m too
+                  lazy to even pick a folder so it just goes into the abyss that is my
+                  general saved feed, gone, forever, never to be seen again, and can we
+                  talk about how the TikTok cover image is NEVER what&apos;s actually in
+                  the video? Like why. Why would you do that to me.
+                </p>
+              </div>
+
+              <div className="border-t border-foreground/10 pt-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
+                  [everywhere, not just tiktok]
+                </span>
+                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                  And okay, even when I do remember something and I go back to find it,
+                  the creator said the name of the cafe for like half a second in tiny
+                  white text at the bottom of the screen, and now I&apos;m pausing,
+                  I&apos;m rewinding, I&apos;m squinting like I&apos;m reading ancient
+                  scripture, and honestly? Sometimes they just say it out loud and I
+                  still don&apos;t write it down because googling things is apparently
+                  above my pay grade. And this isn&apos;t even just a TikTok thing, you
+                  guys, this is everything, this is the whole internet doing this to me.
+                </p>
+              </div>
+
+              <div className="border-t border-foreground/10 pt-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
+                  [the fix]
+                </span>
+                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                  So anyway, I got so fed up I built Supernuggets. It started small —
+                  just a Telegram bot you could send a TikTok to, and it would grab the
+                  important stuff out of it for you — and then I was like, wait, why am
+                  I only doing this for TikToks? So I kept adding stuff: screenshots,
+                  voice notes, random links, just text, whatever, all straight through
+                  Telegram. And eventually I built an actual web app on top of it, so now
+                  everything — every post, every idea, every screenshot, every TikTok
+                  from literally anywhere — lives in Supernuggets, and I can find it in
+                  like two seconds and send it to a friend.
+                </p>
+              </div>
+
+              <div className="border-t border-foreground/10 pt-3">
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">
+                  [proof]
+                </span>
+                <p className="font-mono text-[15px] text-muted-foreground leading-relaxed mt-2">
+                  And I have proof Supernuggets actually works, okay. So a few weeks ago
+                  I&apos;m in a store and I remember there was a TikTok about this face
+                  serum everyone was losing their minds over, and obviously I have no
+                  idea which TikTok, no idea when I saved it, classic me — so I open my
+                  Supernuggets vault, I search the name of the store, and boom,
+                  there&apos;s the post, there&apos;s the serum name, thirty seconds,
+                  done. And that&apos;s the moment I was like, oh my god, it actually
+                  works. My saves are no longer a graveyard. They&apos;re alive.
+                </p>
+              </div>
             </div>
           </div>
 
