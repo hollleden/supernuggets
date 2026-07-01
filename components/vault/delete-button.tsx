@@ -41,9 +41,9 @@ export const DeleteButton = forwardRef<HTMLButtonElement, DeleteButtonProps>(
           ref={ref}
           onClick={handleClick}
           disabled={pending}
-          className="h-full px-3 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40 disabled:opacity-40"
+          className="p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40 disabled:opacity-40"
         >
-          <TrashIcon size={22} />
+          <TrashIcon size={14} />
         </button>
       )
     }
