@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 async function loadNuggets(userId: number): Promise<Nugget[]> {
   const { data, error } = await supabaseAdmin
     .from('entries')
-    .select('*')
+    .select('id,created_at,media_type,title,summary,tags,folder,enrichment')
     .eq('user_id', userId)
     // Secondary sort by id desc: created_at is a date (not timestamp) so
     // same-day entries tie and Postgres returns them in physical order.
