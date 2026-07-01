@@ -40,15 +40,15 @@ export function NuggetMetaBar({ nuggetId, token, folder, date }: Props) {
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-neutral-500">
           {formatDateNewspaper(date)}
         </span>
-        <div className="flex items-center gap-2 h-8">
+        <div className="flex items-center gap-2">
           <Tip label="Favourites">
-            <button className="h-full px-3 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
-              <HeartIcon size={22} />
+            <button className="p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+              <HeartIcon size={14} />
             </button>
           </Tip>
           <Tip label="Share">
-            <button className="h-full px-3 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
-              <PlaneIcon size={22} />
+            <button className="p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+              <PlaneIcon size={14} />
             </button>
           </Tip>
           <Tip label="Folder">
