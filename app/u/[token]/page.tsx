@@ -1,10 +1,8 @@
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
 import { userIdFromToken } from '@/lib/users'
 import { mapRowToNugget, type EntryRow, type Nugget } from '@/lib/nuggets'
 import { HomeGrid } from '@/components/vault/home-grid'
-import VaultLoading from './loading'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,11 +18,6 @@ async function loadNuggets(userId: number): Promise<Nugget[]> {
   return (data as EntryRow[]).map(mapRowToNugget)
 }
 
-async function NuggetGrid({ userId }: { userId: number }) {
-  const nuggets = await loadNuggets(userId)
-  return <HomeGrid initialNuggets={nuggets} />
-}
-
 export default async function UserHomePage({
   params,
 }: {
@@ -33,10 +26,6 @@ export default async function UserHomePage({
   const { token } = await params
   const userId = await userIdFromToken(token)
   if (userId == null) notFound()
-
-  return (
-    <Suspense fallback={<VaultLoading />}>
-      <NuggetGrid userId={userId} />
-    </Suspense>
-  )
+  const nuggets = await loadNuggets(userId)
+  return <HomeGrid initialNuggets={nuggets} />
 }

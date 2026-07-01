@@ -274,6 +274,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
       destroyedRef.current = 0
       setDialogIdx(-1)
       setDeepFryActive(true)
+    } else {
+      router.push(token ? `/u/${token}` : '/')
     }
   }
 
