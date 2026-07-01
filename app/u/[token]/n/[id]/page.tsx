@@ -369,10 +369,10 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
-      className="group flex flex-row gap-3 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-3 hover:border-black dark:hover:border-white transition-all h-24 overflow-hidden"
+      className="group flex flex-row bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl overflow-hidden hover:border-black dark:hover:border-white transition-all h-24"
     >
       {hasThumbnail ? (
-        <div className="h-full aspect-[9/16] bg-stone-100 rounded-lg overflow-hidden relative shrink-0">
+        <div className="h-full aspect-[9/16] relative shrink-0 overflow-hidden">
           <ThumbnailImage
             src={nugget.sourceInfo!.thumbnailUrl!}
             alt={nugget.title}
@@ -386,14 +386,11 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
         </div>
       ) : (
         <div
-          className="h-full w-3 shrink-0 rounded-sm"
-          style={{
-            backgroundColor: folderColor + '18',
-            borderRight: `1px solid ${folderColor}30`,
-          }}
+          className="h-full w-[54px] shrink-0"
+          style={{ backgroundColor: folderColor + '22' }}
         />
       )}
-      <div className="flex-1 flex flex-col min-w-0 gap-1">
+      <div className="flex-1 flex flex-col min-w-0 gap-1 p-3">
         <span
           className="font-mono text-[9px] font-bold uppercase tracking-wider"
           style={{ color: folderColor }}
