@@ -368,20 +368,10 @@ function Divider({ children }: { children: React.ReactNode }) {
   )
 }
 
-function relatedMediaLabel(mediaType?: string): string {
-  if (!mediaType) return 'text'
-  if (mediaType === 'image_group' || mediaType === 'image_url') return 'gallery'
-  if (mediaType === 'image') return 'image'
-  if (mediaType.startsWith('video')) return 'video'
-  if (mediaType === 'voice') return 'voice'
-  if (mediaType === 'article') return 'article'
-  return 'text'
-}
-
 function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
   const folderColor = FOLDER_COLOR_HEX[nugget.folder as FolderType] ?? FOLDER_COLOR_HEX.all
   const hasThumbnail = !!nugget.sourceInfo?.thumbnailUrl
-  const label = relatedMediaLabel(nugget.mediaType)
+  const duration = nugget.sourceInfo?.durationS ? formatDuration(nugget.sourceInfo.durationS) : null
   return (
     <Link
       href={`/u/${token}/n/${nugget.id}`}
@@ -394,38 +384,37 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
             alt={nugget.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute bottom-1 left-1 bg-black/80 text-white font-mono font-bold px-1 py-0.5 rounded text-[7px] tracking-tight uppercase">
-            {label}
-          </div>
+          {duration && (
+            <div className="absolute bottom-1 left-1 bg-black/80 text-white font-mono font-bold px-1 py-0.5 rounded text-[7px] tracking-tight uppercase">
+              {duration}
+            </div>
+          )}
         </div>
       ) : (
         <div
-          className="h-full w-4 shrink-0 flex items-center justify-center rounded-md"
-          style={{ backgroundColor: folderColor + '14' }}
-        >
-          <span
-            className="font-mono text-[7px] font-bold uppercase tracking-widest"
-            style={{ color: folderColor + '80', writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-          >
-            {label}
-          </span>
-        </div>
+          className="h-full w-3 shrink-0 rounded-sm"
+          style={{
+            backgroundColor: folderColor + '18',
+            borderRight: `1px solid ${folderColor}30`,
+          }}
+        />
       )}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
-        <div>
-          <div className="flex justify-between items-center w-full">
-            <span
-              className="text-[9px] font-bold uppercase tracking-wider"
-              style={{ color: folderColor }}
-            >
-              {nugget.folder.toUpperCase()}
-            </span>
-            <span className="text-[9px] text-gray-400">{nugget.dateCompact}</span>
-          </div>
-          <div className="font-bold text-black dark:text-white text-[11px] uppercase tracking-tight line-clamp-2 mt-1">
-            {nugget.title}
-          </div>
+      <div className="flex-1 flex flex-col min-w-0 gap-1">
+        <span
+          className="font-mono text-[9px] font-bold uppercase tracking-wider"
+          style={{ color: folderColor }}
+        >
+          {nugget.folder}
+        </span>
+        <div className="font-bold text-black dark:text-white text-[11px] uppercase tracking-tight line-clamp-2">
+          {nugget.title}
         </div>
+        {nugget.tags.length > 0 && (
+          <div className="font-mono text-[9px] text-gray-400 truncate mt-auto">
+            {nugget.tags.slice(0, 2).map(t => `#${t}`).join(' ')}
+            {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
+          </div>
+        )}
       </div>
     </Link>
   )
