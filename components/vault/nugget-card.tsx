@@ -52,7 +52,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
     >
       {/* Left: thumbnail or folder-tinted placeholder */}
       {hasThumbnail ? (
-        <div className="relative shrink-0 overflow-hidden" style={{ width: '180px' }}>
+        <div className="relative shrink-0 overflow-hidden" style={{ width: '120px' }}>
           <ThumbnailImage
             src={nugget.sourceInfo!.thumbnailUrl!}
             alt={nugget.title}
@@ -68,7 +68,7 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         <div
           className="shrink-0 self-stretch"
           style={{
-            width: '72px',
+            width: '48px',
             backgroundColor: folderColor + '18',
             borderRight: `1px solid ${folderColor}30`,
           }}
