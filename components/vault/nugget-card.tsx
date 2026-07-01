@@ -68,9 +68,8 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
         <div
           className="shrink-0 self-stretch"
           style={{
-            width: '48px',
-            backgroundColor: folderColor + '18',
-            borderRight: `1px solid ${folderColor}30`,
+            width: '120px',
+            backgroundColor: folderColor + '22',
           }}
         />
       )}
