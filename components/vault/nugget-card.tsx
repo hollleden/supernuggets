@@ -77,37 +77,25 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
 
       {/* Right: text — spans 100% width when no thumbnail */}
       <div className="flex-1 flex flex-col p-3 min-w-0 gap-1.5">
-        <div className="flex items-center justify-between w-full">
-          {!hideFolder ? (
-            <span
-              className="font-mono text-[11px] font-bold uppercase tracking-wider"
-              style={{ color: folderColor }}
-            >
-              {nugget.folder}
-            </span>
-          ) : <span />}
-          <time className="font-mono text-[11px] text-muted-foreground/60">
-            {nugget.dateCompact}
-          </time>
-        </div>
+        {!hideFolder && (
+          <span
+            className="font-mono text-[11px] font-bold uppercase tracking-wider"
+            style={{ color: folderColor }}
+          >
+            {nugget.folder}
+          </span>
+        )}
 
         <h3 className="font-mono text-[13px] font-extrabold uppercase tracking-tight leading-snug text-foreground" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {nugget.title}
         </h3>
 
-        <div className="flex flex-col gap-0.5 mt-auto pt-1">
-          {via && (
-            <div className="font-mono text-[11px] text-muted-foreground/60 truncate">
-              {via}
-            </div>
-          )}
-          {nugget.tags.length > 0 && (
-            <div className="font-mono text-[11px] text-muted-foreground/60 truncate">
-              {nugget.tags.slice(0, 2).map(tag => `#${tag}`).join(' ')}
-              {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
-            </div>
-          )}
-        </div>
+        {nugget.tags.length > 0 && (
+          <div className="font-mono text-[10px] text-muted-foreground/55 truncate mt-auto pt-1">
+            {nugget.tags.slice(0, 2).map(tag => `#${tag}`).join(' ')}
+            {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
+          </div>
+        )}
       </div>
     </div>
   )
