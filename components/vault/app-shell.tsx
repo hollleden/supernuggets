@@ -9,6 +9,19 @@ import { pickRandomNuggetId } from '@/app/actions/nuggets'
 import { VaultStatsProvider, useVaultStats } from '@/lib/vault-stats-context'
 import { FOLDERS, type FolderType } from '@/lib/nuggets'
 import { cn } from '@/lib/utils'
+import { SearchIcon, RandomIcon, StatsIcon, PlaneIcon, MoonIcon, SunIcon, TextScaleIcon, SortIcon, HamburgerIcon, CloseIcon } from './pixel-icons'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+
+function Tip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side="bottom" className="font-mono text-[10px] font-bold tracking-widest uppercase rounded-none px-2 py-1">
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
 
 // ─── Header search (debounced URL param) ─────────────────────────────────────
 
@@ -39,10 +52,8 @@ function HeaderSearchInner() {
   }, [query])
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-[4px] border-2 border-black/25 dark:border-white/20 w-full">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-400 shrink-0 pointer-events-none">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-[4px] border border-black/15 dark:border-white/10 w-full">
+      <SearchIcon size={13} className="text-foreground/30 dark:text-[#FFF200] pointer-events-none" />
       <input
         type="text"
         value={query}
@@ -131,10 +142,10 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
 
         <div className="border-t border-black/10 pt-4 flex flex-col gap-1.5">
           <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start opacity-50 hover:opacity-80" onClick={onClose}>
-            <span>⬈</span> open bot
+            <PlaneIcon size={12} /> open bot
           </a>
           <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start opacity-50 hover:opacity-80">
-            <span>{isDarkMode ? '☀️' : '🌙'}</span> {isDarkMode ? 'light mode' : 'dark mode'}
+            {isDarkMode ? <SunIcon size={12} /> : <MoonIcon size={12} />} {isDarkMode ? 'light mode' : 'dark mode'}
           </button>
         </div>
       </div>
@@ -305,69 +316,96 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background">
 
       {/* Sticky header */}
-      <header className="sticky top-0 z-40 bg-card border-b-2 border-[#FFF200] flex items-center min-h-[48px]">
-        {/* Logo — click 5× rapidly for a surprise */}
+      <header className="sticky top-0 z-40 bg-background flex items-center min-h-[48px] border-b border-black/10 dark:border-white/8">
+        {/* Logo + sidebar toggle */}
         <div
           className={cn(
-            'flex items-center px-3 shrink-0 transition-all duration-200 border-r border-black/20 dark:border-white/10 self-stretch',
-            isSidebarCollapsed ? 'md:w-[72px]' : 'md:w-[220px]'
+            'flex items-center shrink-0 transition-all duration-200 border-r border-black/20 dark:border-white/10 self-stretch',
+            isSidebarCollapsed
+              ? 'md:w-[72px] px-1 gap-1 justify-center'
+              : 'md:w-[220px] px-2 gap-1.5'
           )}
           data-egg-exempt
         >
+          <button
+            onClick={() => setIsSidebarCollapsed(v => !v)}
+            className="hidden md:flex p-1 text-muted-foreground/55 hover:text-muted-foreground/85 transition-colors shrink-0"
+            title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isSidebarCollapsed ? <HamburgerIcon size={17} /> : <CloseIcon size={13} />}
+          </button>
           <a
             href={token ? `/u/${token}` : '/'}
             onClick={handleLogoClick}
-            className="font-mono text-base font-black tracking-wider whitespace-nowrap flex items-center gap-2 hover:opacity-70 transition-opacity"
+            className="font-mono text-base font-black tracking-wider whitespace-nowrap flex items-center gap-1.5"
           >
-            <img
-              src="/nugget-logo-pixel.png"
-              alt="Supernuggets"
-              width={32}
-              height={34}
-              className={cn('w-12 h-auto shrink-0', deepFryActive && 'logo-shaking')}
-              style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
-            />
+            <div className="nugget-container relative shrink-0" style={{ width: '38px' }}>
+              <img
+                src="/nugget-logo-pixel.png"
+                alt="Supernuggets"
+                className={cn('h-auto w-full nugget-avatar', deepFryActive && 'logo-shaking')}
+                style={{ imageRendering: 'pixelated' as React.CSSProperties['imageRendering'] }}
+              />
+              <svg className="pixel-star star-1" style={{ top: '-6px', left: '8px', width: '13px', height: '13px' }} viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
+              </svg>
+              <svg className="pixel-star star-2" style={{ top: '8px', right: '-5px', width: '13px', height: '13px' }} viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
+              </svg>
+              <svg className="pixel-star star-3" style={{ bottom: '-5px', left: '18px', width: '13px', height: '13px' }} viewBox="0 0 7 7" fill="none" aria-hidden="true">
+                <path d="M3 0h1v1H3V0zm0 6h1v1H3V6zM0 3h1v1H0V3zm6 0h1v1H6V3zm-2 0h-1v1h1V3zm0-1h-1v1h1V2zm0 2h-1v1h1V4zm1-1h-1v1h1V3zm-3 0h-1v1h1V3z" fill="#000"/>
+                <path d="M3 1h1v1H3V1zm0 4h1v1H3V5zM1 3h1v1H1V3zm4 0h1v1H5V3zm-2 0h1v1H3V3zm0-1h1v1H3V2zm0 2h1v1H3V4z" fill="#FAFF00"/>
+              </svg>
+            </div>
             {!isSidebarCollapsed && <span className="hidden md:inline tracking-tight">supernuggets</span>}
           </a>
         </div>
 
-        {/* Search */}
-        <div className="flex-1 px-3">
-          <div className="max-w-md">
+        {/* Search — flex-1 on mobile, absolutely centred on md+ */}
+        <div className="flex-1 px-3 md:flex-none md:absolute md:inset-y-0 md:left-0 md:right-0 md:flex md:items-center md:justify-center md:pointer-events-none">
+          <div className="w-full md:pointer-events-auto md:w-full md:max-w-sm">
             <HeaderSearch />
           </div>
         </div>
 
+        {/* Spacer (desktop): pushes buttons to the right edge */}
+        <div className="hidden md:flex flex-1" />
+
         {/* Action buttons */}
-        <div className="hidden md:flex items-center gap-1.5 px-3">
-          <button
-            onClick={handleResurface}
-            className="font-mono text-[13px] font-bold tracking-wider px-3 py-1.5 rounded-[4px] border-2 border-black/25 dark:border-white/20 hover:bg-foreground hover:text-background transition-colors"
-          >
-            random
-          </button>
-          <Link
-            href={token ? `/u/${token}/stats` : '/stats'}
-            className="font-mono text-[13px] font-bold tracking-wider px-3 py-1.5 rounded-[4px] border-2 border-black/25 dark:border-white/20 hover:bg-foreground hover:text-background transition-colors"
-          >
-            stats
-          </Link>
-          <a
-            href="https://t.me/supernuggetss_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-base px-2 py-1 hover:opacity-70 transition-opacity leading-none flex items-center"
-            title="Open Bot"
-          >
-            ✈️
-          </a>
-          <button
-            onClick={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
-            className="text-base px-2 py-1 hover:opacity-70 transition-opacity leading-none flex items-center"
-            title={isDarkMode ? 'Light mode' : 'Dark mode'}
-          >
-            {isDarkMode ? '☀️' : '🌙'}
-          </button>
+        <div className="hidden md:flex items-center gap-1 px-3 relative z-10">
+          {([
+            { label: 'random',    icon: <RandomIcon size={14} />,    onClick: handleResurface,                                   as: 'button' },
+            { label: 'stats',     icon: <StatsIcon size={14} />,     href: token ? `/u/${token}/stats` : '/stats',               as: 'link' },
+            { label: 'open bot',  icon: <PlaneIcon size={14} />,     href: 'https://t.me/supernuggetss_bot', external: true,    as: 'a' },
+            { label: isDarkMode ? 'light mode' : 'dark mode', icon: isDarkMode ? <SunIcon size={14} /> : <MoonIcon size={14} />, onClick: () => { setUserToggled(true); setIsDarkMode(v => !v) }, as: 'button' },
+            { label: 'text scale', icon: <TextScaleIcon size={14} />, as: 'stub' },
+            { label: 'sort',      icon: <SortIcon size={14} />,      as: 'stub' },
+          ] as const).map((item) => {
+            const btnCls = 'p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors'
+            const stubCls = 'p-1.5 flex items-center rounded-[4px] border border-black/8 dark:border-white/6 opacity-25 cursor-not-allowed'
+            if (item.as === 'stub') return (
+              <Tip key={item.label} label={item.label}>
+                <button className={stubCls} disabled>{item.icon}</button>
+              </Tip>
+            )
+            if (item.as === 'link') return (
+              <Tip key={item.label} label={item.label}>
+                <Link href={(item as { href: string }).href} className={btnCls}>{item.icon}</Link>
+              </Tip>
+            )
+            if (item.as === 'a') return (
+              <Tip key={item.label} label={item.label}>
+                <a href={(item as { href: string }).href} target="_blank" rel="noopener noreferrer" className={btnCls}>{item.icon}</a>
+              </Tip>
+            )
+            return (
+              <Tip key={item.label} label={item.label}>
+                <button onClick={(item as { onClick: () => void }).onClick} className={btnCls}>{item.icon}</button>
+              </Tip>
+            )
+          })}
         </div>
 
         {/* Mobile burger */}
