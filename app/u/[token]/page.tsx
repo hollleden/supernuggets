@@ -4,7 +4,7 @@ import { userIdFromToken } from '@/lib/users'
 import { mapRowToNugget, type EntryRow, type Nugget } from '@/lib/nuggets'
 import { HomeGrid } from '@/components/vault/home-grid'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 async function loadNuggets(userId: number): Promise<Nugget[]> {
   const { data, error } = await supabaseAdmin
