@@ -90,12 +90,12 @@ function MediaCapture({ nugget }: { nugget: Nugget }) {
     ? `via ${info.uploader.startsWith('@') ? info.uploader : '@' + info.uploader}`
     : null
   return (
-    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-4 space-y-4">
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl overflow-hidden">
       <a
         href={info.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block w-full aspect-[9/16] bg-stone-100 dark:bg-neutral-800 rounded-xl overflow-hidden relative border border-gray-200 dark:border-neutral-700"
+        className="block w-full aspect-[9/16] bg-stone-100 dark:bg-neutral-800 relative"
       >
         <ThumbnailImage
           src={info.thumbnailUrl!}
@@ -107,7 +107,7 @@ function MediaCapture({ nugget }: { nugget: Nugget }) {
         </div>
       </a>
 
-      <div className="space-y-1.5 text-[12px] font-mono text-gray-500 dark:text-gray-400">
+      <div className="p-4 space-y-1.5 text-[12px] font-mono text-gray-500 dark:text-gray-400">
         {via && <div>{via} · {(info.platform || '').toLowerCase()}</div>}
         <a
           href={info.url}
