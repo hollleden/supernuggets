@@ -50,8 +50,8 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       className="nugget-card flex flex-row relative overflow-hidden cursor-pointer"
       style={{ minHeight: '120px' }}
     >
-      {/* Left: thumbnail — only when media exists, no placeholder otherwise */}
-      {hasThumbnail && (
+      {/* Left: thumbnail or folder-tinted placeholder */}
+      {hasThumbnail ? (
         <div className="relative shrink-0 overflow-hidden" style={{ width: '180px' }}>
           <ThumbnailImage
             src={nugget.sourceInfo!.thumbnailUrl!}
@@ -64,39 +64,45 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
             </div>
           )}
         </div>
+      ) : (
+        <div
+          className="shrink-0 self-stretch"
+          style={{
+            width: '72px',
+            backgroundColor: folderColor + '18',
+            borderRight: `1px solid ${folderColor}30`,
+          }}
+        />
       )}
 
       {/* Right: text — spans 100% width when no thumbnail */}
-      <div className="flex-1 flex flex-col justify-between p-4 min-w-0">
-        <div>
-          <div className="flex items-center justify-between w-full mb-1">
-            {!hideFolder ? (
-              <span
-                className="font-mono text-[13px] font-bold uppercase"
-                style={{ color: folderColor }}
-              >
-                {nugget.folder}
-              </span>
-            ) : <span />}
-            <time className="font-mono text-[13px] text-muted-foreground">
-              {nugget.dateCompact}
-            </time>
-          </div>
-
-          <h3 className="font-mono text-[15px] font-extrabold uppercase tracking-tight leading-snug text-foreground line-clamp-2">
-            {nugget.title}
-          </h3>
+      <div className="flex-1 flex flex-col p-3 min-w-0 gap-1.5">
+        <div className="flex items-center justify-between w-full">
+          {!hideFolder ? (
+            <span
+              className="font-mono text-[11px] font-bold uppercase tracking-wider"
+              style={{ color: folderColor }}
+            >
+              {nugget.folder}
+            </span>
+          ) : <span />}
+          <time className="font-mono text-[11px] text-muted-foreground/60">
+            {nugget.dateCompact}
+          </time>
         </div>
 
-        <div className="space-y-0.5 mt-auto">
+        <h3 className="font-mono text-[13px] font-extrabold uppercase tracking-tight leading-snug text-foreground" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {nugget.title}
+        </h3>
+
+        <div className="flex flex-col gap-0.5 mt-auto pt-1">
           {via && (
-            <div className="font-mono text-[13px] text-muted-foreground truncate">
+            <div className="font-mono text-[11px] text-muted-foreground/60 truncate">
               {via}
             </div>
           )}
-
           {nugget.tags.length > 0 && (
-            <div className="font-mono text-[13px] text-muted-foreground truncate">
+            <div className="font-mono text-[11px] text-muted-foreground/60 truncate">
               {nugget.tags.slice(0, 2).map(tag => `#${tag}`).join(' ')}
               {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
             </div>
@@ -142,17 +148,17 @@ export function MasonryGrid({ nuggets, hideFolder, onClearFilters }: MasonryGrid
     return (
       <div className="py-24 flex flex-col items-center justify-center">
         <pre className="font-mono text-xs text-foreground text-center leading-relaxed mb-4">
-{`vault registry index // empty
-----------------------------------
-nothing matched those filters.
-try clearing a tag or switching folders.`}
+{`i'm actually obsessed with how empty this is.
+---------------------------------------------
+nothing found. seriously, go outside.
+the sun is literally waiting for you.`}
         </pre>
         {onClearFilters && (
           <button
             onClick={onClearFilters}
             className="font-mono text-[12px] font-bold tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
           >
-            [ clear all filters ]
+            RESET
           </button>
         )}
       </div>

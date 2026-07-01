@@ -5,6 +5,7 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
+import { DotIcon } from './pixel-icons'
 import { useVaultStats } from '@/lib/vault-stats-context'
 
 const ANCHOR_THRESHOLD = 1
@@ -69,11 +70,11 @@ function SidebarInner({
       )}
     >
       {/* Scrollable inner */}
-      <div className="flex flex-col overflow-y-auto p-2 gap-0.5 no-scrollbar flex-1">
+      <div className="flex flex-col overflow-y-auto no-scrollbar flex-1">
 
-        {/* Folder list — desktop expanded only */}
+        {/* Folder list — expanded */}
         {!isCollapsed && (
-          <>
+          <div className="flex flex-col px-2 gap-0.5 pt-2">
             <div className="flex flex-col gap-0.5">
               {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
                 const isActive = folder === activeFolder
@@ -84,23 +85,21 @@ function SidebarInner({
                     key={folder}
                     onClick={() => handleFolderClick(folder)}
                     className={cn(
-                      'font-mono text-[13px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-md',
                       isActive
-                        ? 'text-foreground font-bold'
+                        ? 'text-foreground font-black'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
+                    style={isActive ? { backgroundColor: color + '18' } : {}}
                   >
                     <span className="flex items-center gap-1.5">
-                      <span
-                        className="w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ backgroundColor: color }}
-                      />
+                      <span style={{ color }} className="shrink-0">
+                        <DotIcon size={7} />
+                      </span>
                       {FOLDER_LABELS[folder]}
                     </span>
                     {count > 0 && (
-                      <span className="text-[11px] opacity-40 tabular-nums">
-                        {count}
-                      </span>
+                      <span className="text-[11px] opacity-40 tabular-nums">{count}</span>
                     )}
                   </button>
                 )
@@ -121,9 +120,9 @@ function SidebarInner({
                     key={tag}
                     onClick={() => handleTagClick(tag)}
                     className={cn(
-                      'font-mono text-[13px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-md',
                       activeTag === tag
-                        ? 'text-foreground font-bold'
+                        ? 'text-foreground font-black bg-black/8 dark:bg-white/10'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
                   >
@@ -133,12 +132,12 @@ function SidebarInner({
                 ))}
               </div>
             )}
-          </>
+          </div>
         )}
 
-        {/* Folder dots — collapsed view */}
+        {/* Folder dots — collapsed */}
         {isCollapsed && (
-          <div className="flex flex-col gap-0.5 mt-2">
+          <div className="flex flex-col gap-1 px-2 mt-2">
             {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
               const color = FOLDER_COLOR_HEX[folder]
@@ -147,13 +146,15 @@ function SidebarInner({
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => handleFolderClick(folder)}
-                      className={cn('pill-btn-icon mx-auto', isActive && 'active')}
-                      style={{ borderColor: color }}
+                      className={cn(
+                        'mx-auto flex items-center justify-center w-10 h-8 rounded-md transition-all',
+                        isActive ? '' : 'opacity-55 hover:opacity-90'
+                      )}
+                      style={isActive ? { backgroundColor: color + '18' } : {}}
                     >
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: isActive ? 'currentColor' : color }}
-                      />
+                      <span style={{ color }}>
+                        <DotIcon size={14} />
+                      </span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="right" className="font-mono text-[12px] font-bold tracking-wider rounded-none">
@@ -164,19 +165,6 @@ function SidebarInner({
             })}
           </div>
         )}
-      </div>
-
-      {/* Collapse toggle */}
-      <div className="p-2 pt-1 border-t border-black/10 dark:border-white/10">
-        <button
-          onClick={onToggleCollapse}
-          className={cn(
-            'pill-btn border-dashed opacity-40 hover:opacity-70',
-            isCollapsed && 'pill-btn-icon mx-auto'
-          )}
-        >
-          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[12px]">collapse</span></>}
-        </button>
       </div>
     </aside>
   )

@@ -5,6 +5,7 @@ import { useSearchParams, useRouter, useParams } from 'next/navigation'
 import { MasonryGrid } from '@/components/vault/nugget-card'
 import { useVaultStats } from '@/lib/vault-stats-context'
 import type { Nugget, FolderType } from '@/lib/nuggets'
+import { FOLDER_COLOR_HEX } from '@/lib/nuggets'
 
 interface HomeGridProps {
   initialNuggets: Nugget[]
@@ -70,24 +71,59 @@ function HomeGridInner({ initialNuggets }: HomeGridProps) {
     router.replace(qs ? `${homeHref}?${qs}` : homeHref)
   }
 
+  const handleClearFolder = () => {
+    const sp = new URLSearchParams(searchParams.toString())
+    sp.delete('folder')
+    const qs = sp.toString()
+    router.replace(qs ? `${homeHref}?${qs}` : homeHref)
+  }
+
   const handleClearFilters = () => {
     router.replace(homeHref)
   }
 
+  const isFiltered = urlFolder !== 'all' || !!urlTag
+  const folderColor = urlFolder !== 'all' ? FOLDER_COLOR_HEX[urlFolder] : null
+
   return (
     <>
-      {urlTag && (
+      {isFiltered && (
         <div className="px-4 pt-3 flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] tracking-wider px-2 py-1.5 rounded-full">
-            <span>#{urlTag}</span>
-            <button
-              onClick={handleClearTag}
-              className="ml-1 leading-none hover:opacity-70 transition-opacity"
-              aria-label="Clear tag filter"
+          {urlFolder !== 'all' && (
+            <div
+              className="flex items-center gap-1 font-mono text-[10px] tracking-wider px-2 py-1.5 rounded-full"
+              style={{
+                backgroundColor: folderColor + '20',
+                color: folderColor ?? undefined,
+                border: `1px solid ${folderColor}50`,
+              }}
             >
-              ×
-            </button>
-          </div>
+              <span
+                className="inline-block rounded-full w-1.5 h-1.5 shrink-0"
+                style={{ backgroundColor: folderColor ?? undefined }}
+              />
+              <span>{urlFolder}</span>
+              <button
+                onClick={handleClearFolder}
+                className="ml-1 leading-none hover:opacity-70 transition-opacity"
+                aria-label="Clear folder filter"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          {urlTag && (
+            <div className="flex items-center gap-1 border border-foreground bg-foreground text-background font-mono text-[10px] tracking-wider px-2 py-1.5 rounded-full">
+              <span>#{urlTag}</span>
+              <button
+                onClick={handleClearTag}
+                className="ml-1 leading-none hover:opacity-70 transition-opacity"
+                aria-label="Clear tag filter"
+              >
+                ×
+              </button>
+            </div>
+          )}
           {filteredNuggets.length !== initialNuggets.length && (
             <span className="font-mono text-[10px] text-muted-foreground tracking-wider">
               {filteredNuggets.length} of {initialNuggets.length}
