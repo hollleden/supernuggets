@@ -6,10 +6,12 @@ export function ThumbnailImage({
   src,
   alt,
   className,
+  style,
 }: {
   src: string
   alt: string
   className?: string
+  style?: React.CSSProperties
 }) {
   const [failed, setFailed] = useState(false)
   if (failed) return null
@@ -20,6 +22,7 @@ export function ThumbnailImage({
       loading="lazy"
       onError={() => setFailed(true)}
       className={className}
+      style={style}
     />
   )
 }
