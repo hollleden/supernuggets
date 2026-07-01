@@ -223,6 +223,29 @@ export function NuggetIcon(p: Props) {
   ]} {...p} />
 }
 
+// ── Robot / bot face ──────────────────────────────────────────────────────────
+export function BotIcon(p: Props) {
+  return <Icon px={[
+    // antenna knob
+    [5,0],[6,0],
+    // antenna pole
+    [5,1],
+    // head outline
+    [2,2],[3,2],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],
+    [2,3],[9,3],
+    [2,4],[9,4],
+    [2,5],[9,5],
+    [2,6],[9,6],
+    [2,7],[9,7],
+    [2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[8,8],[9,8],
+    // eyes (2×2 blocks)
+    [4,4],[5,4],[4,5],[5,5],
+    [7,4],[8,4],[7,5],[8,5],
+    // mouth
+    [4,7],[5,7],[6,7],[7,7],
+  ]} {...p} />
+}
+
 // ── Calendar / date filter (future) ──────────────────────────────────────────
 export function CalendarIcon(p: Props) {
   return <Icon px={[

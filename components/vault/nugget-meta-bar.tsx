@@ -1,0 +1,64 @@
+'use client'
+
+import { HeartIcon, PlaneIcon } from './pixel-icons'
+import { FolderEditor } from './folder-editor'
+import { DeleteButton } from './delete-button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
+const MONTHS = [
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+]
+
+function formatDateNewspaper(iso: string): string {
+  const [year, month, day] = iso.slice(0, 10).split('-').map(Number)
+  return `${MONTHS[month - 1]} ${String(day).padStart(2, '0')}, ${year}`
+}
+
+function Tip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side="bottom" className="font-mono text-[10px] font-bold tracking-widest uppercase rounded-none px-2 py-1">
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+interface Props {
+  nuggetId: number
+  token: string
+  folder: string
+  date: string
+}
+
+export function NuggetMetaBar({ nuggetId, token, folder, date }: Props) {
+  return (
+    <TooltipProvider>
+      <div className="flex items-center justify-between py-2 mb-3">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-neutral-500">
+          {formatDateNewspaper(date)}
+        </span>
+        <div className="flex items-center gap-2 h-8">
+          <Tip label="Favourites">
+            <button className="h-full px-3 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+              <HeartIcon size={22} />
+            </button>
+          </Tip>
+          <Tip label="Share">
+            <button className="h-full px-3 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+              <PlaneIcon size={22} />
+            </button>
+          </Tip>
+          <Tip label="Folder">
+            <FolderEditor nuggetId={nuggetId} initialFolder={folder} token={token} />
+          </Tip>
+          <Tip label="Delete">
+            <DeleteButton nuggetId={nuggetId} token={token} variant="icon" />
+          </Tip>
+        </div>
+      </div>
+    </TooltipProvider>
+  )
+}
