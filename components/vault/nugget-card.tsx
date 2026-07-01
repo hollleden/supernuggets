@@ -38,7 +38,6 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const cardHref = `${tokenPrefix}/n/${nugget.id}`
   const hasThumbnail = !!nugget.sourceInfo?.thumbnailUrl
-  const label = mediaLabel(nugget.mediaType)
   const duration = nugget.sourceInfo?.durationS ? formatDuration(nugget.sourceInfo.durationS) : null
   const via = viaLine(nugget)
 
@@ -48,60 +47,56 @@ export function NuggetCard({ nugget, hideFolder }: NuggetCardProps) {
       tabIndex={0}
       onClick={() => router.push(cardHref)}
       onKeyDown={(e) => { if (e.key === 'Enter') router.push(cardHref) }}
-      className="nugget-card flex flex-row gap-4 h-40 p-4 relative overflow-hidden cursor-pointer"
+      className="nugget-card flex flex-row relative overflow-hidden cursor-pointer"
+      style={{ minHeight: '120px' }}
     >
-      {/* Left zone: thumbnail or type label */}
-      {hasThumbnail ? (
-        <div className="h-full aspect-[9/16] bg-stone-100 border border-gray-200 rounded-xl overflow-hidden relative shrink-0">
+      {/* Left: thumbnail — only when media exists, no placeholder otherwise */}
+      {hasThumbnail && (
+        <div className="relative shrink-0 overflow-hidden" style={{ width: '180px' }}>
           <ThumbnailImage
             src={nugget.sourceInfo!.thumbnailUrl!}
             alt={nugget.title}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
           {duration && (
-            <div className="absolute bottom-1.5 left-1.5 bg-black/80 text-white font-mono font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tight uppercase">
+            <div className="absolute bottom-1.5 left-1.5 bg-black/80 text-white font-mono font-bold px-1.5 py-0.5 rounded text-[8px] tracking-tight uppercase z-10">
               {duration}
             </div>
           )}
         </div>
-      ) : (
-        <div
-          className="h-full aspect-[9/16] shrink-0 relative rounded-xl"
-          style={{ backgroundColor: folderColor + '14', border: `0.5px solid ${folderColor}26` }}
-        />
       )}
 
-      {/* Right zone: text content */}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
+      {/* Right: text — spans 100% width when no thumbnail */}
+      <div className="flex-1 flex flex-col justify-between p-4 min-w-0">
         <div>
           <div className="flex items-center justify-between w-full mb-1">
             {!hideFolder ? (
               <span
-                className="font-mono text-[11px] font-bold uppercase"
+                className="font-mono text-[13px] font-bold uppercase"
                 style={{ color: folderColor }}
               >
                 {nugget.folder}
               </span>
             ) : <span />}
-            <time className="font-mono text-[11px] text-muted-foreground">
+            <time className="font-mono text-[13px] text-muted-foreground">
               {nugget.dateCompact}
             </time>
           </div>
 
-          <h3 className="font-mono text-[13px] font-extrabold uppercase tracking-tight leading-snug text-foreground line-clamp-2">
+          <h3 className="font-mono text-[15px] font-extrabold uppercase tracking-tight leading-snug text-foreground line-clamp-2">
             {nugget.title}
           </h3>
         </div>
 
         <div className="space-y-0.5 mt-auto">
           {via && (
-            <div className="font-mono text-[11px] text-muted-foreground truncate">
+            <div className="font-mono text-[13px] text-muted-foreground truncate">
               {via}
             </div>
           )}
 
           {nugget.tags.length > 0 && (
-            <div className="font-mono text-[11px] text-muted-foreground truncate">
+            <div className="font-mono text-[13px] text-muted-foreground truncate">
               {nugget.tags.slice(0, 2).map(tag => `#${tag}`).join(' ')}
               {nugget.tags.length > 2 && ` +${nugget.tags.length - 2}`}
             </div>
@@ -155,7 +150,7 @@ try clearing a tag or switching folders.`}
         {onClearFilters && (
           <button
             onClick={onClearFilters}
-            className="font-mono text-[10px] font-bold tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
+            className="font-mono text-[12px] font-bold tracking-wider px-4 py-2 rounded-full border border-foreground hover:bg-foreground hover:text-background transition-colors"
           >
             [ clear all filters ]
           </button>

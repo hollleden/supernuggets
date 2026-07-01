@@ -235,6 +235,29 @@ html.cursor-wait, html.cursor-wait * {
   transform: translate(2px, 2px);
 }
 
+/* ── Easter egg: Deep Fry Destruction Mode ──────────────────────────────── */
+@keyframes logo-shake {
+  0%   { transform: translateX(0)    rotate(0deg);  }
+  20%  { transform: translateX(-3px) rotate(-2deg); }
+  40%  { transform: translateX(3px)  rotate(2deg);  }
+  60%  { transform: translateX(-2px) rotate(-1deg); }
+  80%  { transform: translateX(2px)  rotate(1deg);  }
+  100% { transform: translateX(0)    rotate(0deg);  }
+}
+.logo-shaking {
+  animation: logo-shake 0.1s infinite;
+}
+
+.deep-fried {
+  filter: contrast(300%) brightness(40%) sepia(100%) !important;
+  transition: filter 0.1s ease !important;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* Nugget card: per-folder CSS variable hover system */
 .nugget-card {
   background-color: var(--card);

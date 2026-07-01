@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 import { useVaultStats } from '@/lib/vault-stats-context'
 
-const ANCHOR_THRESHOLD = 3
+const ANCHOR_THRESHOLD = 1
 
 const FOLDER_LABELS: Record<FolderType, string> = {
   all: 'all', skin: 'skin', make: 'make', food: 'food',
@@ -84,7 +84,7 @@ function SidebarInner({
                     key={folder}
                     onClick={() => handleFolderClick(folder)}
                     className={cn(
-                      'font-mono text-[10px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      'font-mono text-[13px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
                       isActive
                         ? 'text-foreground font-bold'
                         : 'text-muted-foreground hover:text-foreground'
@@ -98,7 +98,7 @@ function SidebarInner({
                       {FOLDER_LABELS[folder]}
                     </span>
                     {count > 0 && (
-                      <span className="text-[9px] opacity-40 tabular-nums">
+                      <span className="text-[11px] opacity-40 tabular-nums">
                         {count}
                       </span>
                     )}
@@ -112,7 +112,7 @@ function SidebarInner({
               <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10 flex flex-col gap-0.5">
                 <button
                   onClick={() => setTagSortAZ(prev => !prev)}
-                  className="font-mono text-[9px] tracking-wider px-2 py-0.5 text-muted-foreground/50 hover:text-muted-foreground transition-colors text-right"
+                  className="font-mono text-[11px] tracking-wider px-2 py-0.5 text-muted-foreground/50 hover:text-muted-foreground transition-colors text-right"
                 >
                   {tagSortAZ ? '↓ A-Z' : '↓ #'}
                 </button>
@@ -121,14 +121,14 @@ function SidebarInner({
                     key={tag}
                     onClick={() => handleTagClick(tag)}
                     className={cn(
-                      'font-mono text-[10px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
+                      'font-mono text-[13px] tracking-wider px-2 py-0.5 text-left transition-colors flex items-center justify-between',
                       activeTag === tag
                         ? 'text-foreground font-bold'
                         : 'text-muted-foreground hover:text-foreground'
                     )}
                   >
                     <span>#{tag}</span>
-                    <span className="text-[9px] opacity-40 tabular-nums">{count}</span>
+                    <span className="text-[11px] opacity-40 tabular-nums">{count}</span>
                   </button>
                 ))}
               </div>
@@ -156,7 +156,7 @@ function SidebarInner({
                       />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="font-mono text-[10px] font-bold tracking-wider rounded-none">
+                  <TooltipContent side="right" className="font-mono text-[12px] font-bold tracking-wider rounded-none">
                     {FOLDER_LABELS[folder]}
                   </TooltipContent>
                 </Tooltip>
@@ -175,7 +175,7 @@ function SidebarInner({
             isCollapsed && 'pill-btn-icon mx-auto'
           )}
         >
-          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[10px]">collapse</span></>}
+          {isCollapsed ? '▶' : <><span>◀</span><span className="text-[12px]">collapse</span></>}
         </button>
       </div>
     </aside>
