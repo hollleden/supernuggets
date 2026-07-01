@@ -9,7 +9,7 @@ import { pickRandomNuggetId } from '@/app/actions/nuggets'
 import { VaultStatsProvider, useVaultStats } from '@/lib/vault-stats-context'
 import { FOLDERS, type FolderType } from '@/lib/nuggets'
 import { cn } from '@/lib/utils'
-import { SearchIcon, RandomIcon, StatsIcon, PlaneIcon, MoonIcon, SunIcon, TextScaleIcon, SortIcon, HamburgerIcon, CloseIcon } from './pixel-icons'
+import { SearchIcon, RandomIcon, StatsIcon, PlaneIcon, BotIcon, MoonIcon, SunIcon, TextScaleIcon, SortIcon, HamburgerIcon, CloseIcon } from './pixel-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 function Tip({ label, children }: { label: string; children: React.ReactNode }) {
@@ -142,7 +142,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
 
         <div className="border-t border-black/10 pt-4 flex flex-col gap-1.5">
           <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start opacity-50 hover:opacity-80" onClick={onClose}>
-            <PlaneIcon size={12} /> open bot
+            <BotIcon size={12} /> open bot
           </a>
           <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start opacity-50 hover:opacity-80">
             {isDarkMode ? <SunIcon size={12} /> : <MoonIcon size={12} />} {isDarkMode ? 'light mode' : 'dark mode'}
@@ -378,7 +378,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           {([
             { label: 'random',    icon: <RandomIcon size={14} />,    onClick: handleResurface,                                   as: 'button' },
             { label: 'stats',     icon: <StatsIcon size={14} />,     href: token ? `/u/${token}/stats` : '/stats',               as: 'link' },
-            { label: 'open bot',  icon: <PlaneIcon size={14} />,     href: 'https://t.me/supernuggetss_bot', external: true,    as: 'a' },
+            { label: 'open bot',  icon: <BotIcon size={14} />,       href: 'https://t.me/supernuggetss_bot', external: true,    as: 'a' },
             { label: isDarkMode ? 'light mode' : 'dark mode', icon: isDarkMode ? <SunIcon size={14} /> : <MoonIcon size={14} />, onClick: () => { setUserToggled(true); setIsDarkMode(v => !v) }, as: 'button' },
             { label: 'text scale', icon: <TextScaleIcon size={14} />, as: 'stub' },
             { label: 'sort',      icon: <SortIcon size={14} />,      as: 'stub' },

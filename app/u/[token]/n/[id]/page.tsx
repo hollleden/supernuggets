@@ -31,9 +31,8 @@ function formatTranscript(text: string): string {
   return paragraphs.map(p => p.join(' ')).join('\n\n')
 }
 import { CopyButton } from '@/components/vault/copy-button'
-import { FolderEditor } from '@/components/vault/folder-editor'
 import { TagEditor } from '@/components/vault/tag-editor'
-import { DeleteButton } from '@/components/vault/delete-button'
+import { NuggetMetaBar } from '@/components/vault/nugget-meta-bar'
 import { sourceHeaderLine } from '@/lib/nuggets'
 
 export const dynamic = 'force-dynamic'
@@ -154,23 +153,18 @@ export default async function NuggetPage({
           )}
 
           {/* ── Main content ── */}
-          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono space-y-0 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded-2xl p-6 md:p-8`}>
-
-            {/* Folder + Delete */}
-            <div className="flex items-center justify-between mb-6">
-              <FolderEditor nuggetId={nugget.id} initialFolder={nugget.folder} token={token} />
-              <DeleteButton nuggetId={nugget.id} token={token} />
-            </div>
+          <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono bg-white dark:bg-neutral-900 p-6 md:p-8`}>
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.15] mb-2">
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.15] mb-4">
               {nugget.title}
             </h1>
 
-            {/* Date */}
-            <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-6">
-              created: {nugget.dateCompact}
-            </div>
+            {/* Single divider */}
+            <hr className="border-t border-gray-200 dark:border-neutral-700 mb-0" />
+
+            {/* Action bar: date + icons */}
+            <NuggetMetaBar nuggetId={nugget.id} token={token} folder={nugget.folder} date={nugget.date} />
 
             {/* 1. SUMMARY */}
             {nugget.summaryBullets.length > 0 && (
@@ -193,7 +187,7 @@ export default async function NuggetPage({
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">fact-check</div>
                 {nugget.factChecks.map((fc, i) => (
                   <div key={i} className="mb-2">
-                    <div className="text-xs font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 uppercase tracking-tight">
+                    <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 uppercase tracking-tight">
                       <span className="text-emerald-600 font-black">✓</span>
                       {fc.searchQuery ? (
                         <a
@@ -209,7 +203,7 @@ export default async function NuggetPage({
                       )}
                     </div>
                     {fc.evidence && (
-                      <div className="text-gray-500 pl-5 text-[11px] leading-relaxed mt-0.5">
+                      <div className="text-gray-500 pl-5 text-[13px] leading-relaxed mt-0.5">
                         {fc.evidence}
                       </div>
                     )}
@@ -230,7 +224,7 @@ export default async function NuggetPage({
                       href={m.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] px-3 py-1 border border-gray-300 dark:border-neutral-600 text-gray-800 dark:text-gray-200 hover:border-black dark:hover:border-white transition-colors"
+                      className="text-[13px] px-3 py-1 border border-gray-300 dark:border-neutral-600 text-gray-800 dark:text-gray-200 hover:border-black dark:hover:border-white transition-colors"
                     >
                       {m.label}
                     </a>
@@ -263,7 +257,7 @@ export default async function NuggetPage({
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">description</span>
                         <CopyButton text={description} label="copy" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{description}</pre>
+                      <pre className="text-[13px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{description}</pre>
                     </>
                   )}
                   {body && (
@@ -273,7 +267,7 @@ export default async function NuggetPage({
                         <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">transcript</span>
                         <CopyButton text={body} label="copy" />
                       </div>
-                      <pre className="text-[11px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{formatTranscript(body)}</pre>
+                      <pre className="text-[13px] leading-relaxed text-gray-500 dark:text-gray-400 whitespace-pre-wrap break-words bg-gray-50 dark:bg-neutral-800 p-3 rounded">{formatTranscript(body)}</pre>
                     </>
                   )}
                 </>
@@ -290,7 +284,7 @@ export default async function NuggetPage({
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">source</div>
-                <div className="text-[11px] text-gray-600">
+                <div className="text-[13px] text-gray-600">
                   <span>↗ </span>
                   <a
                     href={nugget.sourceInfo.url}
@@ -318,7 +312,7 @@ export default async function NuggetPage({
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
                 <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">links</div>
                 {nugget.extractedLinks.map(url => (
-                  <div key={url} className="flex gap-2 text-xs mb-1">
+                  <div key={url} className="flex gap-2 text-[13px] mb-1">
                     <span className="text-gray-400 shrink-0">⬈</span>
                     <a
                       href={url}
@@ -336,7 +330,7 @@ export default async function NuggetPage({
 
           {/* ── Related sidebar ── */}
           <aside className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-3' : 'lg:col-span-4'} space-y-3`}>
-            <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest px-1 mb-1">
+            <div className="text-[9px] text-gray-400 uppercase font-bold tracking-[0.15em] px-1 mb-1">
               related in {nugget.folder.toUpperCase()}
             </div>
             {related.length === 0 ? (
@@ -406,7 +400,7 @@ function RelatedCard({ nugget, token }: { nugget: Nugget; token: string }) {
         >
           {nugget.folder}
         </span>
-        <div className="font-bold text-black dark:text-white text-[11px] uppercase tracking-tight line-clamp-2">
+        <div className="font-bold text-black dark:text-white text-[12px] uppercase tracking-tight line-clamp-2">
           {nugget.title}
         </div>
         {nugget.tags.length > 0 && (
