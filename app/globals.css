@@ -9,6 +9,8 @@
    --------------------------------------------------------------- */
 
 :root {
+  /* Brand yellow — used for shadows, accents, marquee */
+  --brand-yellow: #FAFF00;
   /* Surface palette */
   --background: #F5F4EE;          /* Weathered engineering cream */
   --foreground: #1A1A1A;          /* Off-black high-readability type */
@@ -38,32 +40,32 @@
 }
 
 .dark {
-  /* Amber CRT terminal — BRAND.md §7. Warm sepia, NOT cold modern dark mode.
-     Lower contrast (~8:1) than the rejected cold variant (~18:1). */
-  --background:         #1F1B14;  /* sepia-dark = Hemeon cream inverted */
-  --foreground:         #D4CDB8;  /* warm cream-grey */
-  --card:               #2A251C;  /* slightly raised, warmer */
-  --card-foreground:    #D4CDB8;
-  --popover:            #2A251C;
-  --popover-foreground: #D4CDB8;
-  --primary:            #D4CDB8;
-  --primary-foreground: #1F1B14;
-  --secondary:          #2A251C;
-  --secondary-foreground: #D4CDB8;
-  --muted:              #2A251C;
-  --muted-foreground:   #847E6E;
-  --accent:             #D4CDB8;
-  --accent-foreground:  #1F1B14;
+  /* Brand yellow — darker in dark mode */
+  --brand-yellow: #F0C949;
+  /* Claude-aesthetic dark palette — deep muted warm-grey tones */
+  --background:         #1A1A18;
+  --foreground:         #E8E8E3;
+  --card:               #2D2D2A;
+  --card-foreground:    #E8E8E3;
+  --popover:            #2D2D2A;
+  --popover-foreground: #E8E8E3;
+  --primary:            #F7F7F2;
+  --primary-foreground: #1A1A18;
+  --secondary:          #2D2D2A;
+  --secondary-foreground: #E8E8E3;
+  --muted:              #2D2D2A;
+  --muted-foreground:   #A3A39E;
+  --accent:             #3F3F3C;
+  --accent-foreground:  #F7F7F2;
   --destructive:        #EF4444;
   --destructive-foreground: #FFFFFF;
-  --border:             #D4CDB8;
-  --border-muted:       #4A4538;
-  --input:              #D4CDB8;
-  --ring:               #D4CDB8;
+  --border:             #3F3F3C;
+  --border-muted:       #2D2D2A;
+  --input:              #3F3F3C;
+  --ring:               #A3A39E;
 
-  /* Hemeon orange — "hot key" highlight on amber CRT. Never green, never bright cream. */
-  --flash-bg: #E04A2A;
-  --flash-fg: #1F1B14;
+  --flash-bg: #F7F7F2;
+  --flash-fg: #1A1A18;
 }
 
 @theme inline {
@@ -145,9 +147,9 @@ html.cursor-wait, html.cursor-wait * {
 }
 
 .dark .bg-dither {
-  background-color: #1F1B14;
-  background-image: radial-gradient(#D4CDB8 1px, transparent 1px),
-                    radial-gradient(#D4CDB8 1px, #1F1B14 1px);
+  background-color: var(--background);
+  background-image: radial-gradient(var(--foreground) 1px, transparent 1px),
+                    radial-gradient(var(--foreground) 1px, var(--background) 1px);
 }
 
 /* ---------------------------------------------------------------
@@ -227,12 +229,18 @@ html.cursor-wait, html.cursor-wait * {
 
 /* Brutalist CTA button */
 .cta-brutal-btn {
-  box-shadow: 4px 4px 0px 0px #FAFF00;
+  box-shadow: 4px 4px 0px 0px var(--brand-yellow);
   transition: box-shadow 0.1s ease, transform 0.1s ease;
 }
 .cta-brutal-btn:hover {
-  box-shadow: 2px 2px 0px 0px #FAFF00;
+  box-shadow: 2px 2px 0px 0px var(--brand-yellow);
   transform: translate(2px, 2px);
+}
+.dark .cta-brutal-btn {
+  box-shadow: 4px 4px 0px 0px #F0C949;
+}
+.dark .cta-brutal-btn:hover {
+  box-shadow: 2px 2px 0px 0px #F0C949;
 }
 .ghost-brutal-btn {
   box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.18);
@@ -256,10 +264,11 @@ html.cursor-wait, html.cursor-wait * {
   background-color: var(--card-accent-bg, var(--card));
 }
 .dark .nugget-card {
-  border-color: oklch(0.35 0 0);
+  border-color: var(--border);
 }
 .dark .nugget-card:hover {
-  background-color: oklch(0.19 0 0);
+  background-color: var(--background);
+  box-shadow: 4px 4px 0px 0px var(--border);
 }
 
 /* Sidebar pill buttons */
@@ -291,15 +300,15 @@ html.cursor-wait, html.cursor-wait * {
   color: #fff;
 }
 .dark .pill-btn {
-  border-color: oklch(0.5 0 0);
-  color: oklch(0.985 0 0);
+  border-color: var(--border);
+  color: var(--foreground);
   background-color: transparent;
 }
 .dark .pill-btn:hover,
 .dark .pill-btn.active {
-  background-color: oklch(0.985 0 0);
-  color: oklch(0.145 0 0);
-  border-color: oklch(0.985 0 0);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 
 /* Collapsed sidebar: icon-only circle buttons */
@@ -321,12 +330,24 @@ html.cursor-wait, html.cursor-wait * {
   color: #fff;
 }
 .dark .pill-btn-icon {
-  border-color: oklch(0.5 0 0);
-  color: oklch(0.985 0 0);
+  border-color: var(--border);
+  color: var(--foreground);
 }
 .dark .pill-btn-icon:hover,
 .dark .pill-btn-icon.active {
-  background-color: oklch(0.985 0 0);
-  color: oklch(0.145 0 0);
-  border-color: oklch(0.985 0 0);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Ghost button dark mode — muted card bg + visible shadow */
+.dark .ghost-brutal-btn {
+  background-color: var(--card);
+  border-color: var(--border);
+  box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.08);
+}
+.dark .ghost-brutal-btn:hover {
+  box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.08);
+  background-color: var(--accent);
+  transform: translate(1px, 1px);
 }

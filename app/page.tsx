@@ -11,7 +11,7 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── TOP BAR ── */}
-      <div className="w-full bg-[#FAFF00] border-b border-black py-1.5 select-none overflow-hidden">
+      <div className="w-full bg-[#FAFF00] dark:bg-[#F0C949] border-b border-black py-1.5 select-none overflow-hidden">
         <div className="flex w-max animate-marquee whitespace-nowrap">
           <span className="font-mono text-[12px] font-black tracking-wider text-black px-4">
             × IT IS LITERALLY SO SATISFYING — WATCHING EVERY PIECE OF CONTENT YOU LIKE
@@ -34,8 +34,8 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-3">
 
           {/* ── COL 1: Logo + Headline ── */}
-          <div className="group bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-white">
-            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A]">
+          <div className="group bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-white dark:hover:bg-accent">
+            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A] dark:text-foreground">
               <div className="nugget-container relative inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -61,12 +61,12 @@ export default function LandingPage() {
               </div>
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-[#1A1A1A]">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-[#1A1A1A] dark:text-foreground">
               Save anything.
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed mt-4">
+            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed mt-4">
               Think of the bot as your personal AI chef. You dump in your raw, chaotic
               digital clutter—voice notes, links, articles, or galleries—and it instantly
               deep-fries everything into crispy, perfect little info nuggets.
@@ -74,56 +74,56 @@ export default function LandingPage() {
           </div>
 
           {/* ── COL 2, ROW 1: Step 1 ── */}
-          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
+          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
               1. You send it to the bot
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
               TikToks, articles, voice notes, images and galleries or just random
               thoughts. Whatever it is, just dump it directly into the Telegram bot.
             </p>
           </div>
 
           {/* ── COL 3, ROW 1: Step 2 ── */}
-          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
+          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
               2. The AI does the actual work
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
               It downloads it, enriches it, and files it away neatly while you go do
               literally anything else.
             </p>
           </div>
 
           {/* ── COL 2, ROW 2: Step 3 ── */}
-          <div className="bg-[#F5F3EF] border border-black/10 rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A]">
+          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
               3. And then you can actually find it again
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] leading-relaxed">
+            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
               It&apos;s your own little vault — browse it, search it, edit it, fall back
               into it at 2am like I do. It&apos;s just sitting there waiting for you.
             </p>
           </div>
 
           {/* ── COL 3, ROW 2: control panel stack ── */}
-          <div className="flex flex-col gap-2 h-full">
+          <div className="flex flex-col gap-2 h-full min-h-[140px]">
 
             {/* PRIMARY 2/3: black launch card */}
             <Link
               href="https://t.me/supernuggetss_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group cta-brutal-btn flex flex-[2] items-center justify-center rounded-[12px] border-2 border-black bg-black text-center"
+              className="group cta-brutal-btn flex flex-[2] items-center justify-center rounded-[12px] border-2 border-black dark:border-border bg-black dark:bg-[#2D2D2A] text-center"
             >
-              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
+              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white dark:text-foreground leading-snug">
                 LAUNCH IN TELEGRAM&nbsp;↗
               </span>
             </Link>
 
             {/* GHOST 1/3: login button */}
-            <div className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-black/30 bg-transparent">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666] pointer-events-none select-none">
+            <div className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground pointer-events-none select-none">
                 Log in to existing vault
               </span>
               <div className="absolute inset-0 opacity-0 cursor-pointer">
