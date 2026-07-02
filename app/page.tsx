@@ -122,9 +122,9 @@ export default function LandingPage() {
             </Link>
 
             {/* GHOST 1/3: login button */}
-            <div className="relative flex flex-[1] items-center justify-center rounded-[12px] border border-black/30 bg-transparent">
+            <div className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-black/30 bg-transparent">
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666] pointer-events-none select-none">
-                [ Log in to existing vault ]
+                Log in to existing vault
               </span>
               <div className="absolute inset-0 opacity-0 cursor-pointer">
                 <TelegramLogin />

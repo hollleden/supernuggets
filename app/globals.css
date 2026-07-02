@@ -234,29 +234,15 @@ html.cursor-wait, html.cursor-wait * {
   box-shadow: 2px 2px 0px 0px #FAFF00;
   transform: translate(2px, 2px);
 }
-
-/* ── Easter egg: Deep Fry Destruction Mode ──────────────────────────────── */
-@keyframes logo-shake {
-  0%   { transform: translateX(0)    rotate(0deg);  }
-  20%  { transform: translateX(-3px) rotate(-2deg); }
-  40%  { transform: translateX(3px)  rotate(2deg);  }
-  60%  { transform: translateX(-2px) rotate(-1deg); }
-  80%  { transform: translateX(2px)  rotate(1deg);  }
-  100% { transform: translateX(0)    rotate(0deg);  }
+.ghost-brutal-btn {
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.18);
+  transition: box-shadow 0.1s ease, transform 0.1s ease;
 }
-.logo-shaking {
-  animation: logo-shake 0.1s infinite;
+.ghost-brutal-btn:hover {
+  box-shadow: 1px 1px 0px 0px rgba(0,0,0,0.18);
+  transform: translate(1px, 1px);
 }
 
-.deep-fried {
-  filter: contrast(300%) brightness(40%) sepia(100%) !important;
-  transition: filter 0.1s ease !important;
-}
-
-@keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
 
 /* Nugget card: per-folder CSS variable hover system */
 .nugget-card {
