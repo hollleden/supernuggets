@@ -58,8 +58,8 @@ Paste a link from any of these platforms and the bot will download and process i
 
 | Platform | What it handles |
 |---|---|
-| TikTok | Video posts and photo carousels |
-| Instagram | Reels work out of the box; photo posts require a logged-in session (`INSTAGRAM_COOKIES`) — without it, the bot rejects photo posts and tells you to save the image and send it directly instead |
+| TikTok | Video posts only — photo carousels require sending through @SaveAsBot first |
+| Instagram | Requires a logged-in session to work — both Reels and photo posts need `INSTAGRAM_COOKIES`. Without it, the bot can't download anything from Instagram and asks you to save media to your camera roll and send it directly instead |
 | YouTube | Shorts only (longer videos are out of scope) |
 | Twitter / X | Video posts |
 | Pinterest | Video pins |
@@ -222,13 +222,13 @@ The web app can now be added to your phone's home screen — a proper icon, full
 
 Rewrote the tagging system to produce consistent, filterable tags. The AI now always includes the primary tool, product, or framework being discussed as a tag (e.g. `#claude_code`, `#remotion`, `#figma`). All 173 existing entries were re-tagged via migration. Added a sort toggle in the sidebar to switch tag order between frequency (`↓ #`) and alphabetical (`↓ A-Z`).
 
-### 2026-06-24 — Folder rename + Instagram photos + cleanup
+### 2026-06-24 — Folder rename + cleanup
 
-Consolidated folders from 12 → 10 lowercase names: `skin`, `make`, `food`, `body`, `learn`, `work`, `fun`, `go`, `mind`, `other`. Added Instagram photo post ingestion (GraphQL scraper with session cookies). Updated favicon. Various UI cleanup.
+Consolidated folders from 12 → 10 lowercase names: `skin`, `make`, `food`, `body`, `learn`, `work`, `fun`, `go`, `mind`, `other`. Updated favicon. Various UI cleanup.
 
-### 2026-06-19–22 — Digests, TikTok photos, description capture
+### 2026-06-19–22 — Digests and description capture
 
-Shipped the full digest system (weekly/monthly/year-in-review) with AI-generated summaries, semantic clustering, and BMO-style digital hygiene notes. Added TikTok photo carousel ingestion. Added post description capture for TikTok, Instagram, and YouTube Shorts videos. Overhauled receipt and digest formatting.
+Shipped the full digest system (weekly/monthly/year-in-review) with AI-generated summaries, semantic clustering, and BMO-style digital hygiene notes. Added post description capture for TikTok, Instagram, and YouTube Shorts videos. Overhauled receipt and digest formatting.
 
 ### 2026-06-10 — On-screen URL capture for listicle videos
 
