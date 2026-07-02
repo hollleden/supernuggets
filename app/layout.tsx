@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
@@ -12,12 +12,25 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'supernuggets // vault dashboard',
   description: 'A clean, fast pocket vault for everything worth keeping.',
+  manifest: '/manifest.webmanifest',
   icons: {
     icon: [
       { url: '/favicon-pixel.png', type: 'image/png' },
     ],
-    apple: '/favicon-pixel.png',
+    apple: '/apple-icon.png',
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'supernuggets',
+  },
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#FAFF00',
 }
 
 export default function RootLayout({
