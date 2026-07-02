@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { TelegramLogin } from './telegram-login'
 
 export const metadata = {
   title: 'supernuggets · your personal vault',
@@ -106,16 +107,24 @@ export default function LandingPage() {
           </div>
 
           {/* ── COL 3, ROW 2: CTA — full-cell brutalist button ── */}
-          <Link
-            href="https://t.me/supernuggetss_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group cta-brutal-btn flex items-center justify-center min-h-[140px] rounded-[12px] border-2 border-black bg-black text-center"
-          >
-            <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
-              LAUNCH IN TELEGRAM&nbsp;↗
-            </span>
-          </Link>
+          <div className="group cta-brutal-btn flex flex-col justify-between min-h-[140px] rounded-[12px] border-2 border-black bg-black p-6">
+            <Link
+              href="https://t.me/supernuggetss_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center flex-1"
+            >
+              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
+                LAUNCH IN TELEGRAM&nbsp;↗
+              </span>
+            </Link>
+            <div className="flex justify-end items-center gap-2 mt-2">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/40">
+                have a vault?
+              </span>
+              <TelegramLogin />
+            </div>
+          </div>
         </div>
       </section>
 
