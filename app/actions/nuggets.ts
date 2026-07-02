@@ -30,23 +30,28 @@ export async function updateNuggetFolder(
   id: number,
   folder: string,
 ): Promise<ActionResult> {
-  if (!VALID_FOLDERS.has(folder)) {
-    return { ok: false, error: `Invalid folder: ${folder}` }
+  try {
+    if (!VALID_FOLDERS.has(folder)) {
+      return { ok: false, error: `Invalid folder: ${folder}` }
+    }
+    const owner = await resolveOwner(token)
+    if (!owner.ok) return owner
+    const { error, data } = await supabaseAdmin
+      .from('entries')
+      .update({ folder })
+      .eq('id', id)
+      .eq('user_id', owner.userId)
+      .select('id')
+    if (error) return { ok: false, error: error.message }
+    if (!data || data.length === 0) return { ok: false, error: 'No row updated (id missing or not yours)' }
+    revalidatePath(`/u/${token}/n/${id}`)
+    revalidatePath(`/u/${token}`)
+    revalidatePath(`/u/${token}/stats`)
+    return { ok: true }
+  } catch (e) {
+    console.error('updateNuggetFolder error:', e)
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown error' }
   }
-  const owner = await resolveOwner(token)
-  if (!owner.ok) return owner
-  const { error, data } = await supabaseAdmin
-    .from('entries')
-    .update({ folder })
-    .eq('id', id)
-    .eq('user_id', owner.userId)
-    .select('id')
-  if (error) return { ok: false, error: error.message }
-  if (!data || data.length === 0) return { ok: false, error: 'No row updated (id missing or not yours)' }
-  revalidatePath(`/u/${token}/n/${id}`)
-  revalidatePath(`/u/${token}`)
-  revalidatePath(`/u/${token}/stats`)
-  return { ok: true }
 }
 
 export async function updateNuggetTags(
@@ -54,35 +59,45 @@ export async function updateNuggetTags(
   id: number,
   tags: string[],
 ): Promise<ActionResult> {
-  const owner = await resolveOwner(token)
-  if (!owner.ok) return owner
-  const { error, data } = await supabaseAdmin
-    .from('entries')
-    .update({ tags: JSON.stringify(tags) })
-    .eq('id', id)
-    .eq('user_id', owner.userId)
-    .select('id')
-  if (error) return { ok: false, error: error.message }
-  if (!data || data.length === 0) return { ok: false, error: 'No row updated (id missing or not yours)' }
-  revalidatePath(`/u/${token}/n/${id}`)
-  revalidatePath(`/u/${token}`)
-  return { ok: true }
+  try {
+    const owner = await resolveOwner(token)
+    if (!owner.ok) return owner
+    const { error, data } = await supabaseAdmin
+      .from('entries')
+      .update({ tags: JSON.stringify(tags) })
+      .eq('id', id)
+      .eq('user_id', owner.userId)
+      .select('id')
+    if (error) return { ok: false, error: error.message }
+    if (!data || data.length === 0) return { ok: false, error: 'No row updated (id missing or not yours)' }
+    revalidatePath(`/u/${token}/n/${id}`)
+    revalidatePath(`/u/${token}`)
+    return { ok: true }
+  } catch (e) {
+    console.error('updateNuggetTags error:', e)
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown error' }
+  }
 }
 
 export async function deleteNugget(token: string, id: number): Promise<ActionResult> {
-  const owner = await resolveOwner(token)
-  if (!owner.ok) return owner
-  const { error, data } = await supabaseAdmin
-    .from('entries')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', owner.userId)
-    .select('id')
-  if (error) return { ok: false, error: error.message }
-  if (!data || data.length === 0) return { ok: false, error: 'No row deleted (id missing or not yours)' }
-  revalidatePath(`/u/${token}`)
-  revalidatePath(`/u/${token}/stats`)
-  return { ok: true }
+  try {
+    const owner = await resolveOwner(token)
+    if (!owner.ok) return owner
+    const { error, data } = await supabaseAdmin
+      .from('entries')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', owner.userId)
+      .select('id')
+    if (error) return { ok: false, error: error.message }
+    if (!data || data.length === 0) return { ok: false, error: 'No row deleted (id missing or not yours)' }
+    revalidatePath(`/u/${token}`)
+    revalidatePath(`/u/${token}/stats`)
+    return { ok: true }
+  } catch (e) {
+    console.error('deleteNugget error:', e)
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown error' }
+  }
 }
 
 /**
