@@ -106,24 +106,32 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: CTA — full-cell brutalist button ── */}
-          <div className="group cta-brutal-btn flex flex-col justify-between min-h-[140px] rounded-[12px] border-2 border-black bg-black p-6">
+          {/* ── COL 3, ROW 2: two-card CTA stack ── */}
+          <div className="flex flex-col gap-3">
+
+            {/* PRIMARY: Log in (returning users) */}
+            <div className="cta-brutal-btn flex flex-col items-start justify-center rounded-[12px] border-2 border-black bg-black px-6 py-5 gap-2">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-white/40">
+                already have a vault?
+              </p>
+              <TelegramLogin />
+            </div>
+
+            {/* SECONDARY: Launch bot (new users) */}
             <Link
               href="https://t.me/supernuggetss_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center flex-1"
+              className="group flex flex-col justify-center rounded-[12px] border-2 border-black bg-transparent px-6 py-5 hover:bg-black/5 transition-colors"
             >
-              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
+              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-[#1A1A1A] leading-snug">
                 LAUNCH IN TELEGRAM&nbsp;↗
               </span>
-            </Link>
-            <div className="flex justify-end items-center gap-2 mt-2">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/40">
-                have a vault?
+              <span className="font-mono text-[11px] text-[#4A4538] mt-1">
+                Launch the bot to get started
               </span>
-              <TelegramLogin />
-            </div>
+            </Link>
+
           </div>
         </div>
       </section>
