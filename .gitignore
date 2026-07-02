@@ -43,3 +43,9 @@ HANDOFF-*.md
 RUN-LOCALLY.md
 docs/
 
+.claude/
+public/nugget-logo.png
+placeholder-logo.png
+placeholder-user.jpg
+placeholder.jpg
+placeholder.svg
