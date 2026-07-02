@@ -106,24 +106,24 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: CTA + text login ── */}
-          <div className="flex flex-col gap-2">
+          {/* ── COL 3, ROW 2: single black CTA block ── */}
+          <div className="cta-brutal-btn flex flex-col justify-between min-h-[140px] rounded-[12px] border-2 border-black bg-black px-6 pt-6 pb-4">
 
-            {/* PRIMARY: Launch bot */}
+            {/* Main CTA */}
             <Link
               href="https://t.me/supernuggetss_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group cta-brutal-btn flex items-center justify-center min-h-[140px] rounded-[12px] border-2 border-black bg-black text-center"
+              className="flex items-center justify-center flex-1"
             >
               <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
                 LAUNCH IN TELEGRAM&nbsp;↗
               </span>
             </Link>
 
-            {/* SECONDARY: Log in — custom text over invisible Telegram widget */}
-            <div className="relative flex items-center px-1 py-2">
-              <span className="font-mono text-[11px] font-bold tracking-[0.08em] text-[#4A4538] pointer-events-none select-none">
+            {/* Login footnote — invisible Telegram widget overlaid on styled text */}
+            <div className="relative flex items-center h-6">
+              <span className="font-mono text-[10px] tracking-[0.06em] text-white/40 pointer-events-none select-none">
                 [ Already have a vault? Log in ]
               </span>
               <div className="absolute inset-0 opacity-0 cursor-pointer">
