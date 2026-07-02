@@ -11,6 +11,18 @@ const KIND_LABEL: Record<Digest['kind'], string> = {
   yir: 'Year in Review',
 }
 
+const KIND_COLOR: Record<Digest['kind'], string> = {
+  weekly: '#3B82C4',
+  monthly: '#9A6B2F',
+  yir: '#8A7000',
+}
+
+const KIND_ICON: Record<Digest['kind'], string> = {
+  weekly: '◐',
+  monthly: '◆',
+  yir: '★',
+}
+
 function formatCompact(iso: string): string {
   return iso.slice(0, 10).replace(/-/g, '.')
 }
@@ -68,23 +80,40 @@ digests will appear here.`}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {digests.map(digest => (
-              <Link
-                key={digest.id}
-                href={`/u/${token}/digests/${digest.id}`}
-                className="block bg-card border border-black/20 rounded-xl p-5 hover:border-black/40 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-150"
-              >
-                <div className="font-mono text-[9px] font-bold text-muted-foreground border border-black/10 inline-block px-2 py-0.5 rounded-full uppercase tracking-wider mb-3">
-                  {KIND_LABEL[digest.kind] ?? digest.kind}
-                </div>
-                <div className="font-mono text-sm font-extrabold uppercase tracking-tight text-foreground mb-1">
-                  {dateRange(digest)}
-                </div>
-                <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                  view →
-                </div>
-              </Link>
-            ))}
+            {digests.map(digest => {
+              const color = KIND_COLOR[digest.kind] ?? '#666666'
+              return (
+                <Link
+                  key={digest.id}
+                  href={`/u/${token}/digests/${digest.id}`}
+                  className="nugget-card group flex flex-row overflow-hidden"
+                  style={{ minHeight: '104px' }}
+                >
+                  <div
+                    className="shrink-0 self-stretch flex items-center justify-center"
+                    style={{ width: '64px', backgroundColor: color + '1c' }}
+                  >
+                    <span className="text-xl" style={{ color }}>
+                      {KIND_ICON[digest.kind] ?? '●'}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex flex-col p-4 min-w-0 gap-1.5">
+                    <span
+                      className="font-mono text-[10px] font-bold uppercase tracking-wider"
+                      style={{ color }}
+                    >
+                      {KIND_LABEL[digest.kind] ?? digest.kind}
+                    </span>
+                    <div className="font-mono text-sm font-extrabold uppercase tracking-tight text-foreground">
+                      {dateRange(digest)}
+                    </div>
+                    <div className="font-mono text-[10px] text-muted-foreground/60 group-hover:text-foreground transition-colors mt-auto pt-1">
+                      view digest →
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>

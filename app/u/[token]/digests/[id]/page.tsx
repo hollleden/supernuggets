@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { fetchDigestById, type Digest } from '@/lib/digests'
 import { userIdFromToken } from '@/lib/users'
 import { ShareDigestButton } from '@/components/vault/share-digest-button'
+import { renderDigestBody } from '@/lib/digest-body'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,6 +11,12 @@ const KIND_LABEL: Record<Digest['kind'], string> = {
   weekly: 'Weekly',
   monthly: 'Monthly',
   yir: 'Year in Review',
+}
+
+const KIND_COLOR: Record<Digest['kind'], string> = {
+  weekly: '#3B82C4',
+  monthly: '#9A6B2F',
+  yir: '#8A7000',
 }
 
 function formatCompact(iso: string): string {
@@ -37,6 +44,8 @@ export default async function DigestDetailPage({
   const digest = await fetchDigestById(token, numericId)
   if (!digest) notFound()
 
+  const color = KIND_COLOR[digest.kind] ?? '#666666'
+
   return (
     <>
       {/* Back bar */}
@@ -51,20 +60,22 @@ export default async function DigestDetailPage({
       </div>
 
       <div className="max-w-3xl mx-auto px-4 md:px-6 py-6">
-        <main className="font-mono bg-white dark:bg-neutral-900 p-6 md:p-8 rounded-xl border border-black/10">
-          <div className="font-mono text-[9px] font-bold text-muted-foreground border border-black/10 inline-block px-2 py-0.5 rounded-full uppercase tracking-wider mb-3">
+        <main className="font-mono bg-card p-6 md:p-8 rounded-xl border border-border-muted">
+          <div
+            className="font-mono text-[9px] font-bold border inline-block px-2 py-0.5 rounded-full uppercase tracking-wider mb-3"
+            style={{ color, borderColor: color + '55', backgroundColor: color + '14' }}
+          >
             {KIND_LABEL[digest.kind] ?? digest.kind}
           </div>
           <h1 className="font-mono text-xl font-extrabold uppercase tracking-tight text-foreground mb-1">
             {dateRange(digest)}
           </h1>
 
-          <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
+          <hr className="border-t border-border-muted my-4" />
 
-          <div
-            className="digest-body text-[13px] leading-relaxed text-gray-800 dark:text-gray-200"
-            dangerouslySetInnerHTML={{ __html: digest.body_html }}
-          />
+          <div className="digest-body text-foreground">
+            {renderDigestBody(digest.body_html)}
+          </div>
         </main>
       </div>
     </>
