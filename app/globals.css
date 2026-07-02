@@ -356,3 +356,19 @@ html.cursor-wait, html.cursor-wait * {
     border-color: var(--primary);
   }
 }
+
+/* Digest body — raw text from digest.py's render_* functions: bare \n newlines
+   plus inline <a> tags, no <pre> wrapper. Preserve whitespace on the container
+   itself so line breaks and the ASCII banner lines survive. */
+.digest-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.digest-body a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.digest-body a:hover {
+  color: var(--foreground);
+}

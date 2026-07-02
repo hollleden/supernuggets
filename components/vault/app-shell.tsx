@@ -9,7 +9,7 @@ import { pickRandomNuggetId } from '@/app/actions/nuggets'
 import { VaultStatsProvider, useVaultStats } from '@/lib/vault-stats-context'
 import { FOLDERS, type FolderType } from '@/lib/nuggets'
 import { cn } from '@/lib/utils'
-import { SearchIcon, RandomIcon, StatsIcon, PlaneIcon, BotIcon, MoonIcon, SunIcon, TextScaleIcon, SortIcon, HamburgerIcon, CloseIcon } from './pixel-icons'
+import { SearchIcon, RandomIcon, StatsIcon, PlaneIcon, BotIcon, MoonIcon, SunIcon, TextScaleIcon, SortIcon, HamburgerIcon, CloseIcon, CalendarIcon } from './pixel-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 function Tip({ label, children }: { label: string; children: React.ReactNode }) {
@@ -95,8 +95,10 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
   const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
+  const digestsHref = tokenPrefix ? `${tokenPrefix}/digests` : '/digests'
   const isHome = pathname === homeHref
   const isStats = pathname === statsHref
+  const isDigests = pathname?.startsWith(digestsHref) ?? false
   const { folderCounts } = useVaultStats()
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
 
@@ -117,6 +119,7 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
           <div className="flex flex-col gap-1.5">
             <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> random nugget</button>
             <a href={statsHref} onClick={onClose} className={cn('pill-btn justify-start', isStats && 'active')}><span>📈</span> stats</a>
+            <a href={digestsHref} onClick={onClose} className={cn('pill-btn justify-start', isDigests && 'active')}><span>📊</span> digests</a>
           </div>
         </div>
 
@@ -303,6 +306,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           {([
             { label: 'random',    icon: <RandomIcon size={14} />,    onClick: handleResurface,                                   as: 'button' },
             { label: 'stats',     icon: <StatsIcon size={14} />,     href: token ? `/u/${token}/stats` : '/stats',               as: 'link' },
+            { label: 'digests',   icon: <CalendarIcon size={14} />,  href: token ? `/u/${token}/digests` : '/digests',           as: 'link' },
             { label: 'open bot',  icon: <BotIcon size={14} />,       href: 'https://t.me/supernuggetss_bot', external: true,    as: 'a' },
             { label: isDarkMode ? 'light mode' : 'dark mode', icon: isDarkMode ? <SunIcon size={14} /> : <MoonIcon size={14} />, onClick: () => { setUserToggled(true); setIsDarkMode(v => !v) }, as: 'button' },
             { label: 'text scale', icon: <TextScaleIcon size={14} />, as: 'stub' },
