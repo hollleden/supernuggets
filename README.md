@@ -193,6 +193,10 @@ The bot sends AI-generated digests summarizing your saved nuggets:
 
 Admin commands: `/digest_week`, `/digest_month`, `/digest_year`. Automated scheduling is in the backlog.
 
+### Install as an app (PWA)
+
+The web app can be installed to your phone's home screen like a native app — full-screen, its own icon, no browser chrome. It's a basic install today (no offline mode or push notifications yet, those are on the backlog). See [HOW-TO-INSTALL.md](HOW-TO-INSTALL.md) for step-by-step instructions.
+
 ---
 
 ## Built with
@@ -209,6 +213,10 @@ Admin commands: `/digest_week`, `/digest_month`, `/digest_year`. Automated sched
 ---
 
 ## Changelog
+
+### 2026-07-02 — Installable PWA
+
+The web app can now be added to your phone's home screen — a proper icon, full-screen launch, no browser bar. Basic install only for now; offline mode and push notifications are on the backlog.
 
 ### 2026-06-25 — Tag consistency overhaul
 
