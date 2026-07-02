@@ -40,10 +40,14 @@ CHANGELOG.md
 CLAUDE.md
 HANDOFF.md
 HANDOFF-*.md
+PROMPT-NEXT-SESSION.md
 RUN-LOCALLY.md
 docs/
 
+# local IDE/tool config — not part of the shipped app
 .claude/
+
+# unused/legacy assets — not referenced anywhere in code
 public/nugget-logo.png
 placeholder-logo.png
 placeholder-user.jpg
