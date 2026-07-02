@@ -20,31 +20,12 @@ export const metadata: Metadata = {
   },
 }
 
-// Inline pre-paint script: avoids flash-of-wrong-theme. Reads localStorage
-// then falls back to OS preference. Also listens for live OS theme changes.
-const noFlashTheme = `
-(function(){try{
-  var mq = window.matchMedia('(prefers-color-scheme: dark)');
-  var t = localStorage.getItem('theme');
-  function apply(dark) {
-    if (dark) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  }
-  apply(t === 'dark' || (!t && mq.matches));
-  mq.addEventListener('change', function(e) {
-    if (!localStorage.getItem('theme')) apply(e.matches);
-  });
-}catch(e){}})();
-`
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={jetbrainsMono.variable}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
-      </head>
+    <html lang="en" className={jetbrainsMono.variable}>
+      <head />
       <body className="font-mono antialiased bg-background text-foreground">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

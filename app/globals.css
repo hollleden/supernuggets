@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+/* No @custom-variant dark override — Tailwind v4 default uses
+   @media (prefers-color-scheme: dark), which is what we want. */
 
 /* ---------------------------------------------------------------
    SUPERNUGGETS — tactical neo-retro blueprint tokens
@@ -35,37 +36,38 @@
   --radius: 0px;                  /* Square by default — no rounded corners */
 
   /* Inverted Flash interaction */
-  --flash-bg: #000000;            /* Light mode: black */
-  --flash-fg: #FFFFFF;            /* Light mode: white */
+  --flash-bg: #000000;
+  --flash-fg: #FFFFFF;
 }
 
-.dark {
-  /* Brand yellow — darker in dark mode */
-  --brand-yellow: #F0C949;
-  /* Claude-aesthetic dark palette — deep muted warm-grey tones */
-  --background:         #1A1A18;
-  --foreground:         #E8E8E3;
-  --card:               #2D2D2A;
-  --card-foreground:    #E8E8E3;
-  --popover:            #2D2D2A;
-  --popover-foreground: #E8E8E3;
-  --primary:            #F7F7F2;
-  --primary-foreground: #1A1A18;
-  --secondary:          #2D2D2A;
-  --secondary-foreground: #E8E8E3;
-  --muted:              #2D2D2A;
-  --muted-foreground:   #A3A39E;
-  --accent:             #3F3F3C;
-  --accent-foreground:  #F7F7F2;
-  --destructive:        #EF4444;
-  --destructive-foreground: #FFFFFF;
-  --border:             #3F3F3C;
-  --border-muted:       #2D2D2A;
-  --input:              #3F3F3C;
-  --ring:               #A3A39E;
-
-  --flash-bg: #F7F7F2;
-  --flash-fg: #1A1A18;
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Brand yellow — warmer in dark mode */
+    --brand-yellow: #F0C949;
+    /* Claude-aesthetic dark palette — deep muted warm-grey tones */
+    --background:         #1A1A18;
+    --foreground:         #E8E8E3;
+    --card:               #2D2D2A;
+    --card-foreground:    #E8E8E3;
+    --popover:            #2D2D2A;
+    --popover-foreground: #E8E8E3;
+    --primary:            #F7F7F2;
+    --primary-foreground: #1A1A18;
+    --secondary:          #2D2D2A;
+    --secondary-foreground: #E8E8E3;
+    --muted:              #2D2D2A;
+    --muted-foreground:   #A3A39E;
+    --accent:             #3F3F3C;
+    --accent-foreground:  #F7F7F2;
+    --destructive:        #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border:             #3F3F3C;
+    --border-muted:       #2D2D2A;
+    --input:              #3F3F3C;
+    --ring:               #A3A39E;
+    --flash-bg: #F7F7F2;
+    --flash-fg: #1A1A18;
+  }
 }
 
 @theme inline {
@@ -146,10 +148,12 @@ html.cursor-wait, html.cursor-wait * {
   background-position: 0 0, 2px 2px;
 }
 
-.dark .bg-dither {
-  background-color: var(--background);
-  background-image: radial-gradient(var(--foreground) 1px, transparent 1px),
-                    radial-gradient(var(--foreground) 1px, var(--background) 1px);
+@media (prefers-color-scheme: dark) {
+  .bg-dither {
+    background-color: var(--background);
+    background-image: radial-gradient(var(--foreground) 1px, transparent 1px),
+                      radial-gradient(var(--foreground) 1px, var(--background) 1px);
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -179,9 +183,7 @@ html.cursor-wait, html.cursor-wait * {
   text-overflow: ellipsis;
 }
 
-/* Landing page marquee animation — animated element holds two copies of
-   the text back-to-back; shifting by -50% (one copy's width) loops it
-   seamlessly. */
+/* Landing page marquee animation */
 @keyframes marquee {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
@@ -236,12 +238,6 @@ html.cursor-wait, html.cursor-wait * {
   box-shadow: 2px 2px 0px 0px var(--brand-yellow);
   transform: translate(2px, 2px);
 }
-.dark .cta-brutal-btn {
-  box-shadow: 4px 4px 0px 0px #F0C949;
-}
-.dark .cta-brutal-btn:hover {
-  box-shadow: 2px 2px 0px 0px #F0C949;
-}
 .ghost-brutal-btn {
   box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.18);
   transition: box-shadow 0.1s ease, transform 0.1s ease;
@@ -251,6 +247,18 @@ html.cursor-wait, html.cursor-wait * {
   transform: translate(1px, 1px);
 }
 
+@media (prefers-color-scheme: dark) {
+  .ghost-brutal-btn {
+    background-color: var(--card);
+    border-color: var(--border);
+    box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.08);
+  }
+  .ghost-brutal-btn:hover {
+    box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.08);
+    background-color: var(--accent);
+    transform: translate(1px, 1px);
+  }
+}
 
 /* Nugget card: per-folder CSS variable hover system */
 .nugget-card {
@@ -263,12 +271,15 @@ html.cursor-wait, html.cursor-wait * {
   border-color: var(--card-accent, #121110);
   background-color: var(--card-accent-bg, var(--card));
 }
-.dark .nugget-card {
-  border-color: var(--border);
-}
-.dark .nugget-card:hover {
-  background-color: var(--background);
-  box-shadow: 4px 4px 0px 0px var(--border);
+
+@media (prefers-color-scheme: dark) {
+  .nugget-card {
+    border-color: var(--border);
+  }
+  .nugget-card:hover {
+    background-color: var(--background);
+    box-shadow: 4px 4px 0px 0px var(--border);
+  }
 }
 
 /* Sidebar pill buttons */
@@ -299,16 +310,19 @@ html.cursor-wait, html.cursor-wait * {
   background-color: #121110;
   color: #fff;
 }
-.dark .pill-btn {
-  border-color: var(--border);
-  color: var(--foreground);
-  background-color: transparent;
-}
-.dark .pill-btn:hover,
-.dark .pill-btn.active {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border-color: var(--primary);
+
+@media (prefers-color-scheme: dark) {
+  .pill-btn {
+    border-color: var(--border);
+    color: var(--foreground);
+    background-color: transparent;
+  }
+  .pill-btn:hover,
+  .pill-btn.active {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+  }
 }
 
 /* Collapsed sidebar: icon-only circle buttons */
@@ -329,25 +343,16 @@ html.cursor-wait, html.cursor-wait * {
   background-color: #121110;
   color: #fff;
 }
-.dark .pill-btn-icon {
-  border-color: var(--border);
-  color: var(--foreground);
-}
-.dark .pill-btn-icon:hover,
-.dark .pill-btn-icon.active {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border-color: var(--primary);
-}
 
-/* Ghost button dark mode — muted card bg + visible shadow */
-.dark .ghost-brutal-btn {
-  background-color: var(--card);
-  border-color: var(--border);
-  box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.08);
-}
-.dark .ghost-brutal-btn:hover {
-  box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.08);
-  background-color: var(--accent);
-  transform: translate(1px, 1px);
+@media (prefers-color-scheme: dark) {
+  .pill-btn-icon {
+    border-color: var(--border);
+    color: var(--foreground);
+  }
+  .pill-btn-icon:hover,
+  .pill-btn-icon.active {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+  }
 }
