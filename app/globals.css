@@ -12,7 +12,7 @@
 :root {
   /* Brand yellow — used for shadows, accents, marquee */
   --brand-yellow: #FAFF00;
-  /* Surface palette */
+  /* Surface palette — light mode default */
   --background: #F5F4EE;          /* Weathered engineering cream */
   --foreground: #1A1A1A;          /* Off-black high-readability type */
   --card: #FFFFFF;                /* Pure white card canvas */
@@ -36,6 +36,33 @@
   --radius: 0px;                  /* Square by default — no rounded corners */
 
   /* Inverted Flash interaction */
+  --flash-bg: #000000;
+  --flash-fg: #FFFFFF;
+}
+
+/* Explicit light mode (when dark class is absent) — overrides system preference */
+html:not(.dark) {
+  --brand-yellow: #FAFF00;
+  --background: #F5F4EE;
+  --foreground: #1A1A1A;
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F4EE;
+  --secondary-foreground: #1A1A1A;
+  --muted: #EFEDE5;
+  --muted-foreground: #666666;
+  --accent: #000000;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #000000;
+  --border-muted: #CCCCCC;
+  --input: #000000;
+  --ring: #000000;
   --flash-bg: #000000;
   --flash-fg: #FFFFFF;
 }
@@ -371,4 +398,31 @@ html.cursor-wait, html.cursor-wait * {
 }
 .digest-body a:hover {
   color: var(--foreground);
+}
+
+/* Dark mode via explicit .dark class (AppShell toggle) — overrides system preference */
+html.dark {
+  --brand-yellow: #F0C949;
+  --background: #1A1A18;
+  --foreground: #E8E8E3;
+  --card: #2D2D2A;
+  --card-foreground: #E8E8E3;
+  --popover: #2D2D2A;
+  --popover-foreground: #E8E8E3;
+  --primary: #F7F7F2;
+  --primary-foreground: #1A1A18;
+  --secondary: #2D2D2A;
+  --secondary-foreground: #E8E8E3;
+  --muted: #2D2D2A;
+  --muted-foreground: #A3A39E;
+  --accent: #3F3F3C;
+  --accent-foreground: #F7F7F2;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #3F3F3C;
+  --border-muted: #2D2D2A;
+  --input: #3F3F3C;
+  --ring: #A3A39E;
+  --flash-bg: #F7F7F2;
+  --flash-fg: #1A1A18;
 }
