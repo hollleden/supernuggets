@@ -106,31 +106,30 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* ── COL 3, ROW 2: two-card CTA stack ── */}
-          <div className="flex flex-col gap-3">
+          {/* ── COL 3, ROW 2: CTA + text login ── */}
+          <div className="flex flex-col gap-2">
 
-            {/* PRIMARY: Log in (returning users) */}
-            <div className="cta-brutal-btn flex flex-col items-start justify-center rounded-[12px] border-2 border-black bg-black px-6 py-5 gap-2">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-white/40">
-                already have a vault?
-              </p>
-              <TelegramLogin />
-            </div>
-
-            {/* SECONDARY: Launch bot (new users) */}
+            {/* PRIMARY: Launch bot */}
             <Link
               href="https://t.me/supernuggetss_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col justify-center rounded-[12px] border-2 border-black bg-transparent px-6 py-5 hover:bg-black/5 transition-colors"
+              className="group cta-brutal-btn flex items-center justify-center min-h-[140px] rounded-[12px] border-2 border-black bg-black text-center"
             >
-              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-[#1A1A1A] leading-snug">
+              <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
                 LAUNCH IN TELEGRAM&nbsp;↗
               </span>
-              <span className="font-mono text-[11px] text-[#4A4538] mt-1">
-                Launch the bot to get started
-              </span>
             </Link>
+
+            {/* SECONDARY: Log in — custom text over invisible Telegram widget */}
+            <div className="relative flex items-center px-1 py-2">
+              <span className="font-mono text-[11px] font-bold tracking-[0.08em] text-[#4A4538] pointer-events-none select-none">
+                [ Already have a vault? Log in ]
+              </span>
+              <div className="absolute inset-0 opacity-0 cursor-pointer">
+                <TelegramLogin />
+              </div>
+            </div>
 
           </div>
         </div>
