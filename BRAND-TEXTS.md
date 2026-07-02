@@ -113,7 +113,7 @@ fact-check / mentioned / description / transcript(или content/article) / tags
 ```
 
 ### 1.12 Дайджесты (`digest.py`)
-"weekly digest // {период}", "🤖 insights:", "🔥 top folders:", "⚡︎ other folders:", "[⚡︎ organize the chaos]", "💡 notes:", месячный — "🧠 top clusters:", "📊 metrics:", годовой — "{year} wrapped //", "⏳ the {year} kaleidoscope:".
+"my week // {период}", "🤖 insights:", "🔥 what you were into:", "⚡︎ other folders:", "[⚡︎ go sort your mess]", "💡 notes:", месячный — "my month // {период}", "🧠 top clusters:", "📊 metrics:", годовой — "my {year} //", "⏳ the {year} kaleidoscope:".
 
 **Важно:** `insights` и `notes` — это генерируемый Claude текст по системным промптам с заданным тоном (sharp/dry для insights, "как BMO из Adventure Time" для notes) — если менять голос бота, промпты тоже переписывать.
 
