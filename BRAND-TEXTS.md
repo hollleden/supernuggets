@@ -56,10 +56,12 @@ ping @holeden
 `open` · `source` · `delete` → подтверждение: `yes, delete` / `cancel`
 
 ### 1.5 Квота
-"5-save limit hit for today! resets in {Xh Ym}"
+"that's 5 for today — back in {Xh Ym}"
+
+Сбой проверки квоты — "quota check glitched — try again" (формально, ошибка → правило 2, обёрнуто в футер 1.6)
 
 ### 1.6 Футер всех ошибок
-"{текст}\n\nping @holeden if it keeps happening"
+"{текст}\n\nping @holeden" (безусловно, без "if it keeps happening" — правило 2 BRAND.md)
 
 ### 1.7 Сообщения по хендлерам (полный список)
 
@@ -86,13 +88,17 @@ ping @holeden
 - wiped from the vault / can't delete — not yours or already gone
 
 ### 1.8 Отказы по URL
-TIKTOK_PHOTO, INSTAGRAM_PHOTO, INSTAGRAM_LOGIN, YT_SHORTS_ONLY, VIDEO_TOO_LONG — каждый со своим текстом (см. `pipeline.py` → `URLRejected`)
+TIKTOK_PHOTO, INSTAGRAM_PHOTO, YT_SHORTS_ONLY — формальные, без правки (см. `pipeline.py` → `URLRejected`)
+
+INSTAGRAM_LOGIN — "meta won't let me touch instagram officially, and honestly? I'm just one girl running a nuggets bot — not worth getting blocked over. forward it through @SaveAsBot first, then send it my way"
+
+VIDEO_TOO_LONG — "too long — {duration}s, limit for {ekey} is {cap}s. trim it and resend"
 
 ### 1.9 Таймзона
-"📍 send location" / "tap the button below to share your location — i'll detect your timezone" / "✓ timezone set to {name}"
+"📍 send location" / "tap the button below to share your location — i'll detect your timezone" / "✓ got it — your timezone's {name} now"
 
 ### 1.10 Дайджест on/off/status
-"✓ digests enabled — you'll get weekly/monthly/yearly digests" / "✓ digests disabled" / "📊 digest status\n\ntimezone: {tz}\ndigests: (enabled by default once you set a timezone)"
+"✓ enabled. you'll get your weekly/monthly/yearly digest" / "✓ digests disabled" / "📊 digest status\n\ntimezone: {tz}\ndigests: (enabled by default once you set a timezone)"
 
 ### 1.11 Формат "квитанции" (`pipeline.py` → `render()`)
 разделитель `--------------------`:
