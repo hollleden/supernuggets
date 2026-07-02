@@ -79,6 +79,33 @@ export async function updateNuggetTags(
   }
 }
 
+export async function updateNuggetTitle(
+  token: string,
+  id: number,
+  title: string,
+): Promise<ActionResult> {
+  try {
+    const trimmed = title.trim()
+    if (!trimmed) return { ok: false, error: 'Title cannot be empty' }
+    const owner = await resolveOwner(token)
+    if (!owner.ok) return owner
+    const { error, data } = await supabaseAdmin
+      .from('entries')
+      .update({ title: trimmed })
+      .eq('id', id)
+      .eq('user_id', owner.userId)
+      .select('id')
+    if (error) return { ok: false, error: error.message }
+    if (!data || data.length === 0) return { ok: false, error: 'No row updated (id missing or not yours)' }
+    revalidatePath(`/u/${token}/n/${id}`)
+    revalidatePath(`/u/${token}`)
+    return { ok: true }
+  } catch (e) {
+    console.error('updateNuggetTitle error:', e)
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown error' }
+  }
+}
+
 export async function deleteNugget(token: string, id: number): Promise<ActionResult> {
   try {
     const owner = await resolveOwner(token)

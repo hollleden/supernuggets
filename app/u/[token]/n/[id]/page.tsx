@@ -11,6 +11,7 @@ import {
   type FolderType,
 } from '@/lib/nuggets'
 import { ThumbnailImage } from '@/components/vault/thumbnail-image'
+import { TitleEditor } from '@/components/vault/title-editor'
 
 const TRANSITION_RE = /^(Now,?|So,?|But |And |However|Notice|The other|The easiest|The key|The thing|Of course|In the|For example|Here'?s|That'?s|What I|One thing|Another|First|Second|Third|Finally|Instead|Meanwhile|On the|At the|After|Before|When I|When you|Let me|I'?m going|I want|I'?ll|If you|Think about|Remember|Look,?|See,?|Okay|Alright|Anyway)/i
 
@@ -156,9 +157,7 @@ export default async function NuggetPage({
           <main className={`${nugget.sourceInfo?.thumbnailUrl ? 'lg:col-span-6' : 'lg:col-span-8'} font-mono bg-white dark:bg-neutral-900 p-6 md:p-8`}>
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl font-black tracking-tight text-black dark:text-white uppercase leading-[1.15] mb-4">
-              {nugget.title}
-            </h1>
+            <TitleEditor nuggetId={nugget.id} initialTitle={nugget.title} token={token} />
 
             {/* Single divider */}
             <hr className="border-t border-gray-200 dark:border-neutral-700 mb-0" />
