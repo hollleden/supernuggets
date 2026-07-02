@@ -107,22 +107,22 @@ export default function LandingPage() {
           </div>
 
           {/* ── COL 3, ROW 2: control panel stack ── */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 h-full">
 
-            {/* PRIMARY: black launch card */}
+            {/* PRIMARY 2/3: black launch card */}
             <Link
               href="https://t.me/supernuggetss_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="group cta-brutal-btn flex items-center justify-center min-h-[140px] rounded-[12px] border-2 border-black bg-black text-center"
+              className="group cta-brutal-btn flex flex-[2] items-center justify-center rounded-[12px] border-2 border-black bg-black text-center"
             >
               <span className="font-mono text-base font-extrabold uppercase tracking-tight text-white leading-snug">
                 LAUNCH IN TELEGRAM&nbsp;↗
               </span>
             </Link>
 
-            {/* GHOST: login button — transparent, sharp corners, TelegramLogin overlaid */}
-            <div className="relative flex items-center justify-center rounded-none border border-black/30 bg-transparent px-6 py-3 dark:border-[#666666]">
+            {/* GHOST 1/3: login button */}
+            <div className="relative flex flex-[1] items-center justify-center rounded-[12px] border border-black/30 bg-transparent">
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666] pointer-events-none select-none">
                 [ Log in to existing vault ]
               </span>
