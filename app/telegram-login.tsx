@@ -20,8 +20,7 @@ function TelegramLoginInner() {
     script.setAttribute('data-telegram-login', BOT_USERNAME)
     script.setAttribute('data-size', 'small')
     script.setAttribute('data-userpic', 'false')
-    script.setAttribute('data-auth-url', '/api/auth/telegram')
-    script.setAttribute('data-request-access', 'write')
+    script.setAttribute('data-auth-url', 'https://www.supernuggets.app/api/auth/telegram')
     container.appendChild(script)
 
     return () => {
