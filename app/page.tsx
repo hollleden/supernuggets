@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { TelegramLogin } from './telegram-login'
+import { cookies } from 'next/headers'
 
 export const metadata = {
   title: 'supernuggets · your personal vault',
@@ -7,7 +7,8 @@ export const metadata = {
     'Save anything from Telegram — TikToks, articles, voice notes, screenshots — and browse it all in one place.',
 }
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const vaultToken = (await cookies()).get('sn_vault_token')?.value
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* ── TOP BAR ── */}
@@ -121,15 +122,30 @@ export default function LandingPage() {
               </span>
             </Link>
 
-            {/* GHOST 1/3: login button */}
-            <div className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground pointer-events-none select-none">
-                Log in to existing vault
-              </span>
-              <div className="absolute inset-0 opacity-0 cursor-pointer">
-                <TelegramLogin />
-              </div>
-            </div>
+            {/* GHOST 1/3: vault access — cookie set on first vault visit */}
+            {vaultToken ? (
+              <Link
+                href={`/u/${vaultToken}/`}
+                className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent transition-colors hover:bg-foreground/[0.03]"
+              >
+                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  ↗ Open my vault
+                </span>
+              </Link>
+            ) : (
+              <a
+                href="https://t.me/supernuggetss_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent px-4 text-center transition-colors hover:bg-foreground/[0.03]"
+              >
+                <span className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.1em] text-muted-foreground">
+                  Already have a vault?
+                  <br />
+                  Open the bot → send /myvault
+                </span>
+              </a>
+            )}
 
           </div>
         </div>
