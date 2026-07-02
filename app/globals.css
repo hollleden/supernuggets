@@ -98,6 +98,13 @@
   --color-flash: var(--flash-bg);
   --color-flash-fg: var(--flash-fg);
 
+  --color-landing-card: var(--landing-card-bg);
+  --color-landing-card-hover: var(--landing-card-bg-hover);
+  --color-landing-card-text: var(--landing-card-text);
+  --color-landing-card-body-text: var(--landing-card-body-text);
+  --color-landing-card-border: var(--landing-card-border);
+  --color-landing-link: var(--landing-link-text);
+
   --radius-sm: 0px;
   --radius-md: 0px;
   --radius-lg: 0px;
@@ -506,6 +513,14 @@ html.dark {
   --ring: #A3A39E;
   --flash-bg: #F7F7F2;
   --flash-fg: #1A1A18;
+
+  /* Landing page hero cards — backlog #0 dark mode polish spec */
+  --landing-card-bg: #1A1A1A;
+  --landing-card-bg-hover: #242424;
+  --landing-card-text: #D1D1D1;
+  --landing-card-body-text: #D1D1D1;
+  --landing-card-border: #333333;
+  --landing-link-text: #E0E0E0;
 }
 
 /* Explicit light mode (when dark class absent) — overrides system preference via cascading */
@@ -533,4 +548,12 @@ html:not(.dark) {
   --ring: #000000;
   --flash-bg: #000000;
   --flash-fg: #FFFFFF;
+
+  /* Landing page hero cards — light mode unchanged, matches existing inline hex values */
+  --landing-card-bg: #F5F3EF;
+  --landing-card-bg-hover: #FFFFFF;
+  --landing-card-text: #1A1A1A;
+  --landing-card-body-text: #4A4538;
+  --landing-card-border: rgba(0, 0, 0, 0.1);
+  --landing-link-text: #666666;
 }

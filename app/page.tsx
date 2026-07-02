@@ -35,8 +35,8 @@ export default async function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr_1fr] gap-3">
 
           {/* ── COL 1: Logo + Headline ── */}
-          <div className="group bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-white dark:hover:bg-accent">
-            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-[#1A1A1A] dark:text-foreground">
+          <div className="group bg-landing-card border border-landing-card-border rounded-[12px] p-6 md:p-8 flex flex-col justify-center min-h-[260px] md:row-span-2 transition-colors hover:bg-landing-card-hover">
+            <div className="font-mono text-base font-black tracking-tight whitespace-nowrap flex items-center gap-2 mb-6 text-landing-card-text">
               <div className="nugget-container relative inline-block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -62,12 +62,12 @@ export default async function LandingPage() {
               </div>
               <span>supernuggets</span>
             </div>
-            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-[#1A1A1A] dark:text-foreground">
+            <h1 className="font-mono text-3xl sm:text-4xl md:text-[26px] lg:text-[36px] font-extrabold uppercase tracking-tight leading-[1.05] text-landing-card-text">
               Save anything.
               <br />
               Find everything.
             </h1>
-            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed mt-4">
+            <p className="font-mono text-[15px] text-landing-card-body-text leading-relaxed mt-4">
               Think of the bot as your personal AI chef. You dump in your raw, chaotic
               digital clutter—voice notes, links, articles, or galleries—and it instantly
               deep-fries everything into crispy, perfect little info nuggets.
@@ -75,33 +75,33 @@ export default async function LandingPage() {
           </div>
 
           {/* ── COL 2, ROW 1: Step 1 ── */}
-          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
+          <div className="bg-landing-card border border-landing-card-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-landing-card-hover">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-landing-card-text">
               1. You send it to the bot
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-landing-card-body-text leading-relaxed">
               TikToks, articles, voice notes, images and galleries or just random
               thoughts. Whatever it is, just dump it directly into the Telegram bot.
             </p>
           </div>
 
           {/* ── COL 3, ROW 1: Step 2 ── */}
-          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
+          <div className="bg-landing-card border border-landing-card-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-landing-card-hover">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-landing-card-text">
               2. The AI does the actual work
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-landing-card-body-text leading-relaxed">
               It downloads it, enriches it, and files it away neatly while you go do
               literally anything else.
             </p>
           </div>
 
           {/* ── COL 2, ROW 2: Step 3 ── */}
-          <div className="bg-[#F5F3EF] dark:bg-card border border-black/10 dark:border-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-white dark:hover:bg-accent">
-            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-[#1A1A1A] dark:text-foreground">
+          <div className="bg-landing-card border border-landing-card-border rounded-[12px] p-6 flex flex-col min-h-[140px] transition-colors hover:bg-landing-card-hover">
+            <h3 className="font-mono text-base font-extrabold uppercase tracking-tight mb-3 text-landing-card-text">
               3. And then you can actually find it again
             </h3>
-            <p className="font-mono text-[15px] text-[#4A4538] dark:text-muted-foreground leading-relaxed">
+            <p className="font-mono text-[15px] text-landing-card-body-text leading-relaxed">
               It&apos;s your own little vault — browse it, search it, edit it, fall back
               into it at 2am like I do. It&apos;s just sitting there waiting for you.
             </p>
@@ -128,7 +128,7 @@ export default async function LandingPage() {
                 href={`/u/${vaultToken}/`}
                 className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent transition-colors hover:bg-foreground/[0.03]"
               >
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-landing-link">
                   ↗ Open my vault
                 </span>
               </Link>
@@ -139,7 +139,7 @@ export default async function LandingPage() {
                 rel="noopener noreferrer"
                 className="ghost-brutal-btn relative flex flex-[1] items-center justify-center rounded-[12px] border border-foreground/15 bg-transparent px-4 text-center transition-colors hover:bg-foreground/[0.03]"
               >
-                <span className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.1em] text-muted-foreground">
+                <span className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.1em] text-landing-link">
                   Already have a vault?
                   <br />
                   Open the bot → send /myvault
