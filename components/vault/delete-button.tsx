@@ -25,10 +25,16 @@ export const DeleteButton = forwardRef<HTMLButtonElement, DeleteButtonProps>(
       )
       if (!confirmed) return
       setPending(true)
-      const result = await deleteNugget(token, nuggetId)
-      if (!result.ok) {
+      try {
+        const result = await deleteNugget(token, nuggetId)
+        if (!result.ok) {
+          setPending(false)
+          alert(`deletion failed — ${result.error}`)
+          return
+        }
+      } catch {
         setPending(false)
-        alert(`deletion failed — ${result.error}`)
+        alert('deletion failed — network or server error, please try again')
         return
       }
       router.push(`/u/${token}`)
