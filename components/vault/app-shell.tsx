@@ -194,10 +194,9 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   const bubbleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    // Check for explicit dark class toggle, or fall back to system preference
-    const hasDarkClass = document.documentElement.classList.contains('dark')
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setIsDarkMode(hasDarkClass || systemPrefersDark)
+    // User's own saved choice only — never the OS/browser preference.
+    const stored = localStorage.getItem('theme')
+    setIsDarkMode(stored === 'dark')
     setMounted(true)
   }, [])
 

@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* No @custom-variant dark override — Tailwind v4 default uses
-   @media (prefers-color-scheme: dark), which is what we want. */
+/* dark: utilities follow the explicit .dark class (toggled by AppShell),
+   never the OS prefers-color-scheme media query. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------------------------------------
    SUPERNUGGETS — tactical neo-retro blueprint tokens
@@ -40,35 +41,8 @@
   --flash-fg: #FFFFFF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Brand yellow — warmer in dark mode */
-    --brand-yellow: #F0C949;
-    /* Claude-aesthetic dark palette — deep muted warm-grey tones */
-    --background:         #1A1A18;
-    --foreground:         #E8E8E3;
-    --card:               #2D2D2A;
-    --card-foreground:    #E8E8E3;
-    --popover:            #2D2D2A;
-    --popover-foreground: #E8E8E3;
-    --primary:            #F7F7F2;
-    --primary-foreground: #1A1A18;
-    --secondary:          #2D2D2A;
-    --secondary-foreground: #E8E8E3;
-    --muted:              #2D2D2A;
-    --muted-foreground:   #A3A39E;
-    --accent:             #3F3F3C;
-    --accent-foreground:  #F7F7F2;
-    --destructive:        #EF4444;
-    --destructive-foreground: #FFFFFF;
-    --border:             #3F3F3C;
-    --border-muted:       #2D2D2A;
-    --input:              #3F3F3C;
-    --ring:               #A3A39E;
-    --flash-bg: #F7F7F2;
-    --flash-fg: #1A1A18;
-  }
-}
+/* Dark palette moved to the html.dark block below (source of truth is the
+   toggle, not prefers-color-scheme) — see line ~470. */
 
 @theme inline {
   --font-mono: var(--font-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -155,12 +129,10 @@ html.cursor-wait, html.cursor-wait * {
   background-position: 0 0, 2px 2px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .bg-dither {
-    background-color: var(--background);
-    background-image: radial-gradient(var(--foreground) 1px, transparent 1px),
-                      radial-gradient(var(--foreground) 1px, var(--background) 1px);
-  }
+html.dark .bg-dither {
+  background-color: var(--background);
+  background-image: radial-gradient(var(--foreground) 1px, transparent 1px),
+                    radial-gradient(var(--foreground) 1px, var(--background) 1px);
 }
 
 /* ---------------------------------------------------------------
@@ -254,17 +226,15 @@ html.cursor-wait, html.cursor-wait * {
   transform: translate(1px, 1px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .ghost-brutal-btn {
-    background-color: var(--card);
-    border-color: var(--border);
-    box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.08);
-  }
-  .ghost-brutal-btn:hover {
-    box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.08);
-    background-color: var(--accent);
-    transform: translate(1px, 1px);
-  }
+html.dark .ghost-brutal-btn {
+  background-color: var(--card);
+  border-color: var(--border);
+  box-shadow: 2px 2px 0px 0px rgba(255, 255, 255, 0.08);
+}
+html.dark .ghost-brutal-btn:hover {
+  box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.08);
+  background-color: var(--accent);
+  transform: translate(1px, 1px);
 }
 
 /* Nugget card: per-folder CSS variable hover system */
@@ -279,14 +249,12 @@ html.cursor-wait, html.cursor-wait * {
   background-color: var(--card-accent-bg, var(--card));
 }
 
-@media (prefers-color-scheme: dark) {
-  .nugget-card {
-    border-color: var(--border);
-  }
-  .nugget-card:hover {
-    background-color: var(--background);
-    box-shadow: 4px 4px 0px 0px var(--border);
-  }
+html.dark .nugget-card {
+  border-color: var(--border);
+}
+html.dark .nugget-card:hover {
+  background-color: var(--background);
+  box-shadow: 4px 4px 0px 0px var(--border);
 }
 
 /* Sidebar pill buttons */
@@ -318,18 +286,16 @@ html.cursor-wait, html.cursor-wait * {
   color: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .pill-btn {
-    border-color: var(--border);
-    color: var(--foreground);
-    background-color: transparent;
-  }
-  .pill-btn:hover,
-  .pill-btn.active {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-color: var(--primary);
-  }
+html.dark .pill-btn {
+  border-color: var(--border);
+  color: var(--foreground);
+  background-color: transparent;
+}
+html.dark .pill-btn:hover,
+html.dark .pill-btn.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 
 /* Collapsed sidebar: icon-only circle buttons */
@@ -351,17 +317,15 @@ html.cursor-wait, html.cursor-wait * {
   color: #fff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .pill-btn-icon {
-    border-color: var(--border);
-    color: var(--foreground);
-  }
-  .pill-btn-icon:hover,
-  .pill-btn-icon.active {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-color: var(--primary);
-  }
+html.dark .pill-btn-icon {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+html.dark .pill-btn-icon:hover,
+html.dark .pill-btn-icon.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
 }
 
 /* Digest body — raw text from digest.py's render_* functions: bare \n newlines
@@ -427,6 +391,27 @@ html.dark .digest-quote {
   left: 0;
   font-style: normal;
   color: var(--brand-yellow);
+}
+.digest-vault-link {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.digest-box {
+  border: 1px solid var(--border-muted);
+  padding: 12px 16px;
+  margin: 4px 0 14px 0;
+}
+.digest-box-headline {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+.digest-box .digest-metric {
+  border-bottom: none;
+  padding: 1px 0;
+  font-size: 12px;
 }
 .digest-bullet,
 .digest-metric {
