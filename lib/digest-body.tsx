@@ -1,21 +1,31 @@
 import type { ReactNode } from 'react'
 
 // Bot-generated digest text (digest.py) uses a fixed line vocabulary:
-// border rows ("////…", "====…", "####…"), separator rows ("────…", "━━━━…"),
-// "🤖/🔥/⚡︎/🧠/📊/💡/⏳ label:" section headers, "[bracket]" CTA lines,
-// " ▪ label: value" metrics, " ▪ <a>…</a>" links, "  ● SEASON" / "    • sentence"
-// year-in-review rows, and quoted "insight" paragraphs. This parses those into
-// styled blocks instead of dumping raw pre-wrap text.
-const BORDER_RE = /^[/=#]{10,}$/
-const HEADER_LINE_RE = /^(weekly digest|monthly digest|\d{4} wrapped)\s*\/\//i
+// border rows ("════…"), separator rows ("━━━━…"), "┌─ label ─┐" / "└──┘"
+// stat callout boxes, "🤖/📊/💡 text" lines, "👉 read this in my vault: <a>…</a>"
+// self-links, "[bracket]" CTA lines, "label · value" facts, numbered clusters
+// with inline "▪ <a>…</a> ▪ <a>…</a>" links, and "● SEASON — sentence" rows.
+// This parses those into styled blocks instead of dumping raw pre-wrap text.
+//
+// Older/legacy-format digests (pre-2026-07-03 redesign) used a different
+// vocabulary — "////…"/"===…"/"###…" borders, quoted "insight" paragraphs,
+// " ▪ label: value" metrics, "  ● SEASON" / "    • sentence" rows. Those
+// patterns are kept alongside the new ones so old rows in the DB still
+// render without breaking.
+const BORDER_RE = /^[/=#═]{10,}$/
+const HEADER_LINE_RE = /^my (week|month|\d{4})\s*\/\//i
 const SEP_RE = /^[─━-]{10,}$/
 const SECTION_RE = /^(🤖|🔥|⚡︎|🧠|📊|💡|⏳)\s*(.+)$/u
+const VAULT_LINK_RE = /^👉\s*(.+)$/u
 const BRACKET_CTA_RE = /^\[(.+)]$/
 const QUOTE_RE = /^"(.*)"$/
 const CLUSTER_RE = /^\s*(\d{2})\s*\/\s*(.*)$/
 const BULLET_RE = /^(\s*)▪\s?(.*)$/
 const DOT_RE = /^(\s*)([●•])\s?(.*)$/
 const METRIC_RE = /^([A-Za-z][A-Za-z .]{2,20}):\s*(.*)$/
+const DASH_METRIC_RE = /^\s*([a-z][a-z ]{2,20}?)\s+·\s+(.*)$/i
+const BOX_TOP_RE = /^┌─.*─┐$/
+const BOX_BOTTOM_RE = /^└─+┘$/
 
 export function renderDigestBody(bodyHtml: string): ReactNode[] {
   const lines = bodyHtml.split('\n')
@@ -23,6 +33,22 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
   let key = 0
   let sawFirstHeader = false
   let spacer = false
+  let inBox = false
+  let boxHeadline = true
+  let boxChildren: ReactNode[] = []
+
+  const closeBox = () => {
+    if (inBox) {
+      blocks.push(
+        <div key={key++} className="digest-box">
+          {boxChildren}
+        </div>
+      )
+    }
+    inBox = false
+    boxHeadline = true
+    boxChildren = []
+  }
 
   for (const line of lines) {
     if (BORDER_RE.test(line)) continue
@@ -38,8 +64,52 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
     const applySpacer = spacer && blocks.length > 0
     spacer = false
 
+    if (BOX_TOP_RE.test(line)) {
+      closeBox()
+      inBox = true
+      boxHeadline = true
+      continue
+    }
+    if (BOX_BOTTOM_RE.test(line)) {
+      closeBox()
+      continue
+    }
+    if (inBox) {
+      const content = line.trim()
+      const dashMetric = content.match(DASH_METRIC_RE)
+      if (boxHeadline) {
+        boxChildren.push(
+          <div key={boxChildren.length} className="digest-box-headline"
+               dangerouslySetInnerHTML={{ __html: content }} />
+        )
+        boxHeadline = false
+      } else if (dashMetric) {
+        boxChildren.push(
+          <div key={boxChildren.length} className="digest-metric">
+            <span className="digest-metric-label">{dashMetric[1].trim()}</span>
+            <span className="digest-metric-value"
+                  dangerouslySetInnerHTML={{ __html: dashMetric[2] }} />
+          </div>
+        )
+      } else {
+        boxChildren.push(
+          <div key={boxChildren.length} dangerouslySetInnerHTML={{ __html: content }} />
+        )
+      }
+      continue
+    }
+
     if (SEP_RE.test(line)) {
       blocks.push(<hr key={key++} className="digest-sep" />)
+      continue
+    }
+
+    const vaultLink = line.match(VAULT_LINK_RE)
+    if (vaultLink) {
+      blocks.push(
+        <div key={key++} className={`digest-vault-link${applySpacer ? ' digest-mt' : ''}`}
+             dangerouslySetInnerHTML={{ __html: vaultLink[1] }} />
+      )
       continue
     }
 
@@ -127,6 +197,18 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       continue
     }
 
+    const dashMetric = line.match(DASH_METRIC_RE)
+    if (dashMetric) {
+      blocks.push(
+        <div key={key++} className={`digest-metric${applySpacer ? ' digest-mt' : ''}`}>
+          <span className="digest-metric-label">{dashMetric[1].trim()}</span>
+          <span className="digest-metric-value"
+                dangerouslySetInnerHTML={{ __html: dashMetric[2] }} />
+        </div>
+      )
+      continue
+    }
+
     blocks.push(
       <p
         key={key++}
@@ -135,6 +217,8 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       />
     )
   }
+
+  closeBox()
 
   return blocks
 }

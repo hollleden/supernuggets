@@ -112,10 +112,13 @@ summary
 fact-check / mentioned / description / transcript(или content/article) / tags / source
 ```
 
-### 1.12 Дайджесты (`digest.py`)
-"my week // {период}", "🤖 insights:", "🔥 what you were into:", "⚡︎ other folders:", "[⚡︎ go sort your mess]", "💡 notes:", месячный — "my month // {период}", "🧠 top clusters:", "📊 metrics:", годовой — "my {year} //", "⏳ the {year} kaleidoscope:".
+### 1.12 Дайджесты (`digest.py`) — Wrapped-редизайн (2026-07-03)
 
-**Важно:** `insights` и `notes` — это генерируемый Claude текст по системным промптам с заданным тоном (sharp/dry для insights, "как BMO из Adventure Time" для notes) — если менять голос бота, промпты тоже переписывать.
+Единый скелет для всех трёх типов, масштабируется по объёму: заголовок с датой в карточном формате (`DD.MM–DD.MM.YYYY` неделя, `MM.YYYY` месяц, `YYYY` год) → `🤖 {insight}` (без кавычек, ведёт как герой-нарратив) → стат-карточка `┌─ label ─┐` (главный факт периода: топ-папка/тема, соседние строки `biggest day · …`, `longest streak · …`, у месяца/года ещё `main character · …`) → у года дополнительно `the seasons` (`● SEASON — описание`, одна строка на сезон) → у месяца/года `top clusters` / `themes of the year` (нумерованные AI-кластеры с инлайн-ссылками `▪ <a>…</a> ▪ <a>…</a>`) → одна строка `📊 saves · active days · дельта` → CTA-бренд-скобка (`[⚡︎ go sort your mess]` / `[⚡︎ captured today, remembered forever]` / `[⚡︎ stop cluttering your camera roll]`, без изменений) → `👉 read this in my vault: <a>…</a>` (ссылка на конкретную запись `/digests/{id}` в волте, не на общий волт) → `💡 {hygiene_note}`.
+
+**Убрано:** отдельные секции "top folders"/"other folders" со списком всех ссылок на записи (неделя больше не перечисляет каждую сохранёнку — только сводная карточка); старая многострочная "metrics"-таблица (`▪ Total saved : … / ▪ Active days : …`) схлопнута в одну строку `📊`.
+
+**Важно:** `insights` (🤖) и `hygiene_note` (💡) — генерируемый Claude текст по системным промптам с заданным тоном (sharp/dry для insights, "как BMO из Adventure Time" для hygiene) — не менялись в этом проходе, промпты уже соответствуют новому формату. Кластеры (`extract_clusters`) — Claude-группировка сохранёнок по смыслу поперёк папок (не теги, не папки) — см. бэклог CLAUDE.md про переиспользование кластеров вне дайджестов.
 
 ## 2. САЙТ (`~/supernuggets`)
 
