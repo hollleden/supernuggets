@@ -68,10 +68,18 @@ export default function PrivacyPage() {
               Who can see it
             </h2>
             <p>
-              Only you. Your vault is reachable only via a private,
-              unguessable link tied to your account. Database-level access
-              controls (Row Level Security) enforce that your data can only
-              be read or written through your own link.
+              Only you — by default. Your vault is reachable only via a
+              private, unguessable link tied to your account; there is no
+              username/password login. Database-level access controls (Row
+              Level Security) enforce that your data can only be read or
+              written through that link.
+            </p>
+            <p className="mt-3">
+              This means the link itself <em>is</em> the access control:
+              anyone you send it to can open your entire vault, no separate
+              login required. Treat it like a password — don&apos;t post it
+              publicly or forward it to anyone you don&apos;t want seeing
+              your saved content.
             </p>
           </section>
 
