@@ -228,6 +228,12 @@ export default async function LandingPage() {
       <footer className="max-w-5xl mx-auto px-6 py-5 border-t border-black/[0.06]">
         <div className="flex items-center justify-end gap-5">
           <Link
+            href="/privacy"
+            className="font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground/40 hover:text-foreground transition-colors"
+          >
+            ⬈ privacy
+          </Link>
+          <Link
             href="https://github.com/hollleden/supernuggets"
             target="_blank"
             rel="noopener noreferrer"
