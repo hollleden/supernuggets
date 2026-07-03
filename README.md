@@ -63,7 +63,6 @@ Paste a link from any of these platforms and the bot will download and process i
 | YouTube | Shorts only (longer videos are out of scope) |
 | Twitter / X | Video posts |
 | Pinterest | Video pins |
-| Reddit | Video posts |
 | Threads | Video posts |
 
 For video links, the bot downloads the clip, transcribes it, and files the resulting nugget with a link back to the original. Per-platform duration caps keep ingest times short and costs bounded; clips longer than the cap return a rejection message rather than processing.
