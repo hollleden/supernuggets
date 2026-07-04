@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams, usePathname, useSearchParams } from 'next/navigation'
 import { Sidebar } from './sidebar'
+import { BottomNav } from './bottom-nav'
 import { CursorWaitOnNav } from './cursor-wait-nav'
 import { pickRandomNuggetId } from '@/app/actions/nuggets'
 import { VaultStatsProvider, useVaultStats } from '@/lib/vault-stats-context'
@@ -81,24 +82,16 @@ function HeaderSearch() {
 // ─── Mobile overlay menu ─────────────────────────────────────────────────────
 
 interface MobileMenuProps {
-  isDarkMode: boolean
-  onToggleDarkMode: () => void
-  onResurface: () => void
   onClose: () => void
 }
 
-function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }: MobileMenuProps) {
-  const pathname = usePathname()
+function MobileMenuInner({ onClose }: MobileMenuProps) {
   const router = useRouter()
   const params = useParams<{ token?: string }>()
   const searchParams = useSearchParams()
   const tokenPrefix = params?.token ? `/u/${params.token}` : ''
   const homeHref = tokenPrefix || '/'
-  const statsHref = tokenPrefix ? `${tokenPrefix}/stats` : '/stats'
   const digestsHref = tokenPrefix ? `${tokenPrefix}/digests` : '/digests'
-  const isHome = pathname === homeHref
-  const isStats = pathname === statsHref
-  const isDigests = pathname?.startsWith(digestsHref) ?? false
   const { folderCounts } = useVaultStats()
   const activeFolder = (searchParams.get('folder') ?? 'all') as FolderType
 
@@ -112,19 +105,9 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
   }
 
   return (
-    <div className="fixed inset-0 z-30 bg-card pt-14 overflow-y-auto md:hidden">
+    <div className="fixed inset-0 z-30 bg-card pt-14 pb-8 overflow-y-auto md:hidden">
       <div className="p-4 space-y-4">
         <div>
-          <div className="text-[13px] font-black tracking-widest text-muted-foreground mb-2">// navigation</div>
-          <div className="flex flex-col gap-1.5">
-            <button onClick={() => { onResurface(); onClose() }} className="pill-btn justify-start"><span>✨</span> random nugget</button>
-            <a href={statsHref} onClick={onClose} className={cn('pill-btn justify-start', isStats && 'active')}><span>📈</span> stats</a>
-            <a href={digestsHref} onClick={onClose} className={cn('pill-btn justify-start', isDigests && 'active')}><span>📊</span> digests</a>
-          </div>
-        </div>
-
-        <div className="border-t border-black/10 pt-4">
-          <div className="text-[13px] font-black tracking-widest text-muted-foreground mb-2">// folders</div>
           <div className="grid grid-cols-2 gap-1.5">
             {FOLDERS.filter(f => f !== 'all').sort((a, b) => a.localeCompare(b)).map((folder) => {
               const isActive = folder === activeFolder
@@ -144,12 +127,12 @@ function MobileMenuInner({ isDarkMode, onToggleDarkMode, onResurface, onClose }:
         </div>
 
         <div className="border-t border-black/10 pt-4 flex flex-col gap-1.5">
+          <a href={digestsHref} onClick={onClose} className="pill-btn justify-start opacity-50 hover:opacity-80">
+            <CalendarIcon size={12} /> digests
+          </a>
           <a href="https://t.me/supernuggetss_bot" target="_blank" rel="noopener noreferrer" className="pill-btn justify-start opacity-50 hover:opacity-80" onClick={onClose}>
             <BotIcon size={12} /> open bot
           </a>
-          <button onClick={() => { onToggleDarkMode(); onClose() }} className="pill-btn justify-start opacity-50 hover:opacity-80">
-            {isDarkMode ? <SunIcon size={12} /> : <MoonIcon size={12} />} {isDarkMode ? 'light mode' : 'dark mode'}
-          </button>
         </div>
       </div>
     </div>
@@ -342,10 +325,10 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         {/* Mobile burger */}
         <button
           onClick={() => setIsMobileMenuOpen(v => !v)}
-          className="md:hidden font-mono text-2xl leading-none p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label="Toggle menu"
         >
-          {isMobileMenuOpen ? '✕' : '☰'}
+          {isMobileMenuOpen ? <CloseIcon size={16} /> : <HamburgerIcon size={19} />}
         </button>
       </header>
 
@@ -355,19 +338,23 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(v => !v)}
         />
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 pb-16 md:pb-0">
           {children}
         </main>
       </div>
 
-      {/* Mobile overlay */}
-      {isMobileMenuOpen && (
-        <MobileMenu
+      {/* Mobile bottom nav (thumb-reachable primary actions) */}
+      {!isMobileMenuOpen && (
+        <BottomNav
           isDarkMode={isDarkMode}
           onToggleDarkMode={() => { setUserToggled(true); setIsDarkMode(v => !v) }}
           onResurface={handleResurface}
-          onClose={() => setIsMobileMenuOpen(false)}
         />
+      )}
+
+      {/* Mobile overlay (folders + settings only) */}
+      {isMobileMenuOpen && (
+        <MobileMenu onClose={() => setIsMobileMenuOpen(false)} />
       )}
 
       {/* ── Easter egg: speech bubble ── */}

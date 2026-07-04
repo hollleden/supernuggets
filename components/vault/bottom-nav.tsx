@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useParams } from 'next/navigation'
-import { Grid3X3, Sparkles, Moon, Sun, Activity } from 'lucide-react'
+import { NuggetIcon, RandomIcon, StatsIcon, MoonIcon, SunIcon } from './pixel-icons'
 import { cn } from '@/lib/utils'
 
 // Mobile-only bottom nav. Mirrors the desktop sidebar's nav items but as a
@@ -25,26 +25,26 @@ export function BottomNav({ isDarkMode, onToggleDarkMode, onResurface }: BottomN
   const isStats = pathname === statsHref
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card border-t-2 border-foreground flex md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card border-t-2 border-foreground flex md:hidden pb-[env(safe-area-inset-bottom)]">
       <BottomItem
         href={homeHref}
-        icon={<Grid3X3 className="w-4 h-4" />}
+        icon={<NuggetIcon size={16} />}
         label="browse"
         isActive={isHome}
       />
       <BottomItem
-        icon={<Sparkles className="w-4 h-4" />}
+        icon={<RandomIcon size={16} />}
         label="resurface"
         onClick={onResurface}
       />
       <BottomItem
         href={statsHref}
-        icon={<Activity className="w-4 h-4" />}
+        icon={<StatsIcon size={16} />}
         label="stats"
         isActive={isStats}
       />
       <BottomItem
-        icon={isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        icon={isDarkMode ? <SunIcon size={16} /> : <MoonIcon size={16} />}
         label={isDarkMode ? 'light' : 'dark'}
         onClick={onToggleDarkMode}
       />
