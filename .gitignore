@@ -35,6 +35,7 @@ yarn-error.log*
 next-env.d.ts
 
 # internal docs — keep locally only, never push to GitHub
+BACKLOG.md
 BRAND.md
 CHANGELOG.md
 CLAUDE.md
