@@ -7,7 +7,22 @@
 ### 1.1 Меню команд (`bot.py` → `set_my_commands`)
 `/start` — "about supernuggets", `/help` — "user guide", `/myvault` — "get my vault link", `/timezone` — "set my timezone for digests", `/digest_on` — "i want to receive digests", `/digest_off` — "i don't want to receive digests", `/digest_status` — "show my digest preferences"
 
-### 1.2 `/start` и `/help` (`_build_start_text()`) — только манифест, без vault-ссылки (та отдельным сообщением, см. 1.3)
+### 1.1b Постоянное reply-меню (`MAIN_KEYBOARD`, 6 кнопок, `is_persistent=True`, обновлено 2026-07-04)
+`📁 my vault` · `❓ help` · `📍 send location` (шлёт локацию напрямую через `request_location=True` — определяет таймзону; раньше называлась `⏰ timezone`, переименована, т.к. пользователь путался, что кнопка не про "включить таймзону", а про "прислать геолокацию") · `📊 digest status` · `✅ digest on` · `🚫 digest off`. Показывается сразу на `/start`, остаётся видимым постоянно.
+
+### 1.2a `/start` (`_build_start_text()`) — только манифест, без vault-ссылки и без списка команд (обновлено 2026-07-04 — команды вынесены в отдельную `_build_help_text()`, см. 1.2b)
+
+```
+supernuggets
+----------------------------------
+okay here's the deal — think of me as your personal AI chef: send me text, screenshots, voice notes, video circles, or regular videos, and I'll break it down, fact-check it, tag it, and file it into your vault so you can actually find it again. paste a tiktok, youtube short, twitter/x, pinterest, or threads link and I'll pull it in the same way.
+
+oh, and you'll get a digest every week, month, and year — a recap of everything you've saved, so it's not just sitting there being ignored. the web vault also has stats, search, and a "surprise me" button if you want to get re-acquainted with old saves.
+```
+
+`/start` шлёт 3 сообщения подряд: (1) манифест выше, (2) vault-ссылка (см. 1.3), (3) `"one last thing — tap 📍 send location in the menu below so i can figure out your timezone for digests"` вместе с показом `MAIN_KEYBOARD`.
+
+### 1.2b `/help` (`_build_help_text()`) — манифест + полный список команд
 
 ```
 supernuggets
@@ -26,6 +41,9 @@ commands:
 ```
 
 Список ссылок ограничен платформами, реально протестированными и рабочими на 2026-07-02 (tiktok, youtube shorts, twitter/x, pinterest, threads). Instagram, reddit, обычные статьи — не работают сейчас (см. CLAUDE.md backlog), в текст не включены до починки.
+
+### 1.2c `/timezone` (повторный вызов, для смены локации позже) — короткое напоминание про кнопку
+`"tap 📍 send location in the menu below — i'll detect your timezone from it"`
 
 ### 1.3 `/myvault` и vault-сообщение (`_build_vault_message()`) — отправляется отдельным сообщением на `/start` и по команде `/myvault`, специально чтобы можно было запинить его отдельно от манифеста
 
