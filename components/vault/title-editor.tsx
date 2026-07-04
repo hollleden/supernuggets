@@ -76,14 +76,14 @@ export function TitleEditor({ nuggetId, initialTitle, token }: TitleEditorProps)
         <div className="flex items-center gap-2">
           <button
             onClick={handleSave}
-            className="p-1.5 flex items-center rounded-[4px] border border-emerald-500 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
+            className="w-11 h-11 flex items-center justify-center rounded-[4px] border border-emerald-500 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
             aria-label="save"
           >
             <Check className="w-4 h-4" />
           </button>
           <button
             onClick={handleCancel}
-            className="p-1.5 flex items-center rounded-[4px] border border-gray-300 dark:border-neutral-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
+            className="w-11 h-11 flex items-center justify-center rounded-[4px] border border-gray-300 dark:border-neutral-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors"
             aria-label="cancel"
           >
             <X className="w-4 h-4" />
@@ -103,7 +103,7 @@ export function TitleEditor({ nuggetId, initialTitle, token }: TitleEditorProps)
       </h1>
       <button
         onClick={() => setIsEditing(true)}
-        className="absolute top-0 -right-8 p-1.5 flex items-center rounded-[4px] border border-gray-200 dark:border-neutral-700 text-gray-400 dark:text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-neutral-600"
+        className="absolute top-0 -right-11 w-11 h-11 flex items-center justify-center rounded-[4px] border border-gray-200 dark:border-neutral-700 text-gray-400 dark:text-neutral-600 opacity-0 group-hover:opacity-100 transition-opacity hover:text-black dark:hover:text-white hover:border-gray-300 dark:hover:border-neutral-600"
         aria-label="edit title"
       >
         <Edit2 className="w-4 h-4" />

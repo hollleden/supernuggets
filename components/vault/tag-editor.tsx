@@ -55,7 +55,7 @@ export function TagEditor({ nuggetId, initialTags, token }: TagEditorProps) {
   }
 
   return (
-    <div className="flex flex-wrap gap-x-3 gap-y-2 items-center">
+    <div className="flex flex-wrap gap-x-1 gap-y-1 items-center">
       {tags.map(tag => (
         <span
           key={tag}
@@ -63,13 +63,13 @@ export function TagEditor({ nuggetId, initialTags, token }: TagEditorProps) {
         >
           <Link
             href={`/u/${token}?q=${encodeURIComponent(tag)}`}
-            className="hover:text-foreground"
+            className="hover:text-foreground py-1.5"
           >
             #{tag}
           </Link>
           <button
             onClick={() => handleRemove(tag)}
-            className="ml-1 opacity-40 hover:opacity-100 hover:text-destructive transition-opacity"
+            className="p-2.5 -m-1 opacity-40 hover:opacity-100 hover:text-destructive transition-opacity"
             aria-label={`remove ${tag}`}
           >
             <X className="w-3 h-3" />

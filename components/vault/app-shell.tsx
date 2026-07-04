@@ -59,7 +59,7 @@ function HeaderSearchInner() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Find a nugget..."
-        className="w-full bg-transparent font-mono text-[14px] font-bold focus:outline-none placeholder:text-neutral-400 tracking-wider py-0.5 text-foreground"
+        className="w-full bg-transparent font-mono text-[16px] font-bold focus:outline-none placeholder:text-neutral-400 tracking-wider py-0.5 text-foreground"
       />
     </div>
   )

@@ -42,18 +42,19 @@ export function NuggetMetaBar({ nuggetId, token, folder, date }: Props) {
         </span>
         <div className="flex items-center gap-2">
           <Tip label="Favourites">
-            <button className="p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+            <button className="w-11 h-11 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
               <HeartIcon size={14} />
             </button>
           </Tip>
           <Tip label="Share">
-            <button className="p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
+            <button className="w-11 h-11 flex items-center justify-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors text-foreground/40">
               <PlaneIcon size={14} />
             </button>
           </Tip>
           <Tip label="Folder">
             <FolderEditor nuggetId={nuggetId} initialFolder={folder} token={token} />
           </Tip>
+          <div className="w-px h-6 bg-black/10 dark:bg-white/10 mx-1" aria-hidden />
           <Tip label="Delete">
             <DeleteButton nuggetId={nuggetId} token={token} variant="icon" />
           </Tip>

@@ -47,7 +47,7 @@ export const FolderEditor = forwardRef<HTMLSpanElement, FolderEditorProps>(
           value={folder}
           onChange={(e) => handleChange(e.target.value)}
           disabled={saving}
-          className="font-mono text-[10px] font-bold uppercase tracking-wider bg-card border border-black/15 dark:border-white/10 py-1.5 px-2 pr-7 appearance-none rounded-[4px] focus:outline-none hover:bg-foreground hover:text-background transition-colors disabled:opacity-50"
+          className="font-mono text-[10px] font-bold uppercase tracking-wider bg-card border border-black/15 dark:border-white/10 h-11 py-1.5 px-2 pr-7 appearance-none rounded-[4px] focus:outline-none hover:bg-foreground hover:text-background transition-colors disabled:opacity-50"
           style={{ color }}
         >
           {FOLDERS.filter(f => f !== 'all').map(f => (
