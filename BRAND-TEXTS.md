@@ -127,7 +127,11 @@ VIDEO_TOO_LONG — "too long — {duration}s, limit for {ekey} is {cap}s. trim i
 summary
 • буллет
 --------------------
-fact-check / mentioned / description / transcript(или content/article) / tags / source
+receipts (было fact-check, переименовано 2026-07-04)
+!!! verify before you trust it — ai and the internet can both be wrong
+▪ ссылка на claim · хеджированное мнение модели (не вердикт, не пересказ транскрипта)
+--------------------
+mentioned / description / transcript(или content/article) / tags / source
 ```
 
 ### 1.12 Дайджесты (`digest.py`) — Wrapped-редизайн (2026-07-03)
@@ -170,7 +174,7 @@ name/short_name "supernuggets"
 "i'm actually obsessed with how empty this is. / nothing found. seriously, go outside. the sun is literally waiting for you." + кнопка "RESET"
 
 ### 2.6 Страница нагетта
-секции `summary · fact-check · mentioned · description · transcript · tags · source · links`; "Delete this nugget? Once it's gone from the vault, it can't come back."
+секции `summary · receipts (было fact-check) · mentioned · description · transcript · tags · source · links`; receipts-секция теперь без `✓` (было ложное "подтверждено") — нейтральный `▪` + одна строка ворнинга "!!! verify before you trust it — ai and the internet can both be wrong"; "Delete this nugget? Once it's gone from the vault, it can't come back."
 
 ### 2.7 Статистика
 "total nuggets in vault", "daily streak", "last 30 days", "folder breakdown"

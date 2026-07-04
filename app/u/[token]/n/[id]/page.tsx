@@ -179,15 +179,18 @@ export default async function NuggetPage({
               </>
             )}
 
-            {/* 2. FACT-CHECK */}
+            {/* 2. RECEIPTS (formerly FACT-CHECK) */}
             {nugget.factChecks.length > 0 && (
               <>
                 <hr className="border-t border-gray-200 dark:border-neutral-700 my-4" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">fact-check</div>
+                <div className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-3">receipts</div>
+                <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-3">
+                  !!! verify before you trust it — ai and the internet can both be wrong
+                </div>
                 {nugget.factChecks.map((fc, i) => (
                   <div key={i} className="mb-2">
                     <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5 uppercase tracking-tight">
-                      <span className="text-emerald-600 font-black">✓</span>
+                      <span className="text-gray-400 font-black">▪</span>
                       {fc.searchQuery ? (
                         <a
                           href={`https://www.google.com/search?q=${encodeURIComponent(fc.searchQuery)}`}
