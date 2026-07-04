@@ -8,7 +8,9 @@ import { FOLDERS, FOLDER_COLOR_HEX, type FolderType } from '@/lib/nuggets'
 import { DotIcon } from './pixel-icons'
 import { useVaultStats } from '@/lib/vault-stats-context'
 
-const ANCHOR_THRESHOLD = 1
+// Sidebar shows only tags that cluster >=2 posts — one-off tags stay on their
+// posts (searchable, shown on detail pages) but drop out of the browse list.
+const ANCHOR_THRESHOLD = 2
 
 const FOLDER_LABELS: Record<FolderType, string> = {
   all: 'all', skin: 'skin', make: 'make', food: 'food',
