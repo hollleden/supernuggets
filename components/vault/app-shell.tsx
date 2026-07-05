@@ -53,7 +53,7 @@ function HeaderSearchInner() {
   }, [query])
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-[4px] border border-black/15 dark:border-white/10 w-full">
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-black/[0.03] dark:bg-white/[0.05] w-full">
       <SearchIcon size={13} className="text-foreground/30 dark:text-[#FFF200] pointer-events-none" />
       <input
         type="text"
@@ -233,7 +233,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         {/* Logo + sidebar toggle */}
         <div
           className={cn(
-            'flex items-center shrink-0 transition-all duration-200 border-r border-black/20 dark:border-white/10 self-stretch',
+            'flex items-center shrink-0 transition-all duration-200 self-stretch',
             isSidebarCollapsed
               ? 'md:w-[72px] px-1 gap-1 justify-center'
               : 'md:w-[220px] px-2 gap-1.5'
@@ -287,7 +287,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
         <div className="hidden md:flex flex-1" />
 
         {/* Action buttons */}
-        <div className="hidden md:flex items-center gap-1 px-3 relative z-10">
+        <div className="hidden md:flex items-center gap-0.5 px-3 relative z-10 rounded-[12px] bg-black/[0.03] dark:bg-white/[0.05] p-1">
           {([
             { label: 'random',    icon: <RandomIcon size={14} />,    onClick: handleResurface,                                   as: 'button' },
             { label: 'stats',     icon: <StatsIcon size={14} />,     href: token ? `/u/${token}/stats` : '/stats',               as: 'link' },
@@ -297,8 +297,8 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             { label: 'text scale', icon: <TextScaleIcon size={14} />, as: 'stub' },
             { label: 'sort',      icon: <SortIcon size={14} />,      as: 'stub' },
           ] as const).map((item) => {
-            const btnCls = 'p-1.5 flex items-center rounded-[4px] border border-black/15 dark:border-white/10 hover:bg-foreground hover:text-background transition-colors'
-            const stubCls = 'p-1.5 flex items-center rounded-[4px] border border-black/8 dark:border-white/6 opacity-25 cursor-not-allowed'
+            const btnCls = 'p-1.5 flex items-center rounded-[8px] hover:bg-foreground hover:text-background transition-colors'
+            const stubCls = 'p-1.5 flex items-center rounded-[8px] opacity-25 cursor-not-allowed'
             if (item.as === 'stub') return (
               <Tip key={item.label} label={item.label}>
                 <button className={stubCls} disabled>{item.icon}</button>
