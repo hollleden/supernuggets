@@ -103,7 +103,7 @@ export interface EntryRow {
   message_id?: number | null
 }
 
-function parseTags(raw: EntryRow['tags']): string[] {
+export function parseTags(raw: EntryRow['tags']): string[] {
   if (!raw) return []
   if (Array.isArray(raw)) return raw.map(String).map(t => t.trim()).filter(Boolean)
   const s = String(raw).trim()
@@ -295,4 +295,22 @@ export function sourceHeaderLine(info: SourceInfo): string {
   const dur = formatDuration(info.durationS)
   if (dur) bits.push(dur)
   return bits.join(' · ')
+}
+
+/**
+ * Folder + tag counts across the whole vault — used to keep the sidebar's
+ * folder/tag list populated on every route (stats, digests, nugget detail),
+ * not just the main grid page where per-page filtered counts are computed.
+ */
+export function computeFolderTagCounts(entries: { folder: string; tags: string[] }[]) {
+  const folderCounts: Record<string, number> = { all: entries.length }
+  const tagCounts: Record<string, number> = {}
+  for (const e of entries) {
+    folderCounts[e.folder] = (folderCounts[e.folder] ?? 0) + 1
+    for (const t of e.tags) {
+      const tag = t.toLowerCase()
+      tagCounts[tag] = (tagCounts[tag] ?? 0) + 1
+    }
+  }
+  return { folderCounts, tagCounts, total: entries.length }
 }

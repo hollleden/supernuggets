@@ -379,12 +379,32 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
   )
 }
 
+// ─── Vault stats publisher ────────────────────────────────────────────────────
+// Publishes the whole-vault folder/tag counts (fetched server-side once per
+// layout render) so the sidebar has data on every route — not just the main
+// grid page, which additionally re-publishes its own live-filtered counts.
+
+interface VaultStatsSeed {
+  folderCounts: Record<string, number>
+  tagCounts: Record<string, number>
+  total: number
+}
+
+function VaultStatsPublisher({ stats }: { stats: VaultStatsSeed }) {
+  const { setVaultStats } = useVaultStats()
+  useEffect(() => {
+    setVaultStats(stats.total, stats.total, stats.folderCounts, stats.tagCounts)
+  }, [stats, setVaultStats])
+  return null
+}
+
 // ─── Public export ────────────────────────────────────────────────────────────
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, initialStats }: { children: React.ReactNode; initialStats?: VaultStatsSeed }) {
   return (
     <VaultStatsProvider>
       <CursorWaitOnNav />
+      {initialStats && <VaultStatsPublisher stats={initialStats} />}
       <AppShellInner>{children}</AppShellInner>
     </VaultStatsProvider>
   )

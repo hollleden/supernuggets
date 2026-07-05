@@ -87,10 +87,10 @@ function SidebarInner({
                     key={folder}
                     onClick={() => handleFolderClick(folder)}
                     className={cn(
-                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-md',
+                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-[8px]',
                       isActive
                         ? 'text-foreground font-black'
-                        : 'text-muted-foreground hover:text-foreground'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                     )}
                     style={isActive ? { backgroundColor: color + '18' } : {}}
                   >
@@ -122,10 +122,10 @@ function SidebarInner({
                     key={tag}
                     onClick={() => handleTagClick(tag)}
                     className={cn(
-                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-md',
+                      'font-mono text-[13px] tracking-wider px-2 py-1 text-left transition-all flex items-center justify-between rounded-[8px]',
                       activeTag === tag
                         ? 'text-foreground font-black bg-black/8 dark:bg-white/10'
-                        : 'text-muted-foreground hover:text-foreground'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                     )}
                   >
                     <span>#{tag}</span>
@@ -149,8 +149,8 @@ function SidebarInner({
                     <button
                       onClick={() => handleFolderClick(folder)}
                       className={cn(
-                        'mx-auto flex items-center justify-center w-10 h-8 rounded-md transition-all',
-                        isActive ? '' : 'opacity-55 hover:opacity-90'
+                        'mx-auto flex items-center justify-center w-10 h-8 rounded-[8px] transition-all',
+                        isActive ? '' : 'opacity-55 hover:opacity-90 hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                       )}
                       style={isActive ? { backgroundColor: color + '18' } : {}}
                     >
