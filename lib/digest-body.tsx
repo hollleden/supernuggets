@@ -1,4 +1,27 @@
 import type { ReactNode } from 'react'
+import sanitizeHtml from 'sanitize-html'
+
+// Defense-in-depth: `body_html` comes from the bot (digest.py), which already
+// html.escape()s all text and only ever emits <a href> and <pre> tags. But this
+// renderer feeds it straight into dangerouslySetInnerHTML in ~11 spots, so we do
+// NOT trust the DB value — a future bot change, a direct DB edit, or a missed
+// escape upstream must not be able to inject script into a shared vault page.
+// Allowlist exactly the digest grammar: <a>/<pre> tags, href only, http(s) only.
+const DIGEST_SANITIZE_OPTS: sanitizeHtml.IOptions = {
+  allowedTags: ['a', 'pre'],
+  allowedAttributes: { a: ['href'] },
+  allowedSchemes: ['http', 'https'],
+  // script/style contents are dropped by default (nonTextTags); unknown tags are
+  // discarded but their text kept, so legitimate copy never disappears.
+  disallowedTagsMode: 'discard',
+}
+
+// Sanitize a single HTML fragment right before it is handed to
+// dangerouslySetInnerHTML. Applied per-fragment (after line parsing) so it can
+// never interfere with the pattern matching in renderDigestBody.
+function clean(html: string): string {
+  return sanitizeHtml(html, DIGEST_SANITIZE_OPTS)
+}
 
 // Bot-generated digest text (digest.py) uses a fixed line vocabulary:
 // border rows ("════…"), separator rows ("━━━━…"), "┌─ label ─┐" / "└──┘"
@@ -80,7 +103,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       if (boxHeadline) {
         boxChildren.push(
           <div key={boxChildren.length} className="digest-box-headline"
-               dangerouslySetInnerHTML={{ __html: content }} />
+               dangerouslySetInnerHTML={{ __html: clean(content) }} />
         )
         boxHeadline = false
       } else if (dashMetric) {
@@ -88,12 +111,12 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
           <div key={boxChildren.length} className="digest-metric">
             <span className="digest-metric-label">{dashMetric[1].trim()}</span>
             <span className="digest-metric-value"
-                  dangerouslySetInnerHTML={{ __html: dashMetric[2] }} />
+                  dangerouslySetInnerHTML={{ __html: clean(dashMetric[2]) }} />
           </div>
         )
       } else {
         boxChildren.push(
-          <div key={boxChildren.length} dangerouslySetInnerHTML={{ __html: content }} />
+          <div key={boxChildren.length} dangerouslySetInnerHTML={{ __html: clean(content) }} />
         )
       }
       continue
@@ -108,7 +131,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
     if (vaultLink) {
       blocks.push(
         <div key={key++} className={`digest-vault-link${applySpacer ? ' digest-mt' : ''}`}
-             dangerouslySetInnerHTML={{ __html: vaultLink[1] }} />
+             dangerouslySetInnerHTML={{ __html: clean(vaultLink[1]) }} />
       )
       continue
     }
@@ -142,7 +165,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       blocks.push(
         <blockquote key={key++} className="digest-quote">
           {sentences.map((s, i) => (
-            <p key={i} dangerouslySetInnerHTML={{ __html: s }} />
+            <p key={i} dangerouslySetInnerHTML={{ __html: clean(s) }} />
           ))}
         </blockquote>
       )
@@ -154,7 +177,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       blocks.push(
         <div key={key++} className={`digest-cluster${applySpacer ? ' digest-mt' : ''}`}>
           <span className="digest-cluster-num">{cluster[1]}</span>
-          <span dangerouslySetInnerHTML={{ __html: cluster[2] }} />
+          <span dangerouslySetInnerHTML={{ __html: clean(cluster[2]) }} />
         </div>
       )
       continue
@@ -171,7 +194,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
             <span className="digest-metric-label">{metric[1].trim()}</span>
             <span
               className="digest-metric-value"
-              dangerouslySetInnerHTML={{ __html: metric[2] }}
+              dangerouslySetInnerHTML={{ __html: clean(metric[2]) }}
             />
           </div>
         )
@@ -179,7 +202,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
         blocks.push(
           <div key={key++} className={`digest-bullet${indented ? ' digest-indent' : ''}`}>
             <span className="digest-bullet-mark">▪</span>
-            <span dangerouslySetInnerHTML={{ __html: content }} />
+            <span dangerouslySetInnerHTML={{ __html: clean(content) }} />
           </div>
         )
       }
@@ -191,7 +214,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       const isSeason = dot[2] === '●'
       blocks.push(
         <div key={key++} className={isSeason ? 'digest-season' : 'digest-season-sentence'}>
-          <span dangerouslySetInnerHTML={{ __html: dot[3] }} />
+          <span dangerouslySetInnerHTML={{ __html: clean(dot[3]) }} />
         </div>
       )
       continue
@@ -203,7 +226,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
         <div key={key++} className={`digest-metric${applySpacer ? ' digest-mt' : ''}`}>
           <span className="digest-metric-label">{dashMetric[1].trim()}</span>
           <span className="digest-metric-value"
-                dangerouslySetInnerHTML={{ __html: dashMetric[2] }} />
+                dangerouslySetInnerHTML={{ __html: clean(dashMetric[2]) }} />
         </div>
       )
       continue
@@ -213,7 +236,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       <p
         key={key++}
         className={`digest-line${applySpacer ? ' digest-mt' : ''}`}
-        dangerouslySetInnerHTML={{ __html: line }}
+        dangerouslySetInnerHTML={{ __html: clean(line) }}
       />
     )
   }
