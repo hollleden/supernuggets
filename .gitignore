@@ -55,3 +55,22 @@ placeholder-logo.png
 placeholder-user.jpg
 placeholder.jpg
 placeholder.svg
+
+.playwright/profiles/
+
+# Playwright QA tooling + auth profiles — local only (profiles hold a live vault session)
+.playwright/
+.playwright-cli/
+
+# QA workflow manifests — contain a live vault token; NEVER commit to this public repo
+workflows/
+
+# Security scan report — sensitive findings, keep local only
+MEDUSA Security Report.pdf
+
+# Abandoned hover-effect assets — unreferenced anywhere in code; kept on disk, not shipped
+public/nugget-hover-shine.gif
+public/nugget-hover-shine-320x180.gif
+public/nugget-hover-shine-640x360.gif
+public/nugget-hover-shine-960x540.gif
+public/telegram desc picture.png
