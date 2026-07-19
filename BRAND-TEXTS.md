@@ -134,20 +134,64 @@ receipts (было fact-check, переименовано 2026-07-04)
 mentioned / description / transcript(или content/article) / tags / source
 ```
 
-### 1.12 Дайджесты (`digest.py`) — Wrapped-редизайн (2026-07-03)
+### 1.12 Дайджесты (`digest.py`) — полный ререрайт (2026-07-19, owner-approved)
 
-Единый скелет для всех трёх типов, масштабируется по объёму: заголовок с датой в карточном формате (`DD.MM–DD.MM.YYYY` неделя, `MM.YYYY` месяц, `YYYY` год) → `🤖 what stood out this {week/month/year}` + буллеты-инсайты (см. "Фикс 2026-07-03" ниже) → стат-карточка `┌─ label ─┐` (главный факт периода: топ-папка/тема, соседние строки `biggest day · …`, `longest streak · …`, у месяца/года ещё `main character · …`) → у года дополнительно `the seasons` (`● SEASON — описание`, одна строка на сезон) → у месяца/года `top clusters` / `themes of the year` (нумерованные AI-кластеры с инлайн-ссылками `▪ <a>…</a> ▪ <a>…</a>`) → одна строка `📊 saves · active days · дельта` → CTA-бренд-скобка (`[⚡︎ go sort your mess]` / `[⚡︎ captured today, remembered forever]` / `[⚡︎ stop cluttering your camera roll]`, без изменений) → `👉 read this in my vault: <a>…</a>` (ссылка на конкретную запись `/digests/{id}` в волте, не на общий волт) → `💡 {hygiene_note}`.
+**История версий:** Wrapped-редизайн (2026-07-03, box-эмодзи-скелет) → фрейм/эмодзи очистка (2026-07-19 утро, тот же скелет без рамок) → **этот, финальный формат** (2026-07-19 вечер, полный редизайн после итеративной сессии с владельцем — обе промежуточные версии заменены целиком, детали не сохраняем, они больше не в коде).
 
-**Убрано:** отдельные секции "top folders"/"other folders" со списком всех ссылок на записи (неделя больше не перечисляет каждую сохранёнку — только сводная карточка); старая многострочная "metrics"-таблица (`▪ Total saved : … / ▪ Active days : …`) схлопнута в одну строку `📊`.
+**Почему переделали:** владелец прогнал несколько раундов живой правки прямо в чате (не через файлы) и отверг: (1) любые рамки/линии («супер тупо»), (2) дашборд-стиль цифр («saves · active days · vs last week» — никому не интересно), (3) generic AI-инсайты без привязки к конкретным сохранёнкам, (4) придуманные факты о поведении пользователя («cooking exactly none of them» — бот не знает, готовила ли она). Итог: дайджест — не аналитика, а тёплая записка от волта с конкретными сохранёнками, которые стоит пересмотреть.
 
-**Важно:** инсайты (🤖) и `hygiene_note` (💡) — генерируемый Claude текст по системным промптам с заданным тоном (sharp/dry для инсайтов, "как BMO из Adventure Time" для hygiene). Кластеры (`extract_clusters`) — Claude-группировка сохранёнок по смыслу поперёк папок (не теги, не папки) — см. бэклог CLAUDE.md про переиспользование кластеров вне дайджестов.
+**Новая структура (одна на все три типа: weekly / monthly / yir):**
+```
+your {week/month/{year}} in the vault
 
-**Фикс 2026-07-03 (после первого живого теста):**
-- Изначальный формат саммари (сплошной абзац) оказался нечитаем — сначала попробовали ужать до одного предложения (`maxLength` 500→180), но проблема была не в длине, а в отсутствии форматирования: даже короткий абзац выглядит "простынёй". Финально сменили формат на буллеты, по BRAND.md §5 ("Length — short, always"), с разной глубиной по типу дайджеста:
-  - **Неделя** — заголовок `🤖 what stood out this week` (статичный) + 2-3 буллета (`emit_summary`'s `insights[]`, `maxLength` 90 симв/буллет), промпт `SUMMARY_SYSTEM_PROMPT_SHORT`.
-  - **Месяц/год** — заголовок `🤖 what stood out this month/year` + 4-6 буллетов (`maxLength` 110 симв/буллет, больше материала за период), промпт `SUMMARY_SYSTEM_PROMPT_LONG`.
-  - Технически бесплатно на рендер-стороне: буллеты используют существующий `▪`-формат, который и бот (receipt SUMMARY-секция), и сайт (`lib/digest-body.tsx`'s `BULLET_RE` → `.digest-bullet` CSS) уже умеют показывать — ни CSS, ни парсер сайта не менялись.
-- Стат-карточка `┌─ label ─┐` в Telegram рендерилась кривой (рамка "плывёт") — box-drawing символы верстались из расчёта на моноширинный шрифт, а Telegram рисует обычный текст пропорциональным. Фикс только для Telegram-канала: `digest.truncate_for_telegram()` оборачивает каждый `┌─…─┐ … └─…┘` блок в `<pre>` перед отправкой (форсирует моноширинный код-шрифт). Тело, которое уходит в БД и на сайт, не тронуто — `lib/digest-body.tsx` и так парсит эти же маркеры в свою CSS-карточку, которая уже рендерилась корректно.
+{intro — 2-3 предложения, AI, тема периода}
+
+a few nuggets to pull back up, one from each corner of your {week/month/year}:
+▪ <a>TITLE</a> (folder)
+▪ <a>TITLE</a> (folder)
+▪ <a>TITLE</a> (folder)
+[+1 для monthly/yir — 4 пика вместо 3]
+
+the random nugget:
+▪ <a>TITLE</a> (folder) — {random_blurb, AI, только про этот пик}
+
+[YIR only: "how the year went, season by season:" + ▪ season — summary ×4]
+
+{main_character — YIR only, AI: "your main character this year was X. {dry tail}"}
+
+{nudge — 1 предложение, AI, персонализирован под тему периода}
+
+→ <a>open your {week/month/whole year} in the vault</a>
+```
+
+**Пустое состояние** (без AI-вызова, статичный текст):
+```
+your {week/month/{year}} in the vault
+
+{статичная фраза, per kind — см. ниже}
+
+→ <a>your vault's still here</a>
+```
+
+**Что убрано полностью:** ВСЕ рамки/боксы/разделители (`═`, `━`, `┌─┐`), ВСЕ picture-эмодзи (`🤖 📊 💡 👉`), дашборд-строка цифр (`N saves · active days · vs prior period`), AI-кластеры (`extract_clusters` — удалена функция целиком, больше не вызывается), сезонная генерация не тронута, но теперь описывает реальные темы, а не абстрактные "streak"-факты.
+
+**Что новое:**
+- **`pick_across_folders(entries, n)`** (код, не AI) — берёт по одной самой свежей сохранёнке из N самых насыщенных папок (3 для недели, 4 для месяца/года). Гарантирует разброс по темам, не одну случайную папку.
+- **`pick_random(entries, exclude_ids)`** (код) — one random nugget, явный кивок на кнопку shuffle/"surprise me" в интерфейсе волта. Владелец отдельно одобрил эту идею как фичу, не баг.
+- **`generate_digest_copy()`** — один AI tool-call (`emit_digest_copy`) генерит разом `intro` / `random_blurb` / `nudge` / (только yir) `main_character`. Промпт (`DIGEST_COPY_SYSTEM_PROMPT`) жёстко запрещает выдумывать поведение/чувства пользователя — модель описывает ТОЛЬКО то, что реально сохранено (темы, папки, тайминг). Самоирония — только про бота/волт, никогда про пользователя. Nudge обязан быть персонализирован под тему периода (еда → «иди поешь», путешествия → «иди съезди»), не generic.
+- Голос: болтливый, тёплый, второе лицо (`your`, сообщение ПОЛЬЗОВАТЕЛЮ, не `my`), в стиле Stephanie Soo storytime — но без придуманных фактов о поведении.
+- Термин **«nugget»** (бренд-слово для сохранёнки) вплетён в текст естественно: «six nuggets», «the random nugget», «a whole year of nuggets».
+- Ссылка на дайджест теперь `→ <a>open your {period} in the vault</a>` (стрелка, не `👉`/`read this in my vault:`).
+- Truncate-нотис (Telegram, длинные дайджесты): `…that's the short version — the rest is in your vault`.
+
+**Empty-state тексты** (per kind, статичные — AI не вызывается, если сохранений 0):
+- week: `nothing this week — not a single nugget. either you went outside or you forgot i exist, both fine. forward me something when you're back.`
+- month: `a whole month and not one nugget landed in here. proud of you, honestly — go touch grass, don't tell the vault. send me something when you're ready.`
+- year: `a whole year, zero nuggets. either that's impressive restraint or we just met. either way — forward me something and let's make next year messier.`
+
+**Парсер сайта `lib/digest-body.tsx`:** переписан под новую грамматику — `NEW_TITLE_RE` (`your … in the vault` заголовок), `ARROW_LINK_RE` (`→ <a>…</a>` замыкающая ссылка), `LABEL_RE` (любая строка, оканчивающаяся на `:`, не начинающаяся с `▪`/`●` — ловит `a few nuggets to pull back up…:` и `the random nugget:` как секционные лейблы). Легаси regex-ы (эмодзи, боксы, `_BORDER`/`_SEP`, старый `UPPER_HEADER_RE`) оставлены нетронутыми — старые дайджесты в БД (обе прошлые версии формата) продолжают рендериться со своими стилями, ничего не мигрировано ретроактивно.
+
+**Что НЕ тронуто:** receipt-формат сохранённых нагетсов (`pipeline.render()`) — свой отдельный, залоченный формат, из этого редизайна не менялся ни разу за всю сессию.
 
 ## 2. САЙТ (`~/supernuggets`)
 

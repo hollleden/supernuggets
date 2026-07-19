@@ -37,9 +37,31 @@ function clean(html: string): string {
 // render without breaking.
 const BORDER_RE = /^[/=#═]{10,}$/
 const HEADER_LINE_RE = /^my (week|month|\d{4})\s*\/\//i
+const NEW_TITLE_RE = /^your (?:week|month|\d{4}) in the vault$/i
 const SEP_RE = /^[─━-]{10,}$/
 const SECTION_RE = /^(🤖|🔥|⚡︎|🧠|📊|💡|⏳)\s*(.+)$/u
-const VAULT_LINK_RE = /^👉\s*(.+)$/u
+// 2026-07-19 emoji-free digest redesign: section headers ("what stood out…"),
+// the stats line ("12 saves · …"), and the hygiene note ("ps — …") no longer
+// carry a leading picture emoji, so they're detected by text pattern instead.
+// The legacy emoji REs above stay in place so pre-2026-07-19 digest rows already
+// stored in the DB keep rendering with the same styling.
+const INSIGHT_HEADER_RE = /^what stood out this (?:week|month|year)$/i
+const STATS_RE = /^\d[\d,]*\s+saves\s+·/
+const HYGIENE_RE = /^ps\s+—\s+.+$/
+const VAULT_LINK_RE = /^(?:👉\s*)?(read .*\bin my vault:.*)$/u
+// 2026-07-19 frameless redesign: the box-drawing "┌─ label ─┐" callouts and the
+// "════"/"━━━" borders/separators were dropped from the digest entirely. Block
+// headers are now plain ALL-CAPS lines ("WHAT YOU WERE INTO", "THE RECURRING
+// STUFF", "YOUR 2026 IN ONE FOLDER", …). Detect those. The `·` fact rows and
+// numbered cluster lines don't match (they contain "·" or lead with a digit),
+// so they still fall through to the metric/cluster renderers below.
+const UPPER_HEADER_RE = /^[A-Z][A-Z0-9 ,'()]+$/
+// 2026-07-19 owner-approved rewrite: section headers are now lowercase chatty
+// labels ending in a colon ("a few nuggets to pull back up…:", "the random
+// nugget:"). The closing vault link leads with "→". Intro/nudge prose never
+// ends in a colon, and bullet/season lines start with ▪/●, so neither collides.
+const LABEL_RE = /:\s*$/
+const ARROW_LINK_RE = /^→\s*(.+)$/u
 const BRACKET_CTA_RE = /^\[(.+)]$/
 const QUOTE_RE = /^"(.*)"$/
 const CLUSTER_RE = /^\s*(\d{2})\s*\/\s*(.*)$/
@@ -75,7 +97,7 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
 
   for (const line of lines) {
     if (BORDER_RE.test(line)) continue
-    if (!sawFirstHeader && HEADER_LINE_RE.test(line)) {
+    if (!sawFirstHeader && (HEADER_LINE_RE.test(line) || NEW_TITLE_RE.test(line.trim()))) {
       sawFirstHeader = true
       continue
     }
@@ -136,11 +158,27 @@ export function renderDigestBody(bodyHtml: string): ReactNode[] {
       continue
     }
 
-    const section = line.match(SECTION_RE)
-    if (section) {
+    const arrowLink = line.match(ARROW_LINK_RE)
+    if (arrowLink) {
+      blocks.push(
+        <div key={key++} className={`digest-vault-link${applySpacer ? ' digest-mt' : ''}`}
+             dangerouslySetInnerHTML={{ __html: clean(arrowLink[1]) }} />
+      )
+      continue
+    }
+
+    const trimmed = line.trim()
+    if (
+      SECTION_RE.test(line) ||
+      INSIGHT_HEADER_RE.test(trimmed) ||
+      STATS_RE.test(trimmed) ||
+      HYGIENE_RE.test(trimmed) ||
+      UPPER_HEADER_RE.test(trimmed) ||
+      (LABEL_RE.test(trimmed) && !trimmed.startsWith('▪') && !trimmed.startsWith('●'))
+    ) {
       blocks.push(
         <div key={key++} className={`digest-section-label${applySpacer ? ' digest-mt' : ''}`}>
-          {line.trim()}
+          {trimmed}
         </div>
       )
       continue
