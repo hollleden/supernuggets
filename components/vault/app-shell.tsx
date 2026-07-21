@@ -35,8 +35,13 @@ function HeaderSearchInner() {
 
   const urlQ = searchParams.get('q') ?? ''
   const [query, setQuery] = useState(urlQ)
+  const lastPushedQ = useRef(urlQ)
 
-  useEffect(() => setQuery(urlQ), [urlQ])
+  useEffect(() => {
+    if (urlQ === lastPushedQ.current) return
+    setQuery(urlQ)
+    lastPushedQ.current = urlQ
+  }, [urlQ])
 
   useEffect(() => {
     const current = searchParams.get('q') ?? ''
@@ -46,6 +51,7 @@ function HeaderSearchInner() {
       if (query) sp.set('q', query)
       else sp.delete('q')
       const qs = sp.toString()
+      lastPushedQ.current = query
       router.replace(qs ? `${homeHref}?${qs}` : homeHref)
     }, 300)
     return () => clearTimeout(timer)
