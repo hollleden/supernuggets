@@ -20,7 +20,7 @@ okay here's the deal — think of me as your personal AI chef: send me text, scr
 oh, and you'll get a digest every week, month, and year — a recap of everything you've saved, so it's not just sitting there being ignored. the web vault also has stats, search, and a "surprise me" button if you want to get re-acquainted with old saves.
 ```
 
-`/start` шлёт 3 сообщения подряд: (1) манифест выше, (2) vault-ссылка (см. 1.3), (3) `"one last thing — tap 📍 send location in the menu below so i can figure out your timezone for digests"` вместе с показом `MAIN_KEYBOARD`.
+`/start` шлёт 3 сообщения подряд: (1) манифест выше (с `ReplyKeyboardRemove()` — очищает залипшую клавиатуру от старых версий), (2) vault-ссылка (см. 1.3), (3) `"one last thing — use /timezone so i can figure out your timezone for digests (works in the Telegram mobile app only)"`. Постоянной reply-клавиатуры больше нет — кнопка локации показывается только на `/timezone`.
 
 ### 1.2b `/help` (`_build_help_text()`) — манифест + полный список команд
 
@@ -42,8 +42,10 @@ commands:
 
 Список ссылок ограничен платформами, реально протестированными и рабочими на 2026-07-02 (tiktok, youtube shorts, twitter/x, pinterest, threads). Instagram, reddit, обычные статьи — не работают сейчас (см. CLAUDE.md backlog), в текст не включены до починки.
 
-### 1.2c `/timezone` (повторный вызов, для смены локации позже) — короткое напоминание про кнопку
-`"tap 📍 send location in the menu below — i'll detect your timezone from it"`
+### 1.2c `/timezone` — показывает одноразовую кнопку запроса локации (`LOCATION_KEYBOARD`, `one_time_keyboard=True`)
+`"tap 📍 send location below — i'll detect your timezone from it\n(this only works in the Telegram mobile app, not desktop/web)"`
+
+Важно: `request_location` работает **только в мобильном Telegram**. В Desktop/Web кнопка ничего не отправляет (схлопывается, апдейт в бот не приходит) — потому в тексте явная пометка.
 
 ### 1.3 `/myvault` и vault-сообщение (`_build_vault_message()`) — отправляется отдельным сообщением на `/start` и по команде `/myvault`, специально чтобы можно было запинить его отдельно от манифеста
 
@@ -109,6 +111,8 @@ ping @holeden
 TIKTOK_PHOTO, INSTAGRAM_PHOTO, YT_SHORTS_ONLY — формальные, без правки (см. `pipeline.py` → `URLRejected`)
 
 INSTAGRAM_LOGIN — "meta won't let me touch instagram officially, and honestly? I'm just one girl running a nuggets bot — not worth getting blocked over. forward it through @SaveAsBot first, then send it my way"
+
+TIKTOK_AGE_GATED (добавлено 2026-07-21) — "tiktok flagged this one as sensitive/mature and hides it from logged-out viewers — not a bot malfunction, just their own age gate. forward it through @SaveAsBot first, then send it my way"
 
 VIDEO_TOO_LONG — "too long — {duration}s, limit for {ekey} is {cap}s. trim it and resend"
 
