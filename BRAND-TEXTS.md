@@ -20,7 +20,7 @@ okay here's the deal — think of me as your personal AI chef: send me text, scr
 oh, and you'll get a digest every week, month, and year — a recap of everything you've saved, so it's not just sitting there being ignored. the web vault also has stats, search, and a "surprise me" button if you want to get re-acquainted with old saves.
 ```
 
-`/start` шлёт 3 сообщения подряд: (1) манифест выше (с `ReplyKeyboardRemove()` — очищает залипшую клавиатуру от старых версий), (2) vault-ссылка (см. 1.3), (3) `"one last thing — use /timezone so i can figure out your timezone for digests (works in the Telegram mobile app only)"`. Постоянной reply-клавиатуры больше нет — кнопка локации показывается только на `/timezone`.
+`/start` шлёт 3 сообщения подряд: (1) манифест выше (с `ReplyKeyboardRemove()` — очищает залипшую клавиатуру от старых версий), (2) vault-ссылка (см. 1.3), (3) `"okay, one last thing before i let you go — hit /timezone so i actually know your timezone for the digests. heads up though: it only works in the telegram phone app, not desktop."` (Stephanie Soo voice, 2026-07-23). Постоянной reply-клавиатуры больше нет — кнопка локации показывается только на `/timezone`.
 
 ### 1.2b `/help` (`_build_help_text()`) — манифест + полный список команд
 
